@@ -1,0 +1,3001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — MrDelegate</title>
+<link rel="icon" type="image/x-icon" href="https://mrdelegate.ai/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="https://mrdelegate.ai/favicon-32.png">
+<link rel="apple-touch-icon" href="https://mrdelegate.ai/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/design-system.css">
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   MrDelegate Customer Dashboard — Premium Edition v2
+   Warm editorial aesthetic · homepage-matched · retention-first copy
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Impeccable Light Theme ── */
+  --bg:           oklch(98% 0.005 60);
+  --bg-warm:      oklch(97% 0.007 60);
+  --bg-deep:      oklch(96% 0.009 60);
+  --surface:      oklch(100% 0 0);
+  --surface-warm: oklch(99% 0.004 60);
+  --surface-raised: oklch(100% 0 0);
+  --panel:        oklch(98.5% 0.004 260);
+  --panel-2:      oklch(97% 0.006 260);
+  --panel-hover:  oklch(96% 0.008 260);
+  --border:       oklch(90% 0.005 260);
+  --border-subtle: oklch(93% 0.004 260);
+  --border-strong: oklch(84% 0.008 260);
+
+  /* ── Light Sidebar ── */
+  --sidebar-bg:     oklch(100% 0 0);
+  --sidebar-surface: oklch(97% 0.006 260);
+  --sidebar-hover:  oklch(96% 0.008 260);
+  --sidebar-active: oklch(55% 0.18 250 / 0.08);
+  --sidebar-border: oklch(90% 0.005 260);
+  --sidebar-text:   oklch(50% 0.02 260);
+  --sidebar-text-active: oklch(15% 0.01 260);
+
+  /* ── Text ── */
+  --text-primary:   oklch(15% 0.01 260);
+  --text-secondary: oklch(35% 0.015 260);
+  --text-tertiary:  oklch(52% 0.02 260);
+  --text-muted:     oklch(68% 0.01 260);
+
+  /* ── Brand Indigo ── */
+  --accent:       oklch(55% 0.18 250);
+  --accent-hover: oklch(52% 0.20 250);
+  --accent-bg:    oklch(55% 0.18 250 / 0.08);
+  --accent-border: oklch(55% 0.18 250 / 0.2);
+  --accent-glow:  oklch(55% 0.18 250 / 0.15);
+
+  --success: oklch(55% 0.15 145);
+  --success-bg: oklch(55% 0.15 145 / 0.08);
+  --success-border: oklch(55% 0.15 145 / 0.18);
+
+  --warning: oklch(65% 0.15 60);
+  --warning-bg: oklch(65% 0.15 60 / 0.08);
+  --warning-border: oklch(65% 0.15 60 / 0.18);
+
+  --error: oklch(55% 0.18 25);
+  --error-bg: oklch(55% 0.18 25 / 0.06);
+  --error-border: oklch(55% 0.18 25 / 0.15);
+
+  --tag-blue: oklch(55% 0.18 250);
+  --tag-blue-bg: oklch(55% 0.18 250 / 0.1);
+  --tag-green: oklch(45% 0.15 145);
+  --tag-green-bg: oklch(55% 0.15 145 / 0.1);
+  --tag-amber: oklch(60% 0.15 60);
+  --tag-amber-bg: oklch(65% 0.15 60 / 0.1);
+  --tag-red: oklch(55% 0.18 25);
+  --tag-red-bg: oklch(55% 0.18 25 / 0.08);
+
+  --shadow-xs: 0 1px 2px oklch(15% 0.01 260 / 0.05);
+  --shadow-sm: 0 1px 3px oklch(15% 0.01 260 / 0.07), 0 1px 2px oklch(15% 0.01 260 / 0.04);
+  --shadow-md: 0 4px 12px oklch(15% 0.01 260 / 0.06), 0 1px 3px oklch(15% 0.01 260 / 0.04);
+  --shadow-lg: 0 8px 24px oklch(15% 0.01 260 / 0.07), 0 2px 6px oklch(15% 0.01 260 / 0.04);
+  --shadow-xl: 0 16px 48px oklch(15% 0.01 260 / 0.08), 0 4px 12px oklch(15% 0.01 260 / 0.04);
+
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  --sidebar-w: 260px;
+  --header-h: 64px;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 70% 20%, oklch(55% 0.18 250 / 0.02) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, oklch(55% 0.15 145 / 0.01) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+::selection { background: oklch(55% 0.18 250 / 0.15); }
+
+/* ── LOADING ── */
+.app-loading {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  transition: opacity 0.4s var(--ease), visibility 0.4s;
+}
+.app-loading.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.app-loading .loader { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+.app-loading .loader-logo { display: flex; align-items: center; gap: 10px; }
+.app-loading .loader-logo svg { width: 32px; height: 32px; flex-shrink: 0; }
+.app-loading .loader-logo .ll-mr { font-size: 18px; font-weight: 900; letter-spacing: 0.14em; color: var(--accent); }
+.app-loading .loader-logo .ll-dot { display: none; }
+.app-loading .loader-logo .ll-delegate { font-size: 18px; font-weight: 900; letter-spacing: 0.14em; color: var(--text-primary); }
+.loader-bar { width: 120px; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.loader-bar::after {
+  content: '';
+  display: block;
+  width: 40%;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  animation: loader-slide 1s var(--ease) infinite;
+}
+@keyframes loader-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: transform 0.3s var(--ease);
+  overflow: hidden;
+  box-shadow: 1px 0 0 0 var(--sidebar-border);
+}
+.sidebar-inner { display: flex; flex-direction: column; height: 100%; }
+.sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.logo-text { display: flex; align-items: center; gap: 10px; user-select: none; text-decoration: none; color: inherit; }
+.logo-text svg { width: 32px; height: 32px; flex-shrink: 0; }
+.logo-mr { font-family: var(--font-body); font-size: 20px; font-weight: 900; letter-spacing: 0.14em; color: var(--accent); text-transform: uppercase; }
+.logo-dot { display: none; }
+.logo-delegate { font-family: var(--font-body); font-size: 20px; font-weight: 900; letter-spacing: 0.14em; color: var(--text-primary); text-transform: uppercase; }
+
+.agent-pill {
+  margin: 16px 16px 4px;
+  padding: 10px 14px;
+  background: rgba(14,180,114,0.08);
+  border: 1px solid rgba(14,180,114,0.15);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.agent-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 6px var(--success);
+  animation: agent-pulse 2.5s ease infinite;
+  flex-shrink: 0;
+}
+@keyframes agent-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--success); }
+  50% { opacity: 0.6; box-shadow: 0 0 3px var(--success); }
+}
+.agent-pill-text { font-size: 12px; color: var(--success); font-weight: 600; }
+.agent-pill-sub { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+
+.sidebar-nav { padding: 12px; flex: 1; overflow-y: auto; }
+.nav-section-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; padding: 16px 8px 8px; font-family: var(--font-mono); }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: var(--radius-sm);
+  color: var(--sidebar-text); font-size: 13.5px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s var(--ease);
+  user-select: none; text-decoration: none;
+  margin-bottom: 1px; position: relative;
+}
+.nav-item:hover { background: var(--sidebar-hover); color: var(--sidebar-text-active); }
+.nav-item.active { background: var(--sidebar-active); color: var(--accent); font-weight: 600; }
+.nav-item.active::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--accent); border-radius: 0 3px 3px 0;
+}
+.nav-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; line-height: 1; }
+.nav-icon svg { width: 16px; height: 16px; display: block; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.nav-label-text { font-size: 13.5px; }
+
+.sidebar-tg {
+  margin: 8px 16px;
+  padding: 12px 14px;
+  background: rgba(42,171,238,0.08);
+  border: 1px solid rgba(42,171,238,0.15);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; transition: all 0.15s var(--ease); cursor: pointer; flex-shrink: 0;
+}
+.sidebar-tg:hover { background: rgba(42,171,238,0.12); border-color: rgba(42,171,238,0.25); }
+.sidebar-tg-icon { font-size: 16px; flex-shrink: 0; }
+.sidebar-tg-text { font-size: 12px; font-weight: 600; color: #2AABEE; line-height: 1.3; }
+.sidebar-tg-sub { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 1px; font-weight: 400; }
+
+.sidebar-footer { padding: 16px; border-top: 1px solid var(--border); flex-shrink: 0; }
+.sidebar-user { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: var(--radius-sm); cursor: default; }
+.user-avatar {
+  width: 32px; height: 32px; border-radius: var(--radius-sm);
+  background: var(--accent-bg); display: grid; place-items: center;
+  font-size: 13px; font-weight: 700; color: var(--accent);
+  flex-shrink: 0; border: 1px solid var(--accent-border);
+}
+.user-info { min-width: 0; flex: 1; }
+.user-name { font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-email { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--font-mono); }
+.signout-btn { background: none; border: none; color: var(--text-tertiary); font-size: 11px; cursor: pointer; padding: 6px 0 0; font-family: var(--font-mono); transition: color 0.15s; }
+.signout-btn:hover { color: var(--error); }
+
+/* ── MOBILE ── */
+.mobile-header {
+  display: none;
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  background: rgba(255,253,249,0.88);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-bottom: 1px solid var(--border);
+  z-index: 200; padding: 0 16px;
+  align-items: center; justify-content: space-between;
+}
+.mobile-hamburger { background: none; border: none; padding: 8px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
+.mobile-hamburger span { width: 18px; height: 2px; background: var(--text-primary); border-radius: 1px; }
+.mobile-logo-text { display: flex; align-items: center; gap: 8px; }
+.mobile-logo-text svg { width: 24px; height: 24px; flex-shrink: 0; }
+.mobile-logo-text .mlm { font-size: 14px; font-weight: 900; letter-spacing: 0.14em; color: var(--accent); }
+.mobile-logo-text .mld { display: none; }
+.mobile-logo-text .mldl { font-size: 14px; font-weight: 900; letter-spacing: 0.14em; color: var(--text-primary); }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); z-index: 99; }
+.sidebar-overlay.open { display: block; }
+
+/* ── MAIN ── */
+.main { margin-left: var(--sidebar-w); min-height: 100vh; position: relative; z-index: 1; }
+.main-inner { max-width: 920px; margin: 0 auto; padding: 40px 40px 80px; }
+
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; animation: viewIn 0.3s var(--ease-out); }
+@keyframes viewIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── PAGE HEADER ── */
+.page-header { margin-bottom: 28px; }
+.page-title {
+  font-family: var(--font-display);
+  font-size: 30px; font-weight: 400;
+  letter-spacing: -0.03em; color: var(--text-primary); line-height: 1.1;
+}
+.page-subtitle { font-size: 14px; color: var(--text-tertiary); margin-top: 6px; font-weight: 400; line-height: 1.6; }
+
+/* Home greeting hero */
+.home-hero {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 20px;
+  padding: 28px 32px 26px;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-warm) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.home-hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, oklch(55% 0.18 250 / 0.3) 80%, transparent 100%);
+}
+.home-hero::after {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, oklch(55% 0.18 250 / 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.home-hero-main { flex: 1; min-width: 0; }
+.home-hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 10px;
+}
+.home-hero-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: agent-pulse 2s ease infinite; }
+.home-hero-greeting {
+  font-family: var(--font-display);
+  font-size: 34px; font-weight: 400; letter-spacing: -0.035em;
+  color: var(--text-primary); line-height: 1.1; margin-bottom: 6px;
+}
+.home-hero-date { font-size: 13px; color: var(--text-tertiary); font-weight: 400; }
+
+/* ── BUTTONS ── */
+.btn-primary-orange {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--accent);
+  color: #fff; border: none; border-radius: 10px;
+  padding: 12px 24px; font-size: 14px; font-weight: 600;
+  font-family: var(--font-body); cursor: pointer; text-decoration: none;
+  box-shadow: 0 2px 8px var(--accent-glow);
+  transition: all 0.15s;
+}
+.btn-primary-orange:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--accent-glow);
+}
+.btn-primary-orange:active { transform: scale(0.98); }
+
+.btn-secondary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  background: transparent; color: var(--text-secondary);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px 18px; font-size: 13px; font-weight: 600;
+  font-family: var(--font-body); cursor: pointer; text-decoration: none; transition: all 0.15s;
+}
+.btn-secondary:hover { border-color: var(--border-strong); background: rgba(62,36,7,0.03); color: var(--text-primary); }
+.btn-sm { padding: 7px 14px; font-size: 12px; border-radius: var(--radius-xs); }
+
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--accent);
+  color: #fff; border: none; border-radius: 10px;
+  padding: 11px 22px; font-size: 14px; font-weight: 600;
+  font-family: var(--font-body); cursor: pointer; text-decoration: none;
+  box-shadow: 0 2px 8px var(--accent-glow);
+  transition: all 0.15s;
+}
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s var(--ease), border-color 0.2s var(--ease);
+  position: relative;
+}
+.card:hover { box-shadow: var(--shadow-md); }
+.card + .card { margin-top: 16px; }
+.card-header {
+  padding: 16px 24px; border-bottom: 1px solid var(--border-subtle);
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(180deg, var(--surface-raised) 0%, var(--surface) 100%);
+}
+.card-header-left { display: flex; align-items: center; gap: 10px; }
+.card-title { font-size: 13.5px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.01em; }
+.card-badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 100px; line-height: 1; }
+.card-badge.success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+.card-badge.warning { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
+.card-badge.accent  { background: var(--accent-bg);  color: var(--accent);  border: 1px solid var(--accent-border);  }
+.card-meta { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+.card-body { padding: 24px; }
+.card-body-flush { padding: 0; }
+
+/* ═══════════ HOME VIEW ═══════════ */
+
+/* Telegram hero banner */
+.tg-hero-banner {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, rgba(42,171,238,0.06) 0%, rgba(42,171,238,0.02) 100%);
+  border: 1px solid rgba(42,171,238,0.15);
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+  transition: all 0.2s var(--ease);
+  text-decoration: none; color: inherit;
+}
+.tg-hero-banner:hover { background: linear-gradient(135deg, rgba(42,171,238,0.1) 0%, rgba(42,171,238,0.04) 100%); border-color: rgba(42,171,238,0.25); box-shadow: 0 4px 16px rgba(42,171,238,0.08); }
+.tg-hero-icon { width: 44px; height: 44px; border-radius: var(--radius); background: linear-gradient(135deg, #2AABEE 0%, #229ED9 100%); display: grid; place-items: center; font-size: 22px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(42,171,238,0.3); }
+.tg-hero-content { flex: 1; min-width: 0; }
+.tg-hero-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+.tg-hero-sub { font-size: 13px; color: var(--text-tertiary); line-height: 1.4; }
+.tg-hero-btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; background: #2AABEE; color: #fff; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font-body); text-decoration: none; transition: all 0.15s; flex-shrink: 0; box-shadow: 0 1px 4px rgba(42,171,238,0.3); }
+.tg-hero-btn:hover { background: #229ED9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(42,171,238,0.35); }
+
+/* Provisioning progress */
+.tg-hero-banner.is-provisioning { flex-wrap: wrap; align-items: flex-start; }
+.prov-block { width: 100%; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(42,171,238,0.15); }
+.prov-progress-wrap { width: 100%; height: 6px; background: rgba(42,171,238,0.12); border-radius: 3px; overflow: hidden; margin-bottom: 16px; }
+.prov-progress-bar { height: 100%; background: linear-gradient(90deg, #2AABEE, #229ED9); border-radius: 3px; transition: width 1.5s ease; }
+.prov-steps { display: flex; width: 100%; }
+.prov-step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); text-align: center; position: relative; }
+.prov-step:not(:last-child)::after { content: ''; position: absolute; top: 10px; left: 60%; width: 80%; height: 1px; background: var(--border); z-index: 0; }
+.prov-step-dot { width: 20px; height: 20px; border-radius: 50%; background: var(--surface); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; z-index: 1; position: relative; color: var(--text-muted); }
+.prov-step.done .prov-step-dot { background: rgba(42,171,238,0.15); border-color: #2AABEE; color: #2AABEE; }
+.prov-step.active .prov-step-dot { background: #2AABEE; border-color: #2AABEE; color: #fff; animation: prov-pulse 1.5s ease-in-out infinite; }
+.prov-step.active { color: var(--text-primary); font-weight: 600; }
+.prov-step.done { color: var(--text-tertiary); }
+.prov-hint { text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 12px; }
+@keyframes prov-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(42,171,238,0.45); } 50% { box-shadow: 0 0 0 6px rgba(42,171,238,0); } }
+
+/* Morning Brief hero card */
+.brief-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  transition: box-shadow 0.3s var(--ease);
+}
+.brief-card:hover { box-shadow: var(--shadow-lg); }
+.brief-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, oklch(55% 0.15 145) 100%);
+}
+.brief-bar { padding: 14px 24px; background: var(--panel-2); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.brief-bar-diamond { color: var(--text-secondary); font-size: 13px; }
+.brief-bar-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-secondary); font-weight: 600; }
+.brief-bar-live { display: flex; align-items: center; gap: 5px; margin-left: auto; font-family: var(--font-mono); font-size: 9px; letter-spacing: 1px; color: var(--success); font-weight: 600; }
+.brief-bar-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: agent-pulse 1.5s infinite; }
+.brief-content { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 18px; }
+.brief-block { display: flex; flex-direction: column; gap: 6px; }
+.brief-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.brief-label-count { color: var(--text-secondary); font-weight: 600; }
+.brief-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-primary); padding: 6px 0; border-bottom: 1px solid var(--border-subtle); line-height: 1.5; }
+.brief-row:last-child { border-bottom: none; }
+.brief-row.muted-row { color: var(--text-muted); }
+.brief-row.conflict { color: var(--tag-amber); }
+.brief-time { font-family: var(--font-mono); font-size: 12px; color: var(--text-tertiary); width: 42px; flex-shrink: 0; }
+.brief-event { flex: 1; font-size: 13px; }
+.brief-sender { font-weight: 600; width: 100px; flex-shrink: 0; font-size: 13px; }
+.brief-preview { flex: 1; font-size: 12px; color: var(--text-tertiary); }
+.brief-ok { color: var(--success); font-size: 12px; width: 14px; flex-shrink: 0; }
+.brief-tag { font-family: var(--font-mono); font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 5px; white-space: nowrap; letter-spacing: 0.3px; flex-shrink: 0; }
+.brief-tag.tag-blue { background: var(--tag-blue-bg); color: var(--tag-blue); }
+.brief-tag.tag-green { background: var(--tag-green-bg); color: var(--tag-green); }
+.brief-tag.tag-amber { background: var(--tag-amber-bg); color: var(--tag-amber); }
+.brief-tag.tag-red { background: var(--tag-red-bg); color: var(--tag-red); }
+.brief-divider { height: 1px; background: var(--border-subtle); }
+.brief-footer { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); padding-top: 12px; border-top: 1px solid var(--border-subtle); }
+.brief-footer-item { display: flex; align-items: center; gap: 6px; }
+.brief-footer-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--success); }
+.brief-empty { text-align: center; padding: 52px 28px; }
+.brief-empty-icon { font-size: 44px; margin-bottom: 16px; display: block; }
+.brief-empty-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; color: var(--text-primary); margin-bottom: 8px; letter-spacing: -0.02em; }
+.brief-empty-text { font-size: 14px; color: var(--text-tertiary); line-height: 1.7; max-width: 400px; margin: 0 auto; }
+.brief-empty .countdown { display: inline-flex; align-items: center; gap: 8px; background: var(--accent-bg); border: 1px solid var(--accent-border); border-radius: 100px; padding: 8px 18px; font-size: 13px; font-weight: 600; color: var(--accent); margin-top: 20px; }
+.brief-hero-date { font-family: var(--font-display); font-size: 22px; font-weight: 400; letter-spacing: -0.02em; color: var(--text-primary); padding: 20px 24px 4px; }
+.brief-hero-body { padding: 4px 24px 24px; }
+.brief-hero-divider { height: 1px; background: var(--border); margin: 14px 0; }
+.brief-hero-row { display: flex; align-items: baseline; gap: 0; padding: 7px 0; }
+.brief-hero-label { font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: lowercase; width: 64px; flex-shrink: 0; letter-spacing: 0.03em; }
+.brief-hero-dash { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); margin-right: 12px; flex-shrink: 0; opacity: 0.6; }
+.brief-hero-value { font-size: 14px; color: var(--text-primary); line-height: 1.5; }
+
+/* Daily status metrics */
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+.stat-pill {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px 22px 20px; box-shadow: var(--shadow-xs); transition: all 0.2s var(--ease); position: relative; overflow: hidden;
+}
+.stat-pill::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), oklch(55% 0.18 250 / 0.3), transparent); opacity: 0.6; transition: opacity 0.2s; }
+.stat-pill:hover { box-shadow: var(--shadow-md); border-color: var(--border-strong); transform: translateY(-1px); }
+.stat-pill:hover::before { opacity: 1; }
+.stat-value { font-family: var(--font-display); font-size: 36px; font-weight: 400; letter-spacing: -0.04em; color: var(--text-primary); line-height: 1; margin-bottom: 6px; }
+.stat-label { font-size: 12px; color: var(--text-secondary); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+.stat-sub { font-size: 11px; color: var(--text-muted); font-style: italic; line-height: 1.4; }
+
+/* Connector health mini */
+.section-title-row { display: flex; align-items: center; justify-content: space-between; margin-top: 32px; margin-bottom: 8px; }
+.section-title { font-size: 12px; font-weight: 700; color: var(--text-secondary); display: flex; align-items: center; gap: 7px; text-transform: uppercase; letter-spacing: 0.06em; }
+.section-title .section-icon { display: flex; align-items: center; }
+.section-title .section-icon svg { width: 13px; height: 13px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.section-link { font-size: 12px; font-weight: 600; color: var(--accent); text-decoration: none; cursor: pointer; transition: color 0.15s; display: flex; align-items: center; gap: 3px; }
+.section-link:hover { color: var(--accent-hover); }
+.connectors-mini { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.conn-mini { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-xs); transition: all 0.2s var(--ease); }
+.conn-mini:hover { box-shadow: var(--shadow-sm); border-color: var(--border-strong); }
+.conn-mini-icon { font-size: 18px; flex-shrink: 0; }
+.conn-mini-info { flex: 1; min-width: 0; }
+.conn-mini-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.conn-mini-status { font-size: 11px; font-weight: 500; }
+.conn-mini-status.on { color: var(--success); }
+.conn-mini-status.off { color: var(--text-muted); }
+.conn-mini-badge { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 100px; flex-shrink: 0; }
+.conn-mini-badge.on { background: var(--success-bg); color: var(--success); }
+.conn-mini-badge.off { background: var(--accent-bg); color: var(--accent); cursor: pointer; border: 1px solid var(--accent-border); transition: all 0.15s; }
+.conn-mini-badge.off:hover { background: var(--accent); color: #fff; }
+
+/* ── What agent does section ── */
+.agent-does-section { margin-top: 32px; }
+.agent-does-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
+.agent-does-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 18px 20px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow-xs);
+  transition: all 0.2s var(--ease); position: relative; overflow: hidden;
+}
+.agent-does-item::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--accent) 0%, rgba(247,103,7,0.2) 100%); opacity: 0; transition: opacity 0.2s; border-radius: 3px 0 0 3px; }
+.agent-does-item:hover { box-shadow: var(--shadow-sm); border-color: var(--border-strong); transform: translateY(-1px); }
+.agent-does-item:hover::before { opacity: 1; }
+.agent-does-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent); flex-shrink: 0; margin-top: 5px;
+}
+.agent-does-icon-wrap {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  background: var(--accent-bg); border: 1px solid var(--accent-border);
+  display: grid; place-items: center; flex-shrink: 0;
+}
+.agent-does-icon-wrap svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.agent-does-emoji { font-size: 18px; flex-shrink: 0; line-height: 1.3; }
+.agent-does-content { flex: 1; }
+.agent-does-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
+.agent-does-desc { font-size: 12px; color: var(--text-tertiary); line-height: 1.5; }
+
+/* ── Learning Progress Card ── */
+.learning-card {
+  margin-top: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+.learning-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, oklch(55% 0.18 250 / 0.3) 100%);
+}
+.learning-card-inner { padding: 22px 24px; }
+.learning-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.learning-icon { font-size: 20px; }
+.learning-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.learning-subtitle { font-size: 13px; color: var(--text-tertiary); margin-bottom: 20px; line-height: 1.5; }
+
+/* Progress track */
+.learning-track { position: relative; margin: 18px 0 24px; padding: 0 8px; }
+.learning-line { position: relative; height: 3px; background: var(--border); border-radius: 2px; }
+.learning-line-fill { position: absolute; top: 0; left: 0; height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.8s var(--ease-spring); }
+.learning-milestones { display: flex; justify-content: space-between; margin-top: 10px; }
+.learning-milestone { display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; }
+.learning-milestone-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid var(--border); background: var(--surface);
+  transition: all 0.4s var(--ease);
+}
+.learning-milestone-dot.active { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 3px rgba(247,103,7,0.15); }
+.learning-milestone-dot.passed { border-color: var(--accent); background: var(--accent); }
+.learning-milestone-dot.current {
+  border-color: var(--accent); background: var(--accent);
+  box-shadow: 0 0 0 4px rgba(247,103,7,0.2);
+  animation: milestone-pulse 2s ease infinite;
+}
+@keyframes milestone-pulse {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(247,103,7,0.2); }
+  50% { box-shadow: 0 0 0 6px rgba(247,103,7,0.08); }
+}
+.learning-milestone-label { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+.learning-milestone-label.active { color: var(--accent); }
+.learning-milestone-sublabel { font-size: 10px; color: var(--text-muted); text-align: center; max-width: 60px; line-height: 1.3; }
+
+/* Current day indicator */
+.learning-current-day {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent-bg); border: 1px solid var(--accent-border);
+  border-radius: 100px; padding: 4px 12px;
+  font-size: 12px; font-weight: 600; color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.learning-quote {
+  font-size: 13px; color: var(--text-secondary); line-height: 1.7;
+  font-style: italic;
+  padding: 14px 18px;
+  background: var(--panel);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-top: 4px;
+}
+
+/* ═══════════ CONNECTORS VIEW ═══════════ */
+.connector-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.connector-card {
+  display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow-xs);
+  transition: all 0.2s var(--ease); position: relative;
+}
+.connector-card:hover { box-shadow: var(--shadow-sm); border-color: var(--border-strong); transform: translateY(-1px); }
+.connector-card.coming-soon { opacity: 0.55; pointer-events: none; }
+.connector-icon { width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--panel); border: 1px solid var(--border-subtle); display: grid; place-items: center; font-size: 18px; flex-shrink: 0; }
+.connector-info { flex: 1; min-width: 0; }
+.connector-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.connector-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; line-height: 1.4; }
+.connector-status { font-size: 11px; font-weight: 500; margin-top: 2px; }
+.connector-status.on { color: var(--success); }
+.connector-status.off { color: var(--text-muted); }
+.connector-action { flex-shrink: 0; }
+.connector-learning-hint {
+  margin-top: 8px;
+  padding: 7px 10px;
+  background: rgba(14,180,114,0.04);
+  border: 1px solid rgba(14,180,114,0.12);
+  border-radius: var(--radius-xs);
+  font-size: 11px;
+  color: var(--success);
+  line-height: 1.4;
+}
+
+.connector-capabilities { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-subtle); display: flex; flex-wrap: wrap; gap: 4px; }
+.cap-tag { font-size: 10px; font-weight: 500; color: var(--success); background: var(--success-bg); padding: 2px 7px; border-radius: 100px; white-space: nowrap; }
+.connector-warning { margin-top: 6px; padding: 6px 10px; background: var(--warning-bg); border: 1px solid var(--warning-border); border-radius: var(--radius-xs); display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--warning); line-height: 1.4; }
+.connector-warning-icon { font-size: 13px; flex-shrink: 0; }
+.connector-warning-text { flex: 1; }
+.connector-warning-fix { font-size: 11px; font-weight: 600; color: var(--accent); background: none; border: none; cursor: pointer; font-family: var(--font-body); padding: 2px 0; white-space: nowrap; transition: color 0.15s; }
+.connector-warning-fix:hover { color: var(--accent-hover); }
+
+.btn-connect { background: var(--accent); color: #fff; border: none; padding: 7px 14px; border-radius: var(--radius-xs); font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font-body); transition: all 0.15s; box-shadow: 0 1px 3px var(--accent-glow); }
+.btn-connect:hover { background: var(--accent); transform: translateY(-1px); box-shadow: 0 3px 8px rgba(217,72,15,0.3); }
+.btn-connected { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); padding: 6px 12px; border-radius: var(--radius-xs); font-size: 11px; font-weight: 600; cursor: default; }
+.btn-coming-soon { background: var(--panel); color: var(--text-muted); border: 1px solid var(--border); padding: 6px 12px; border-radius: var(--radius-xs); font-size: 11px; font-weight: 500; cursor: default; }
+.btn-reconnect { background: #fff0ee; color: #c0392b; border: 1px solid #f5c6c1; padding: 6px 12px; border-radius: var(--radius-xs); font-size: 11px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+.btn-reconnect:hover { background: #ffe0db; }
+
+.connector-note { margin-top: 16px; padding: 18px 22px; background: var(--panel); border: 1px solid var(--border-subtle); border-radius: var(--radius); display: flex; align-items: center; gap: 14px; }
+.connector-note-text { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+.connector-note-icon { font-size: 20px; flex-shrink: 0; }
+
+/* ═══════════ ACTIVITY VIEW ═══════════ */
+.activity-early-banner {
+  margin: 0 0 0 0;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, rgba(247,103,7,0.05) 0%, rgba(247,103,7,0.02) 100%);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex; align-items: center; gap: 12px;
+}
+.activity-early-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); background: var(--accent-bg); border: 1px solid var(--accent-border); display: grid; place-items: center; flex-shrink: 0; font-size: 14px; }
+.activity-early-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.activity-early-text strong { color: var(--text-primary); }
+
+.activity-list { padding: 4px 0; }
+.activity-item { display: flex; align-items: flex-start; gap: 14px; padding: 14px 24px; border-bottom: 1px solid var(--border-subtle); transition: background 0.15s; }
+.activity-item:last-child { border-bottom: none; }
+.activity-item:hover { background: var(--surface-warm); }
+.activity-icon { width: 34px; height: 34px; border-radius: var(--radius-sm); background: var(--panel); border: 1px solid var(--border-subtle); display: grid; place-items: center; font-size: 14px; flex-shrink: 0; }
+.activity-content { flex: 1; min-width: 0; }
+.activity-text { font-size: 13.5px; font-weight: 500; color: var(--text-primary); line-height: 1.5; }
+.activity-time { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 4px; }
+.activity-time-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-strong); }
+.activity-empty { text-align: center; padding: 56px 24px; }
+.activity-empty-icon { font-size: 40px; margin-bottom: 14px; display: block; }
+.activity-empty-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; color: var(--text-primary); margin-bottom: 6px; letter-spacing: -0.02em; }
+.activity-empty-text { font-size: 14px; color: var(--text-tertiary); line-height: 1.6; max-width: 380px; margin: 0 auto; }
+
+/* ═══════════ SETTINGS VIEW ═══════════ */
+.setting-group { padding: 22px 24px; }
+.setting-group + .setting-group { border-top: 1px solid var(--border-subtle); }
+.setting-label { font-size: 13.5px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
+.setting-desc { font-size: 13px; color: var(--text-tertiary); margin-bottom: 12px; line-height: 1.55; }
+.setting-input {
+  background: var(--surface-warm); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+  font-size: 14px; font-family: var(--font-body); color: var(--text-primary);
+  outline: none; width: 100%; max-width: 360px;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.setting-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(247,103,7,0.08); background: var(--surface); }
+.setting-input[readonly] { color: var(--text-muted); cursor: default; background: var(--panel); }
+.setting-input[readonly]:focus { border-color: var(--border); box-shadow: none; }
+.setting-select {
+  background: var(--surface-warm); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+  font-size: 14px; font-family: var(--font-body); color: var(--text-primary);
+  outline: none; max-width: 280px; width: 100%; transition: border-color 0.15s, box-shadow 0.15s;
+}
+.setting-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(247,103,7,0.08); }
+.key-field { display: flex; align-items: center; gap: 8px; max-width: 420px; }
+.key-field .setting-input { flex: 1; font-family: var(--font-mono); font-size: 13px; }
+.copy-btn { background: var(--panel); border: 1px solid var(--border); padding: 10px 14px; border-radius: var(--radius-sm); cursor: pointer; font-size: 14px; transition: all 0.15s; display: grid; place-items: center; }
+.copy-btn:hover { background: var(--panel-hover); border-color: var(--border-strong); }
+.danger-zone { border-color: var(--error-border) !important; }
+.danger-zone .card-header { background: linear-gradient(180deg, var(--error-bg) 0%, rgba(220,38,38,0.02) 100%) !important; }
+.btn-danger { background: var(--error); color: #fff; border: none; padding: 10px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font-body); transition: all 0.15s; box-shadow: 0 1px 3px rgba(220,38,38,0.25); }
+.btn-danger:hover { background: #b91c1c; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(220,38,38,0.3); }
+
+/* ═══════════ BILLING VIEW ═══════════ */
+.plan-card { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.plan-name { font-family: var(--font-display); font-size: 22px; font-weight: 400; color: var(--text-primary); letter-spacing: -0.02em; }
+.plan-price { font-size: 14px; color: var(--text-secondary); margin-top: 2px; }
+.plan-badge { font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 100px; }
+.billing-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; border-bottom: 1px solid var(--border-subtle); font-size: 14px; }
+.billing-row:last-child { border-bottom: none; }
+.billing-row-label { color: var(--text-secondary); }
+.billing-row-value { font-weight: 600; color: var(--text-primary); }
+.billing-actions { padding: 20px 24px; display: flex; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--border-subtle); }
+
+/* Billing retention nudge */
+.billing-retention-nudge {
+  margin: 0 24px 20px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, rgba(247,103,7,0.05) 0%, rgba(247,103,7,0.02) 100%);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+}
+.billing-retention-nudge-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+.billing-retention-nudge-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ── Modals ── */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
+.modal-backdrop.open { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); max-width: 420px; width: 100%; padding: 28px; animation: modalIn 0.2s var(--ease-out); }
+@keyframes modalIn { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.modal-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; color: var(--text-primary); margin-bottom: 8px; }
+.modal-text { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px; }
+.modal-field-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin: -6px 0 8px; }
+.modal-select { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 14px; font-family: var(--font-body); color: var(--text-primary); outline: none; width: 100%; transition: border-color 0.15s, box-shadow 0.15s; margin-bottom: 18px; }
+.modal-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(247,103,7,0.08); }
+.modal-input { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 14px; font-family: var(--font-body); color: var(--text-primary); outline: none; width: 100%; transition: border-color 0.15s, box-shadow 0.15s; box-sizing: border-box; }
+.modal-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(247,103,7,0.08); }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .mobile-header { display: flex; }
+  .main { margin-left: 0; }
+  .main-inner { padding: 20px 20px 60px; padding-top: calc(var(--header-h) + 20px); }
+  .connector-grid { grid-template-columns: 1fr; }
+  .agent-does-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .stats-row { grid-template-columns: 1fr; }
+  .connectors-mini { grid-template-columns: 1fr; }
+  .connector-grid { grid-template-columns: 1fr; }
+  .agent-does-grid { grid-template-columns: 1fr; }
+  .main-inner { padding: 16px 16px 60px; padding-top: calc(var(--header-h) + 16px); }
+  .brief-content { padding: 16px 20px 20px; }
+  .brief-bar { padding: 12px 20px; }
+  .plan-card { flex-direction: column; align-items: flex-start; }
+  .tg-hero-banner { flex-direction: column; text-align: center; }
+  .tg-hero-btn { width: 100%; justify-content: center; }
+  .brief-row { font-size: 12px; }
+  .brief-sender { width: 80px; font-size: 12px; }
+  .brief-footer { flex-direction: column; gap: 4px; }
+  .learning-milestones { gap: 0; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ═══════════ EMAIL ACTIVITY VIEW ═══════════ */
+.email-filters { display: flex; gap: 8px; flex-wrap: wrap; padding: 16px 24px; border-bottom: 1px solid var(--border-subtle); }
+.email-filter-btn {
+  font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 100px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary);
+  cursor: pointer; font-family: var(--font-body); transition: all 0.15s;
+}
+.email-filter-btn:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.email-filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.email-item {
+  display: flex; align-items: flex-start; gap: 14px; padding: 14px 24px;
+  border-bottom: 1px solid var(--border-subtle); transition: background 0.15s;
+}
+.email-item:last-child { border-bottom: none; }
+.email-item:hover { background: var(--surface-warm); }
+.email-status-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px;
+}
+.email-status-dot.sent     { background: var(--success); }
+.email-status-dot.pending  { background: var(--warning); }
+.email-status-dot.scheduled { background: var(--tag-blue); }
+.email-status-dot.discarded { background: var(--text-muted); }
+.email-info { flex: 1; min-width: 0; }
+.email-subject { font-size: 13.5px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.email-from { font-size: 12px; color: var(--text-tertiary); margin-top: 1px; }
+.email-draft-preview { font-size: 12px; color: var(--text-secondary); margin-top: 4px; line-height: 1.5; font-style: italic; }
+.email-meta { display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+.email-status-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.email-status-badge.sent     { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+.email-status-badge.pending  { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
+.email-status-badge.scheduled { background: var(--tag-blue-bg); color: var(--tag-blue); border: 1px solid rgba(43,127,255,0.2); }
+.email-status-badge.discarded { background: var(--panel); color: var(--text-muted); border: 1px solid var(--border); }
+.email-time { font-size: 11px; color: var(--text-muted); }
+.email-edited-badge { font-size: 10px; color: var(--accent); font-weight: 600; }
+.email-empty { text-align: center; padding: 48px 24px; }
+.email-empty-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+.email-empty-title { font-family: var(--font-display); font-size: 18px; color: var(--text-primary); margin-bottom: 6px; }
+.email-empty-text { font-size: 13px; color: var(--text-tertiary); line-height: 1.6; }
+.email-stats-row { display: flex; gap: 0; border-bottom: 1px solid var(--border-subtle); }
+.email-stat { flex: 1; padding: 14px 20px; text-align: center; border-right: 1px solid var(--border-subtle); }
+.email-stat:last-child { border-right: none; }
+.email-stat-num { font-size: 22px; font-weight: 700; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.email-stat-label { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+/* ── Morning Briefs history tab ───────────────────────────────────────────── */
+.briefs-list { display: flex; flex-direction: column; gap: 24px; }
+.brief-history-card { background: #1a1a1a; border-radius: var(--radius-xl); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+.brief-date-header { padding: 12px 20px; background: var(--bg-warm); font-family: var(--font-mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.brief-date-diamond { opacity: 0.7; font-size: 11px; }
+.brief-date-label { flex: 1; }
+.brief-date-time { font-size: 9px; color: rgba(255,255,255,0.25); letter-spacing: 0.5px; }
+.brief-history-section { padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.brief-history-section:last-of-type { border-bottom: none; }
+.brief-history-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.28); margin-bottom: 10px; }
+.brief-history-line { display: flex; align-items: baseline; gap: 10px; padding: 4px 0; font-size: 12.5px; color: rgba(255,255,255,0.82); border-bottom: 1px solid rgba(255,255,255,0.04); line-height: 1.5; }
+.brief-history-line:last-child { border-bottom: none; }
+.brief-hk { font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.35); white-space: nowrap; flex-shrink: 0; min-width: 44px; }
+.brief-hsep { font-family: var(--font-mono); font-size: 11px; color: var(--accent); opacity: 0.55; flex-shrink: 0; letter-spacing: -1px; }
+.brief-hv { flex: 1; font-size: 12.5px; color: rgba(255,255,255,0.8); }
+.brief-htag { font-family: var(--font-mono); font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; letter-spacing: 0.3px; margin-left: 4px; }
+.bht-green { background: rgba(14,180,114,0.15); color: #0EB472; }
+.bht-blue { background: rgba(43,127,255,0.15); color: #5B9CFF; }
+.bht-amber { background: var(--accent-bg); color: var(--accent); }
+.bht-red { background: rgba(220,38,38,0.15); color: #ef5350; }
+.brief-check { color: #0EB472; font-size: 11px; flex-shrink: 0; width: 14px; }
+.brief-history-footer { padding: 10px 20px; background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.05); font-family: var(--font-mono); font-size: 9px; color: rgba(255,255,255,0.2); display: flex; align-items: center; gap: 6px; }
+.bh-footer-dot { width: 5px; height: 5px; border-radius: 50%; background: #0EB472; flex-shrink: 0; }
+.briefs-empty { text-align: center; padding: 60px 28px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); }
+.briefs-empty-icon { font-size: 44px; margin-bottom: 16px; display: block; }
+.briefs-empty-title { font-family: var(--font-display); font-size: 22px; color: var(--text-primary); margin-bottom: 10px; letter-spacing: -0.02em; }
+.briefs-empty-text { font-size: 14px; color: var(--text-tertiary); line-height: 1.7; max-width: 400px; margin: 0 auto; }
+.briefs-loading { text-align: center; padding: 48px; color: var(--text-muted); font-size: 12px; font-family: var(--font-mono); letter-spacing: 0.06em; }
+</style>
+</head>
+<body>
+
+<!-- Loading screen -->
+<div class="app-loading" id="app-loading">
+  <div class="loader">
+    <div class="loader-logo">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50,10 L90,50 L50,90 L10,50 Z" fill="none" stroke="oklch(55% 0.18 250)" stroke-width="5"/>
+        <circle cx="50" cy="10" r="8" fill="oklch(55% 0.18 250)"/>
+        <circle cx="90" cy="50" r="8" fill="oklch(55% 0.18 250)"/>
+        <circle cx="50" cy="90" r="8" fill="oklch(55% 0.18 250)"/>
+        <circle cx="10" cy="50" r="8" fill="oklch(55% 0.18 250)"/>
+        <circle cx="50" cy="50" r="10" fill="#FFF8F0" stroke="oklch(55% 0.18 250)" stroke-width="3"/>
+      </svg>
+      <span class="ll-mr">MR</span>
+      <span class="ll-dot"></span>
+      <span class="ll-delegate">DELEGATE</span>
+    </div>
+    <div class="loader-bar"></div>
+  </div>
+</div>
+
+<!-- Mobile header -->
+<div class="mobile-header">
+  <button class="mobile-hamburger" onclick="toggleSidebar()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="/dashboard" class="mobile-logo-text" style="text-decoration:none">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50,10 L90,50 L50,90 L10,50 Z" fill="none" stroke="oklch(55% 0.18 250)" stroke-width="5"/>
+      <circle cx="50" cy="10" r="8" fill="oklch(55% 0.18 250)"/>
+      <circle cx="90" cy="50" r="8" fill="oklch(55% 0.18 250)"/>
+      <circle cx="50" cy="90" r="8" fill="oklch(55% 0.18 250)"/>
+      <circle cx="10" cy="50" r="8" fill="oklch(55% 0.18 250)"/>
+      <circle cx="50" cy="50" r="10" fill="#FFF8F0" stroke="oklch(55% 0.18 250)" stroke-width="3"/>
+    </svg>
+    <span class="mlm">MR</span>
+    <span class="mld"></span>
+    <span class="mldl">DELEGATE</span>
+  </a>
+  <div style="width:34px"></div>
+</div>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-inner">
+    <div class="sidebar-logo">
+      <a href="/dashboard" class="logo-text" style="text-decoration:none">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50,10 L90,50 L50,90 L10,50 Z" fill="none" stroke="oklch(55% 0.18 250)" stroke-width="5"/>
+          <circle cx="50" cy="10" r="8" fill="oklch(55% 0.18 250)"/>
+          <circle cx="90" cy="50" r="8" fill="oklch(55% 0.18 250)"/>
+          <circle cx="50" cy="90" r="8" fill="oklch(55% 0.18 250)"/>
+          <circle cx="10" cy="50" r="8" fill="oklch(55% 0.18 250)"/>
+          <circle cx="50" cy="50" r="10" fill="#FFF8F0" stroke="oklch(55% 0.18 250)" stroke-width="3"/>
+        </svg>
+        <span class="logo-mr">MR</span>
+        <span class="logo-dot"></span>
+        <span class="logo-delegate">DELEGATE</span>
+      </a>
+    </div>
+
+    <div class="agent-pill" id="agent-pill">
+      <div class="agent-dot"></div>
+      <div>
+        <div class="agent-pill-text">Agent online</div>
+        <div class="agent-pill-sub" id="agent-last-active">Last active just now</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+      <a class="nav-item active" data-view="home" onclick="navigate('home', this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+        <span class="nav-label-text">Home</span>
+      </a>
+      <a class="nav-item" data-view="connectors" onclick="navigate('connectors', this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+        <span class="nav-label-text">Connectors</span>
+      </a>
+      <a class="nav-item" data-view="activity" onclick="navigate('activity', this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+        <span class="nav-label-text">Activity</span>
+      </a>
+      <a class="nav-item" data-view="email" onclick="navigate('email', this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+        <span class="nav-label-text">Email Activity</span>
+      </a>
+      <a class="nav-item" data-view="briefs" onclick="navigate('briefs', this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+        <span class="nav-label-text">Morning Briefs</span>
+      </a>
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-item" href="/office" target="_blank" rel="noopener">
+        <span class="nav-icon">🧊</span>
+        <span class="nav-label-text">Claw3D Office</span>
+        <span style="font-size:10px;opacity:0.4;margin-left:auto">↗</span>
+      </a>
+      <div class="nav-section-label">Account</div>
+      <a class="nav-item" data-view="settings" onclick="navigate('settings', this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+        <span class="nav-label-text">Settings</span>
+      </a>
+      <a class="nav-item" data-view="billing" onclick="navigate('billing', this)">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
+        <span class="nav-label-text">Billing</span>
+      </a>
+    </nav>
+
+    <a class="sidebar-tg" id="sidebar-tg-link" href="#" target="_blank" rel="noopener" style="display:none">
+      <span class="sidebar-tg-icon">✈️</span>
+      <div>
+        <div class="sidebar-tg-text" id="sidebar-tg-text">Open Telegram</div>
+        <div class="sidebar-tg-sub" id="sidebar-tg-sub">Your agent lives here</div>
+      </div>
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar" id="user-avatar">—</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Loading…</div>
+          <div class="user-email" id="user-email">—</div>
+        </div>
+      </div>
+      <button class="signout-btn" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Main content -->
+<div class="main">
+  <div class="main-inner">
+
+    <!-- ═══════════ HOME ═══════════ -->
+    <div class="view active" id="view-home">
+      <!-- Home hero -->
+      <div class="home-hero">
+        <div class="home-hero-main">
+          <div class="home-hero-eyebrow">
+            <span class="home-hero-eyebrow-dot"></span>
+            Agent active
+          </div>
+          <div class="home-hero-greeting" id="home-greeting">Good morning</div>
+          <div class="home-hero-date" id="home-date"></div>
+        </div>
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:48px;flex-shrink:0;opacity:0.12">
+          <path d="M50,10 L90,50 L50,90 L10,50 Z" fill="none" stroke="oklch(55% 0.18 250)" stroke-width="5"/>
+          <circle cx="50" cy="10" r="8" fill="oklch(55% 0.18 250)"/>
+          <circle cx="90" cy="50" r="8" fill="oklch(55% 0.18 250)"/>
+          <circle cx="50" cy="90" r="8" fill="oklch(55% 0.18 250)"/>
+          <circle cx="10" cy="50" r="8" fill="oklch(55% 0.18 250)"/>
+          <circle cx="50" cy="50" r="10" fill="#FFF8F0" stroke="oklch(55% 0.18 250)" stroke-width="3"/>
+        </svg>
+      </div>
+
+      <!-- Morning Brief hero -->
+      <div class="brief-card" id="brief-card">
+        <div id="brief-inner"><!-- Populated by JS --></div>
+      </div>
+
+      <!-- Telegram hero banner -->
+      <div class="tg-hero-banner" id="tg-hero-banner" style="cursor:default">
+        <div class="tg-hero-icon">✈️</div>
+        <div class="tg-hero-content">
+          <div class="tg-hero-title" id="tg-hero-title">Connect on Telegram</div>
+          <div class="tg-hero-sub" id="tg-hero-sub">Loading your agent details…</div>
+        </div>
+        <span class="tg-hero-btn" id="tg-hero-btn" style="display:none">Open Telegram →</span>
+        <!-- Provisioning progress (shown only when vps_status === 'provisioning') -->
+        <div class="prov-block" id="provisioning-progress" style="display:none">
+          <div class="prov-progress-wrap"><div class="prov-progress-bar" id="prov-bar" style="width:5%"></div></div>
+          <div class="prov-steps">
+            <div class="prov-step" id="pstep-0"><div class="prov-step-dot">1</div><span>Creating server</span></div>
+            <div class="prov-step" id="pstep-1"><div class="prov-step-dot">2</div><span>Installing agent</span></div>
+            <div class="prov-step" id="pstep-2"><div class="prov-step-dot">3</div><span>Configuring</span></div>
+            <div class="prov-step" id="pstep-3"><div class="prov-step-dot">4</div><span>Almost ready</span></div>
+          </div>
+          <div class="prov-hint">Usually ready in about 2 minutes &middot; page refreshes automatically</div>
+        </div>
+      </div>
+
+      <!-- Daily stats -->
+      <div class="section-title-row">
+        <div class="section-title"><span class="section-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>Your agent at a glance</div>
+      </div>
+      <div class="stats-row" id="stats-row">
+        <div class="stat-pill">
+          <div class="stat-value" id="stat-days">—</div>
+          <div class="stat-label" id="stat-days-label">Days running</div>
+          <div class="stat-sub" id="stat-days-sub">Your agent is just getting started.</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-value" id="stat-emails">0</div>
+          <div class="stat-label">Emails triaged this month</div>
+          <div class="stat-sub" id="stat-emails-sub">Each one handled so you didn't have to.</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-value" id="stat-hours">0</div>
+          <div class="stat-label">Hours saved</div>
+          <div class="stat-sub" id="stat-hours-sub">At 2 hours/day, it compounds fast.</div>
+        </div>
+      </div>
+
+      <!-- Learning Progress Card -->
+      <div class="learning-card" id="learning-card">
+        <div class="learning-card-inner">
+          <div class="learning-header">
+            <span class="learning-icon">🧠</span>
+            <span class="learning-title">Getting smarter every night</span>
+          </div>
+          <div class="learning-subtitle" id="learning-subtitle">Every night at 2am, your agent studies your patterns. It's building a picture of you.</div>
+
+          <div class="learning-current-day" id="learning-current-day-badge">
+            <span>Day 1</span>
+          </div>
+
+          <!-- Progress track -->
+          <div class="learning-track">
+            <div class="learning-line">
+              <div class="learning-line-fill" id="learning-line-fill" style="width:0%"></div>
+            </div>
+            <div class="learning-milestones">
+              <div class="learning-milestone">
+                <div class="learning-milestone-dot" id="ms-dot-1"></div>
+                <div class="learning-milestone-label" id="ms-label-1">Day 1</div>
+                <div class="learning-milestone-sublabel">First brief</div>
+              </div>
+              <div class="learning-milestone">
+                <div class="learning-milestone-dot" id="ms-dot-7"></div>
+                <div class="learning-milestone-label" id="ms-label-7">Day 7</div>
+                <div class="learning-milestone-sublabel">Knows your routine</div>
+              </div>
+              <div class="learning-milestone">
+                <div class="learning-milestone-dot" id="ms-dot-30"></div>
+                <div class="learning-milestone-label" id="ms-label-30">Day 30</div>
+                <div class="learning-milestone-sublabel">Indispensable</div>
+              </div>
+              <div class="learning-milestone">
+                <div class="learning-milestone-dot" id="ms-dot-90"></div>
+                <div class="learning-milestone-label" id="ms-label-90">Day 90</div>
+                <div class="learning-milestone-sublabel">Knows you better than you do</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="learning-quote" id="learning-quote">
+            "Every night at 2am, your agent studies your patterns — who to prioritize, what to defer, how you write. By day 30, it runs your day better than an EA you'd pay $6,000/month for."
+          </div>
+        </div>
+      </div>
+
+      <!-- Connector Health mini -->
+      <div class="section-title-row">
+        <div class="section-title"><span class="section-icon"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>Connector health</div>
+        <a class="section-link" onclick="navigate('connectors', document.querySelector('[data-view=connectors]'))">Manage <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:middle"><polyline points="9 18 15 12 9 6"/></svg></a>
+      </div>
+      <div class="connectors-mini" id="connectors-mini"><!-- Populated by JS --></div>
+
+      <!-- What your agent does every day -->
+      <div class="agent-does-section">
+        <div class="section-title-row" style="margin-top:0">
+          <div class="section-title"><span class="section-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>What your agent does every day</div>
+        </div>
+        <div class="agent-does-grid">
+          <div class="agent-does-item">
+            <div class="agent-does-icon-wrap"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div class="agent-does-content">
+              <div class="agent-does-title">Inbox triage</div>
+              <div class="agent-does-desc">Scans and prioritizes every email. Urgent to the top, noise to the bottom.</div>
+            </div>
+          </div>
+          <div class="agent-does-item">
+            <div class="agent-does-icon-wrap"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div class="agent-does-content">
+              <div class="agent-does-title">Calendar protection</div>
+              <div class="agent-does-desc">Blocks focus time, flags conflicts, and guards your schedule before you wake up.</div>
+            </div>
+          </div>
+          <div class="agent-does-item">
+            <div class="agent-does-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div class="agent-does-content">
+              <div class="agent-does-title">Morning brief — 7am</div>
+              <div class="agent-does-desc">Your daily summary delivered to Telegram. Open it, know your day. Done.</div>
+            </div>
+          </div>
+          <div class="agent-does-item">
+            <div class="agent-does-icon-wrap"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.3 4.7-3.3 6l-.7.6V17a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-1.4l-.7-.6A7 7 0 0 1 12 2z"/><line x1="9" y1="21" x2="15" y2="21"/></svg></div>
+            <div class="agent-does-content">
+              <div class="agent-does-title">Nightly learning</div>
+              <div class="agent-does-desc">Studies your patterns while you sleep. 1% better every single night.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ CONNECTORS ═══════════ -->
+    <div class="view" id="view-connectors">
+      <div class="page-header">
+        <div class="page-title">Connectors</div>
+        <div class="page-subtitle">The more you connect, the more your agent can do. Every connection teaches it something new about how you work.</div>
+        <div style="height:1px;background:linear-gradient(90deg,var(--border),transparent);margin-top:20px"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-left">
+            <div class="card-title">Your Core Stack</div>
+            <div class="card-badge accent">Connect these first</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="connector-grid" id="core-connectors"><!-- Populated by JS --></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <div class="card-header">
+          <div class="card-header-left">
+            <div class="card-title">Expand Your Agent</div>
+            <div class="card-meta">More connections = more intelligence</div>
+          </div>
+        </div>
+        <div class="card-body" style="padding:16px">
+          <div class="connector-grid" id="expand-connectors"><!-- Populated by JS --></div>
+        </div>
+      </div>
+
+      <div class="connector-note" style="margin-top:16px;background:linear-gradient(135deg, var(--surface) 0%, var(--surface-warm) 100%);border:1px solid var(--border);padding:28px 28px;">
+        <div class="connector-note-icon" style="width:44px;height:44px;border-radius:var(--radius);background:var(--accent-bg);border:1px solid var(--accent-border);display:grid;place-items:center;flex-shrink:0"><svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><rect x="9" y="12" width="6" height="9"/></svg></div>
+        <div style="flex:1">
+          <div style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:4px">Need a custom integration?</div>
+          <div style="font-size:14px;color:var(--text-secondary);line-height:1.6">Salesforce, Microsoft Teams, Jira, or any other tool? We'll build it. Enterprise plans start at $97/mo.</div>
+          <a href="mailto:team@mrdelegate.ai" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:10px 20px;background:var(--accent);color:white;border-radius:var(--radius-sm);font-size:13px;font-weight:700;text-decoration:none;transition:all 0.15s;box-shadow:0 1px 3px rgba(217,72,15,0.25)">Contact Us →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ ACTIVITY ═══════════ -->
+    <div class="view" id="view-activity">
+      <div class="page-header">
+        <div class="page-title">Activity</div>
+        <div class="page-subtitle">Everything your agent has done, in order.</div>
+        <div style="height:1px;background:linear-gradient(90deg,var(--border),transparent);margin-top:20px"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-body-flush" id="activity-content"><!-- Populated by JS --></div>
+      </div>
+    </div>
+
+    <!-- ═══════════ SETTINGS ═══════════ -->
+    <div class="view" id="view-settings">
+      <div class="page-header">
+        <div class="page-title">Settings</div>
+        <div class="page-subtitle">Customize your agent and account.</div>
+        <div style="height:1px;background:linear-gradient(90deg,var(--border),transparent);margin-top:20px"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Profile</div></div>
+        <div class="setting-group">
+          <div class="setting-label">Full name</div>
+          <div class="setting-desc">How your agent addresses you</div>
+          <input type="text" class="setting-input" id="setting-name" placeholder="Your name" readonly>
+        </div>
+        <div class="setting-group">
+          <div class="setting-label">Email</div>
+          <div class="setting-desc">Used for sign-in and notifications</div>
+          <input type="email" class="setting-input" id="setting-email" placeholder="you@example.com" readonly>
+        </div>
+        <div class="setting-group">
+          <div class="setting-label">Timezone</div>
+          <div class="setting-desc">Controls when your morning brief arrives</div>
+          <select class="setting-select" id="setting-tz">
+            <option value="America/New_York">America/New_York (Eastern)</option>
+            <option value="America/Chicago">America/Chicago (Central)</option>
+            <option value="America/Denver">America/Denver (Mountain)</option>
+            <option value="America/Los_Angeles">America/Los_Angeles (Pacific)</option>
+            <option value="Europe/London">Europe/London (GMT)</option>
+            <option value="Europe/Paris">Europe/Paris (CET)</option>
+            <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
+            <option value="Asia/Dubai">Asia/Dubai (GST)</option>
+            <option value="Australia/Sydney">Australia/Sydney (AEST)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-header"><div class="card-title">Notifications</div></div>
+        <div class="setting-group">
+          <div class="setting-label">Morning brief time</div>
+          <div class="setting-desc">When your daily brief is delivered</div>
+          <select class="setting-select" id="setting-brief-time">
+            <option value="06:00">6:00 AM</option>
+            <option value="06:30">6:30 AM</option>
+            <option value="07:00" selected>7:00 AM</option>
+            <option value="07:30">7:30 AM</option>
+            <option value="08:00">8:00 AM</option>
+            <option value="08:30">8:30 AM</option>
+            <option value="09:00">9:00 AM</option>
+          </select>
+        </div>
+        <div class="setting-group" style="border-bottom:none;padding-bottom:0">
+          <button class="btn-secondary" id="save-settings-btn" onclick="saveSettings()">
+            <span id="save-settings-text">Save settings</span>
+          </button>
+          <div id="save-settings-msg" style="margin-top:8px;font-size:12px;display:none;"></div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-label">Alert channel</div>
+          <div class="setting-desc">Where your agent sends urgent alerts</div>
+          <select class="setting-select" id="setting-alert-channel">
+            <option value="telegram" selected>Telegram</option>
+            <option value="email">Email</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-header"><div class="card-title">Help</div></div>
+        <div class="setting-group">
+          <div class="setting-label">Resend welcome email</div>
+          <div class="setting-desc">Didn't get your welcome email? We'll send it again with your setup instructions.</div>
+          <button class="btn-secondary" id="resend-welcome-btn" onclick="resendWelcomeEmail()">
+            <span id="resend-welcome-text">Resend welcome email</span>
+          </button>
+          <div id="resend-welcome-msg" style="margin-top:8px;font-size:12px;display:none;line-height:1.5;"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-header">
+          <div class="card-title">AI Provider (BYOK)</div>
+          <div class="card-meta">You pay your provider directly — we never mark up AI costs</div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-label">Provider</div>
+          <div class="setting-desc">Choose which AI powers your agent</div>
+          <div style="display:flex;gap:10px;margin-top:6px">
+            <label class="byok-provider-option" id="byok-opt-gemini" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:2px solid var(--accent-border);border-radius:var(--radius-sm);cursor:pointer;flex:1;background:var(--accent-bg);transition:all 0.2s">
+              <input type="radio" name="byok-provider" value="gemini" checked style="accent-color:var(--accent)">
+              <div>
+                <div style="font-size:14px;font-weight:700;color:var(--text-primary)">Gemini Flash 2.0</div>
+                <div style="font-size:11px;color:var(--success);font-weight:600">100% FREE ✓</div>
+              </div>
+            </label>
+            <label class="byok-provider-option" id="byok-opt-claude" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;flex:1;background:var(--surface);transition:all 0.2s">
+              <input type="radio" name="byok-provider" value="claude" style="accent-color:var(--accent)">
+              <div>
+                <div style="font-size:14px;font-weight:700;color:var(--text-primary)">Claude (Anthropic)</div>
+                <div style="font-size:11px;color:var(--text-muted);font-weight:500">Usage-based pricing</div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="setting-group" id="byok-status-group">
+          <div id="byok-status-banner" style="display:none;padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;margin-bottom:8px"></div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-label">API key</div>
+          <div class="setting-desc" id="byok-key-desc">Get your free Gemini key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;text-decoration:underline">aistudio.google.com</a></div>
+          <div class="key-field">
+            <input type="password" class="setting-input" id="setting-api-key" placeholder="AIza..." value="" autocomplete="off">
+            <button class="copy-btn" id="byok-toggle-vis" onclick="toggleKeyVisibility()" title="Show/hide key" style="font-size:14px">👁️</button>
+          </div>
+          <div style="margin-top:8px;font-size:12px;color:var(--text-muted)" id="byok-status">No key set — add your key to activate your agent</div>
+        </div>
+        <div class="setting-group" style="border-top:none;padding-top:0">
+          <button id="byok-save-btn" onclick="saveByokKey()" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:var(--accent);color:white;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:-0.2px">
+            <span id="byok-save-text">Test &amp; save key</span>
+          </button>
+          <div id="byok-save-msg" style="margin-top:8px;font-size:12px;display:none"></div>
+        </div>
+      </div>
+
+      <div class="card danger-zone" style="margin-top:16px">
+        <div class="card-header"><div class="card-title" style="color:var(--error)">Danger zone</div></div>
+        <div class="setting-group">
+          <div class="setting-label">Cancel subscription</div>
+          <div class="setting-desc">Your agent will stop working at the end of the current billing period.</div>
+          <button class="btn-danger" onclick="showCancelModal()">Cancel subscription</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ BILLING ═══════════ -->
+    <div class="view" id="view-billing">
+      <div class="page-header">
+        <div class="page-title">Billing</div>
+        <div class="page-subtitle">Manage your subscription and payment.</div>
+        <div style="height:1px;background:linear-gradient(90deg,var(--border),transparent);margin-top:20px"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="plan-card">
+            <div class="plan-info">
+              <div class="plan-name">MrDelegate</div>
+              <div class="plan-price" id="billing-plan-desc">$47/mo · OpenClaw hosting platform</div>
+            </div>
+            <div class="plan-badge" id="billing-status-badge" style="background:var(--success-bg);color:var(--success);border:1px solid var(--success-border)">Active</div>
+          </div>
+        </div>
+        <div class="billing-rows">
+          <div class="billing-row">
+            <span class="billing-row-label">Status</span>
+            <span class="billing-row-value" id="billing-status">Active</span>
+          </div>
+          <div class="billing-row">
+            <span class="billing-row-label">Next charge</span>
+            <span class="billing-row-value" id="billing-next">—</span>
+          </div>
+          <div class="billing-row">
+            <span class="billing-row-label">Payment method</span>
+            <span class="billing-row-value" id="billing-method">•••• 4242</span>
+          </div>
+          <div class="billing-row">
+            <span class="billing-row-label">Your server</span>
+            <span class="billing-row-value" id="billing-vps" style="font-family:var(--font-mono);font-size:13px">—</span>
+          </div>
+        </div>
+
+        <!-- Retention nudge — rendered by JS above cancel actions -->
+        <div class="billing-retention-nudge" id="billing-retention-nudge" style="display:none">
+          <div class="billing-retention-nudge-title">⏳ Give it two weeks.</div>
+          <div class="billing-retention-nudge-text" id="billing-retention-nudge-text">Most members say the product clicks around day 14. If you're thinking about cancelling before then, you haven't seen what your agent can do yet.</div>
+        </div>
+
+        <div class="billing-actions">
+          <button class="btn-primary-orange" onclick="openBillingPortal()">Manage billing →</button>
+          <button class="btn-secondary" onclick="showCancelModal()">Cancel plan</button>
+        </div>
+
+        <div style="padding:0 24px 20px">
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.6">Cancel anytime. No questions asked. Your data is deleted within 48 hours.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ EMAIL ACTIVITY ═══════════ -->
+    <div class="view" id="view-email">
+      <div class="page-header">
+        <div class="page-title">Email Activity</div>
+        <div class="page-subtitle">Drafts sent, pending, and discarded — last 30 days.</div>
+        <div style="height:1px;background:linear-gradient(90deg,var(--border),transparent);margin-top:20px"></div>
+      </div>
+
+      <div class="card">
+        <!-- Stats row -->
+        <div class="email-stats-row" id="email-stats-row">
+          <div class="email-stat"><div class="email-stat-num" id="email-stat-sent">—</div><div class="email-stat-label">Sent</div></div>
+          <div class="email-stat"><div class="email-stat-num" id="email-stat-pending">—</div><div class="email-stat-label">Pending</div></div>
+          <div class="email-stat"><div class="email-stat-num" id="email-stat-discarded">—</div><div class="email-stat-label">Discarded</div></div>
+        </div>
+
+        <!-- Filters -->
+        <div class="email-filters">
+          <button class="email-filter-btn active" onclick="filterEmails('all', this)">All</button>
+          <button class="email-filter-btn" onclick="filterEmails('sent', this)">Sent</button>
+          <button class="email-filter-btn" onclick="filterEmails('pending', this)">Pending</button>
+          <button class="email-filter-btn" onclick="filterEmails('scheduled', this)">Scheduled</button>
+          <button class="email-filter-btn" onclick="filterEmails('discarded', this)">Discarded</button>
+        </div>
+
+        <!-- Email list -->
+        <div id="email-activity-list"><!-- populated by JS --></div>
+      </div>
+    </div>
+
+    <!-- ═══════════ MORNING BRIEFS ═══════════ -->
+    <div class="view" id="view-briefs">
+      <div class="page-header">
+        <div class="page-title">Morning Briefs</div>
+        <div class="page-subtitle">Your daily intelligence briefings — delivered at 7am, archived here.</div>
+        <div style="height:1px;background:linear-gradient(90deg,var(--border),transparent);margin-top:20px"></div>
+      </div>
+      <div id="briefs-list-container">
+        <div class="briefs-loading">loading briefs...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Cancel confirmation modal -->
+<!-- IMAP/SMTP connector modal -->
+<div class="modal-backdrop" id="imap-modal" onclick="if(event.target===this)closeImapModal()">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-title">Connect Custom Email</div>
+    <div class="modal-text" style="margin-bottom:16px">Works with iCloud, Yahoo, Zoho, GoDaddy, corporate Exchange, Fastmail, and any IMAP/SMTP provider.</div>
+
+    <!-- Presets -->
+    <label class="modal-field-label">Quick preset</label>
+    <select class="modal-select" id="imap-preset" onchange="applyImapPreset(this.value)" style="margin-bottom:14px">
+      <option value="">— Custom / manual entry —</option>
+      <option value="icloud">iCloud (imap.mail.me.com)</option>
+      <option value="yahoo">Yahoo Mail (imap.mail.yahoo.com)</option>
+      <option value="zoho">Zoho Mail (imap.zoho.com)</option>
+      <option value="fastmail">Fastmail (imap.fastmail.com)</option>
+      <option value="godaddy">GoDaddy / Workspace (imap.secureserver.net)</option>
+      <option value="rackspace">Rackspace (secure.emailsrvr.com)</option>
+    </select>
+
+    <div style="display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:10px">
+      <div>
+        <label class="modal-field-label" for="imap-host">IMAP host</label>
+        <input class="modal-input" id="imap-host" type="text" placeholder="imap.example.com" autocomplete="off" spellcheck="false">
+      </div>
+      <div style="width:80px">
+        <label class="modal-field-label" for="imap-port">Port</label>
+        <input class="modal-input" id="imap-port" type="number" value="993" min="1" max="65535">
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:10px">
+      <div>
+        <label class="modal-field-label" for="smtp-host">SMTP host</label>
+        <input class="modal-input" id="smtp-host" type="text" placeholder="smtp.example.com" autocomplete="off" spellcheck="false">
+      </div>
+      <div style="width:80px">
+        <label class="modal-field-label" for="smtp-port">Port</label>
+        <input class="modal-input" id="smtp-port" type="number" value="587" min="1" max="65535">
+      </div>
+    </div>
+
+    <label class="modal-field-label" for="imap-email">Email address</label>
+    <input class="modal-input" id="imap-email" type="email" placeholder="you@example.com" autocomplete="email" style="margin-bottom:10px">
+
+    <label class="modal-field-label" for="imap-password">App password</label>
+    <input class="modal-input" id="imap-password" type="password" placeholder="App-specific password (not your login password)" autocomplete="new-password" style="margin-bottom:6px">
+    <div id="imap-help-text" style="font-size:11px;color:var(--text-muted);margin-bottom:14px;line-height:1.5">Use an app-specific password, not your regular login. Required by iCloud, Yahoo, and most providers with 2FA enabled.</div>
+
+    <div id="imap-error" style="display:none;font-size:13px;color:#c0392b;background:#fdf0f0;border:1px solid #f5c6c6;border-radius:var(--radius-xs);padding:10px 14px;margin-bottom:12px"></div>
+    <div id="imap-success" style="display:none;font-size:13px;color:var(--success);background:rgba(16,232,126,0.06);border:1px solid rgba(16,232,126,0.2);border-radius:var(--radius-xs);padding:10px 14px;margin-bottom:12px"></div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeImapModal()">Cancel</button>
+      <button class="btn-primary" id="imap-submit-btn" onclick="submitImapConnector()">Test &amp; Connect</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="cancel-modal">
+  <div class="modal">
+    <div class="modal-title">Cancel your subscription?</div>
+    <div class="modal-text" id="cancel-modal-text">Your agent will continue working until the end of your current billing period. After that, your VPS and all connected services will be deactivated.</div>
+    <label class="modal-field-label" for="cancel-reason">What's the main reason you're cancelling?</label>
+    <select class="modal-select" id="cancel-reason">
+      <option value="">Choose one</option>
+      <option value="not_using_enough">I'm not using it enough</option>
+      <option value="missing_feature">It's missing something I need</option>
+      <option value="too_expensive">It's too expensive</option>
+      <option value="setup_was_confusing">Setup was confusing</option>
+      <option value="not_working">Something isn't working right</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeCancelModal()">Keep my agent</button>
+      <button class="btn-danger" onclick="confirmCancel()">Yes, cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   MrDelegate Dashboard — Client Logic v2
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+// ── Auth ──────────────────────────────────────────────────────────────────
+var urlParams = new URLSearchParams(window.location.search);
+var urlToken = urlParams.get('token');
+if (urlToken) {
+  localStorage.setItem('md_customer_token', urlToken);
+  window.history.replaceState({}, '', '/dashboard');
+}
+
+var TOKEN = localStorage.getItem('md_customer_token');
+var CID = localStorage.getItem('md_customer_id');
+if (!TOKEN) {
+  fetch('/api/customer/auth/bootstrap', { credentials: 'include' })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) {
+      if (d && d.token && d.customerId) {
+        localStorage.setItem('md_customer_token', d.token);
+        localStorage.setItem('md_customer_id', d.customerId);
+        window.location.reload();
+      } else { window.location.href = '/login'; }
+    })
+    .catch(function() { window.location.href = '/login'; });
+}
+
+document.cookie = 'md_token=' + TOKEN + ';path=/;max-age=' + (30*86400) + ';SameSite=Lax';
+
+function authHeaders() {
+  return { 'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json' };
+}
+
+// ── State ─────────────────────────────────────────────────────────────────
+var customer = null;
+var customerMe = null;
+var googleConnected = false;
+var telegramConnected = false;
+var sidebarOpen = false;
+var daysActive = 0; // computed from signup date
+
+// ── Compute days active ───────────────────────────────────────────────────
+function computeDaysActive() {
+  // Try created_at from customerMe or customer
+  var created = (customerMe && customerMe.created_at) || (customer && customer.created_at);
+  if (created) {
+    var createdDate = new Date(created);
+    var now = new Date();
+    var diffDays = Math.floor((Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) -
+                               Date.UTC(createdDate.getUTCFullYear(), createdDate.getUTCMonth(), createdDate.getUTCDate())) / 86400000);
+    daysActive = Math.max(1, diffDays + 1);
+  } else {
+    daysActive = 1;
+  }
+  return daysActive;
+}
+
+// ── Days active copy ──────────────────────────────────────────────────────
+function getDaysCopy(days) {
+  if (days <= 3) return { label: 'Day ' + days, sub: 'Your agent is just getting started. It\'s learning your patterns.' };
+  if (days <= 7) return { label: 'Day ' + days, sub: 'One week in. Your agent knows your morning routine.' };
+  if (days <= 30) return { label: 'Day ' + days, sub: 'Getting sharper every night. Check your brief quality.' };
+  return { label: 'Day ' + days, sub: 'Your agent knows you. This is when it gets really good.' };
+}
+
+function getLearningQuote(days) {
+  if (days <= 3) {
+    return 'Every night at 2am, your agent studies your patterns — who to prioritize, what to defer, how you write. Day 1 it\'s good. Day 30 it\'s indispensable.';
+  }
+  if (days <= 7) {
+    return 'One week in. Your agent has seen your inbox, your calendar, your habits. It\'s building a picture of you. By day 30 it runs your day better than an EA you\'d pay $6,000/month for.';
+  }
+  if (days < 30) {
+    return 'Your agent is getting sharper every night. It\'s learning which emails matter to you, which meetings you protect, how you write. Keep checking your brief — you\'ll notice the difference.';
+  }
+  return 'This is where most members say it clicks. Your agent genuinely knows how you work now. The longer you use it, the more it knows. That knowledge doesn\'t transfer — it\'s yours.';
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────
+function navigate(viewId, el) {
+  document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  var view = document.getElementById('view-' + viewId);
+  if (view) view.classList.add('active');
+  if (el) {
+    el.classList.add('active');
+  } else {
+    var navEl = document.querySelector('[data-view="' + viewId + '"]');
+    if (navEl) navEl.classList.add('active');
+  }
+  if (sidebarOpen) toggleSidebar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.location.hash = viewId;
+  // Lazy-load email activity tab on first visit
+  if (viewId === 'email') loadEmailActivity();
+  // Lazy-load briefs tab on first visit
+  if (viewId === 'briefs') loadBriefs();
+}
+
+// Restore view from URL hash on load
+setTimeout(function() {
+  var hash = window.location.hash.replace('#', '');
+  var valid = ['home','connectors','activity','email','briefs','settings','billing'];
+  if (hash && valid.indexOf(hash) !== -1) {
+    navigate(hash);
+  }
+}, 150);
+
+function toggleSidebar() {
+  sidebarOpen = !sidebarOpen;
+  document.getElementById('sidebar').classList.toggle('open', sidebarOpen);
+  document.getElementById('sidebar-overlay').classList.toggle('open', sidebarOpen);
+}
+
+function logout() {
+  localStorage.removeItem('md_customer_token');
+  localStorage.removeItem('md_customer_id');
+  document.cookie = 'md_token=;path=/;max-age=0';
+  window.location.href = '/login';
+}
+
+// ── Greeting ──────────────────────────────────────────────────────────────
+function setGreeting() {
+  var tz = (customer && customer.timezone) || Intl.DateTimeFormat().resolvedOptions().timeZone;
+  var h = parseInt(new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', hour12: false }).format(new Date()), 10);
+  var greeting = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+  var nameStr = customer && customer.name ? ', ' + customer.name.split(' ')[0] : '';
+  document.getElementById('home-greeting').textContent = greeting + nameStr;
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-US', { timeZone: tz, weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  document.getElementById('home-date').textContent = dateStr;
+}
+
+// ── Update home stats with day-aware copy ─────────────────────────────────
+function updateHomeStats() {
+  var days = daysActive;
+  var copy = getDaysCopy(days);
+
+  // Days pill
+  document.getElementById('stat-days').textContent = days;
+  document.getElementById('stat-days-label').textContent = copy.label;
+  document.getElementById('stat-days-sub').textContent = copy.sub;
+
+  // Hours saved = days * 2
+  var hours = days * 2;
+  document.getElementById('stat-hours').textContent = hours;
+  document.getElementById('stat-hours-sub').textContent = days <= 7
+    ? 'At 2 hours/day, it compounds fast.'
+    : days <= 30
+      ? 'That\'s ~' + Math.round(hours / 8) + ' full workdays back.'
+      : 'That\'s ' + Math.round(hours / 8) + ' workdays you got back this year.';
+
+  // Learning progress card
+  updateLearningCard(days);
+
+  // Billing retention nudge
+  updateBillingRetentionNudge(days);
+}
+
+function updateLearningCard(days) {
+  // Badge
+  document.getElementById('learning-current-day-badge').innerHTML = '<span>Day ' + days + '</span>';
+
+  // Quote
+  document.getElementById('learning-quote').textContent = getLearningQuote(days);
+
+  // Subtitle
+  var subtitle;
+  if (days <= 3) subtitle = 'Every night at 2am, your agent studies your patterns. It\'s building a picture of you.';
+  else if (days <= 7) subtitle = 'Your agent has completed ' + (days - 1) + ' nightly learning sessions. It\'s starting to recognize your patterns.';
+  else if (days < 30) subtitle = 'Your agent has learned from ' + (days - 1) + ' nights of your workflow. The briefs are getting sharper.';
+  else subtitle = 'After ' + days + ' nights of learning, your agent knows how you work. This is what the long game looks like.';
+  document.getElementById('learning-subtitle').textContent = subtitle;
+
+  // Progress line & milestone dots
+  // Milestones at day 1, 7, 30, 90
+  var milestones = [1, 7, 30, 90];
+  // find position as percentage within track
+  var pct = 0;
+  if (days >= 90) {
+    pct = 100;
+  } else if (days >= 30) {
+    pct = 66 + ((days - 30) / 60) * 34;
+  } else if (days >= 7) {
+    pct = 33 + ((days - 7) / 23) * 33;
+  } else if (days >= 1) {
+    pct = ((days - 1) / 6) * 33;
+  }
+  pct = Math.min(100, Math.round(pct));
+  document.getElementById('learning-line-fill').style.width = pct + '%';
+
+  // Dot states
+  var dotIds = [1, 7, 30, 90];
+  for (var i = 0; i < dotIds.length; i++) {
+    var dot = document.getElementById('ms-dot-' + dotIds[i]);
+    var lbl = document.getElementById('ms-label-' + dotIds[i]);
+    if (!dot) continue;
+    dot.className = 'learning-milestone-dot';
+    lbl.className = 'learning-milestone-label';
+    if (days > dotIds[i]) {
+      dot.classList.add('passed');
+    } else if (days === dotIds[i] || (i > 0 && days > dotIds[i-1] && days < dotIds[i]) || (i === 0 && days >= 1 && days < 7)) {
+      // current segment
+      if (days >= dotIds[i]) {
+        dot.classList.add('current');
+        lbl.classList.add('active');
+      }
+    }
+  }
+  // Mark day-1 as current if days >= 1
+  if (days >= 1) {
+    var d1 = document.getElementById('ms-dot-1');
+    if (days === 1) { d1.className = 'learning-milestone-dot current'; document.getElementById('ms-label-1').classList.add('active'); }
+    else { d1.className = 'learning-milestone-dot passed'; }
+  }
+  if (days >= 7) { document.getElementById('ms-dot-7').className = days === 7 ? 'learning-milestone-dot current' : 'learning-milestone-dot passed'; if (days === 7) document.getElementById('ms-label-7').classList.add('active'); }
+  if (days >= 30) { document.getElementById('ms-dot-30').className = days === 30 ? 'learning-milestone-dot current' : 'learning-milestone-dot passed'; if (days === 30) document.getElementById('ms-label-30').classList.add('active'); }
+  if (days >= 90) { document.getElementById('ms-dot-90').className = 'learning-milestone-dot current'; document.getElementById('ms-label-90').classList.add('active'); }
+}
+
+function updateBillingRetentionNudge(days) {
+  var nudge = document.getElementById('billing-retention-nudge');
+  var nudgeText = document.getElementById('billing-retention-nudge-text');
+  if (!nudge) return;
+  if (days < 30) {
+    nudge.style.display = 'block';
+    if (days < 7) {
+      nudgeText.textContent = 'Most members say the product clicks around day 14. You\'re on day ' + days + '. Give it two weeks — your agent is still learning you.';
+    } else if (days < 14) {
+      nudgeText.textContent = 'You\'re on day ' + days + '. The product typically clicks around day 14. Your agent has been learning your patterns every night — keep going.';
+    } else {
+      nudgeText.textContent = 'You\'re past the point where most members feel the difference. Your agent has ' + (days - 1) + ' nights of learning your workflow. That data is yours.';
+    }
+  } else {
+    nudge.style.display = 'none';
+  }
+}
+
+// ── Email Activity ─────────────────────────────────────────────────────────
+var emailActivityData = [];
+var emailActivityFilter = 'all';
+
+function loadEmailActivity() {
+  fetch('/api/customer/email-activity', { headers: authHeaders() })
+    .then(function(r) { if (!r.ok) return { emails: [] }; return r.json(); })
+    .then(function(data) {
+      emailActivityData = data.emails || [];
+      renderEmailActivity();
+    })
+    .catch(function() { emailActivityData = []; renderEmailActivity(); });
+}
+
+function filterEmails(filter, btn) {
+  emailActivityFilter = filter;
+  document.querySelectorAll('.email-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderEmailActivity();
+}
+
+function renderEmailActivity() {
+  var emails = emailActivityData;
+  var sent = emails.filter(function(e) { return e.status === 'sent'; }).length;
+  var pending = emails.filter(function(e) { return e.status === 'pending'; }).length;
+  var discarded = emails.filter(function(e) { return e.status === 'discarded'; }).length;
+  document.getElementById('email-stat-sent').textContent = sent;
+  document.getElementById('email-stat-pending').textContent = pending;
+  document.getElementById('email-stat-discarded').textContent = discarded;
+
+  if (emailActivityFilter !== 'all') {
+    emails = emails.filter(function(e) { return e.status === emailActivityFilter; });
+  }
+
+  var list = document.getElementById('email-activity-list');
+  if (!list) return;
+
+  if (emails.length === 0) {
+    var emptyLabel = emailActivityFilter === 'all' ? 'No email drafts yet'
+      : 'No ' + emailActivityFilter + ' drafts';
+    var emptyText = emailActivityFilter === 'all'
+      ? 'When your agent drafts replies from your inbox triage, they\'ll appear here.'
+      : 'Nothing in this filter yet.';
+    list.innerHTML = '<div class="email-empty">' +
+      '<span class="email-empty-icon">✉️</span>' +
+      '<div class="email-empty-title">' + emptyLabel + '</div>' +
+      '<div class="email-empty-text">' + emptyText + '</div>' +
+      '</div>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < emails.length; i++) {
+    var e = emails[i];
+    var timeStr = e.sent_at || e.discarded_at || e.created_at;
+    var timeDisplay = timeStr ? new Date(timeStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '—';
+    var editedMark = e.has_edit ? '<span class="email-edited-badge">✏️ Edited</span>' : '';
+    html += '<div class="email-item">' +
+      '<div class="email-status-dot ' + e.status + '"></div>' +
+      '<div class="email-info">' +
+        '<div class="email-subject">' + escHtml(e.subject) + '</div>' +
+        '<div class="email-from">To: ' + escHtml(e.from_name || e.from_email || '') + (e.from_email ? ' &lt;' + escHtml(e.from_email) + '&gt;' : '') + '</div>' +
+        (e.draft_preview ? '<div class="email-draft-preview">"' + escHtml(e.draft_preview) + (e.draft_preview.length >= 120 ? '…' : '') + '"</div>' : '') +
+        '<div class="email-meta">' +
+          '<span class="email-status-badge ' + e.status + '">' + e.status + '</span>' +
+          editedMark +
+          '<span class="email-time">' + timeDisplay + '</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+  list.innerHTML = html;
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Load Profile ──────────────────────────────────────────────────────────
+function loadProfile() {
+  // Use CID from localStorage, or fall back to customerMe.id if set by loadCustomerMe()
+  var profileCid = CID || (customerMe && customerMe.id);
+  if (!profileCid) return Promise.resolve(); // No customer ID available yet — skip
+  return fetch('/api/customer/profile?customerId=' + profileCid, { headers: authHeaders() })
+    .then(function(r) {
+      if (r.status === 401) { logout(); return; }
+      if (!r.ok) return;
+      return r.json();
+    })
+    .then(function(data) {
+      if (!data) return;
+      customer = data;
+      var name = customer.name || (customer.email ? customer.email.split('@')[0] : '—');
+      var email = customer.email || '—';
+      var parts = name.split(' ');
+      var initials = '';
+      for (var i = 0; i < Math.min(parts.length, 2); i++) { if (parts[i]) initials += parts[i][0]; }
+      initials = initials.toUpperCase();
+      document.getElementById('user-name').textContent = name;
+      document.getElementById('user-email').textContent = email;
+      document.getElementById('user-avatar').textContent = initials;
+      document.getElementById('setting-name').value = name;
+      document.getElementById('setting-email').value = email;
+      // Populate settings dropdowns from saved values
+      var tzSelect = document.getElementById('setting-tz');
+      if (tzSelect && customer.timezone) {
+        for (var i = 0; i < tzSelect.options.length; i++) {
+          if (tzSelect.options[i].value === customer.timezone) { tzSelect.selectedIndex = i; break; }
+        }
+      }
+      var briefSelect = document.getElementById('setting-brief-time');
+      if (briefSelect && customer.brief_time) {
+        for (var i = 0; i < briefSelect.options.length; i++) {
+          if (briefSelect.options[i].value === customer.brief_time) { briefSelect.selectedIndex = i; break; }
+        }
+      }
+      computeDaysActive();
+      updateBillingUI();
+      updateHomeStats();
+      setGreeting();
+    })
+    .catch(function(e) { console.error('loadProfile:', e); });
+}
+
+function updateBillingUI() {
+  if (!customer) return;
+  var status = customer.status;
+  var statusBadge = document.getElementById('billing-status-badge');
+  var statusText = document.getElementById('billing-status');
+  var planDesc = document.getElementById('billing-plan-desc');
+  var nextCharge = document.getElementById('billing-next');
+  var vps = document.getElementById('billing-vps');
+
+  if (status === 'trial' || status === 'trialing') {
+    var trialEnd = customer.trial_ends_at || customer.trialEndsAt;
+    var daysLeft = trialEnd ? Math.max(0, Math.ceil((new Date(trialEnd) - Date.now()) / 86400000)) : 3;
+    statusBadge.textContent = 'Trial';
+    statusBadge.style.background = 'var(--warning-bg)'; statusBadge.style.color = 'var(--warning)'; statusBadge.style.border = '1px solid var(--warning-border)';
+    statusText.textContent = 'Trial — ' + daysLeft + ' day' + (daysLeft === 1 ? '' : 's') + ' left';
+    statusText.style.color = 'var(--warning)';
+    planDesc.textContent = '$47/mo · Trial ends ' + (trialEnd ? new Date(trialEnd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'soon');
+    nextCharge.textContent = trialEnd ? 'Trial ends ' + new Date(trialEnd).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+  } else if (status === 'active') {
+    statusBadge.textContent = 'Active';
+    statusText.textContent = 'Active'; statusText.style.color = 'var(--success)';
+    if (planDesc) planDesc.textContent = '$47/mo · OpenClaw hosting platform'; // updated by loadBilling()
+  } else if (status === 'lead') {
+    statusBadge.textContent = 'Incomplete'; statusBadge.style.background = 'var(--panel)'; statusBadge.style.color = 'var(--text-muted)'; statusBadge.style.border = '1px solid var(--border)';
+    statusText.textContent = 'No active plan';
+    planDesc.textContent = 'Complete signup to start your trial';
+  }
+
+  if (customer.vps_ip) {
+    vps.textContent = customer.vps_ip;
+  } else if (status === 'active' || status === 'trial' || status === 'trialing') {
+    vps.textContent = 'Provisioning…'; vps.style.color = 'var(--warning)';
+  } else {
+    vps.textContent = 'Available after signup';
+  }
+
+  updateByokUI(customer);
+}
+
+// ── Load Customer (/api/customer/me) ──────────────────────────────────────
+function loadCustomerMe() {
+  return fetch('/api/customer/me', { headers: authHeaders() })
+    .then(function(r) {
+      if (r.status === 401) { logout(); return null; }
+      if (!r.ok) return null;
+      return r.json();
+    })
+    .then(function(data) {
+      if (!data || data.error) return;
+      customerMe = data;
+      // ── Fix: ensure CID is always set from JWT identity ──────────────────
+      // Users arriving via Stripe/welcome flow may not have md_customer_id
+      // in localStorage. Set it from the authenticated /me response.
+      if (data.id && !CID) {
+        CID = data.id;
+        localStorage.setItem('md_customer_id', CID);
+      }
+      if (!customer) customer = {};
+      if (data.name) customer.name = data.name;
+      if (data.email) customer.email = data.email;
+      if (data.status) customer.status = data.status;
+      if (data.vps_ip) customer.vps_ip = data.vps_ip;
+      if (data.stripe_customer_id) customer.stripe_customer_id = data.stripe_customer_id;
+      if (data.trial_ends_at) customer.trial_ends_at = data.trial_ends_at;
+      if (data.ai_key_set) customer.aiKeySet = data.ai_key_set;
+      if (data.ai_key_preview) customer.aiKeyPreview = data.ai_key_preview;
+      if (data.ai_provider) customer.aiProvider = data.ai_provider;
+      if (data.created_at) customer.created_at = data.created_at;
+      if (data.google_connected) googleConnected = true;
+      if (data.telegram_connected || data.telegram_chat_id) telegramConnected = true;
+      if (data.timezone) {
+        var tzSel = document.getElementById('setting-tz');
+        if (tzSel) tzSel.value = data.timezone;
+      }
+      if (data.brief_time) {
+        var btSel = document.getElementById('setting-brief-time');
+        if (btSel) btSel.value = data.brief_time;
+      }
+      if (data.google_connected !== undefined) customerMe.google_connected = data.google_connected;
+      if (data.had_google !== undefined) customerMe.had_google = data.had_google;
+      if (data.google_last_verified) customerMe.google_last_verified = data.google_last_verified;
+      if (data.calendly_connected) customerMe.calendly_connected = data.calendly_connected;
+
+      computeDaysActive();
+      updateTelegramUI();
+      updateBillingUI();
+      updateHomeStats();
+      setGreeting();
+    })
+    .catch(function(e) { console.error('loadCustomerMe:', e); });
+}
+
+function updateTelegramUI() {
+  var banner = document.getElementById('tg-hero-banner');
+  var heroTitle = document.getElementById('tg-hero-title');
+  var heroSub = document.getElementById('tg-hero-sub');
+  var heroBtn = document.getElementById('tg-hero-btn');
+  var sidebarLink = document.getElementById('sidebar-tg-link');
+  var sidebarText = document.getElementById('sidebar-tg-text');
+  var sidebarSub = document.getElementById('sidebar-tg-sub');
+
+  var vpsStatus = customerMe ? customerMe.vps_status : null;
+
+  if (telegramConnected) {
+    heroTitle.textContent = '✅ Telegram Connected';
+    heroSub.textContent = 'Morning briefs, inbox triage, and alerts delivered via @MrDelegateBot.';
+    heroBtn.style.display = 'inline-flex'; heroBtn.textContent = 'Open @MrDelegateBot →';
+    banner.style.cursor = 'pointer';
+    banner.onclick = function() { window.open('https://t.me/MrDelegateBot', '_blank'); };
+    sidebarLink.href = 'https://t.me/MrDelegateBot'; sidebarLink.style.display = 'flex';
+    sidebarText.textContent = 'Open @MrDelegateBot';
+    sidebarSub.textContent = '✅ Connected';
+  } else if (vpsStatus === 'provisioning') {
+    heroTitle.textContent = 'Setting up your dedicated server…';
+    heroSub.textContent = 'Your agent will be ready in about 2 minutes. Sit tight!';
+    heroBtn.style.display = 'none'; banner.style.cursor = 'default';
+    banner.classList.add('is-provisioning');
+    sidebarLink.style.display = 'flex'; sidebarLink.href = '#';
+    sidebarLink.onclick = function(e) { e.preventDefault(); };
+    sidebarText.textContent = 'Setting up…'; sidebarSub.textContent = 'Telegram link coming soon';
+    // Track start time in localStorage so step progress survives 15s refreshes
+    var provKey = 'prov_start_' + CID;
+    var provStart;
+    try {
+      provStart = parseInt(localStorage.getItem(provKey), 10);
+      if (!provStart || isNaN(provStart)) { provStart = Date.now(); localStorage.setItem(provKey, provStart); }
+    } catch(e) { provStart = Date.now(); }
+    var elapsedSec = (Date.now() - provStart) / 1000;
+    var stepDuration = 120; // ~2 min per step
+    var activeStep = Math.min(3, Math.floor(elapsedSec / stepDuration));
+    var stepProgress = (elapsedSec % stepDuration) / stepDuration;
+    // Progress bar: 5% base + up to 90% over 480s (4 steps × 120s)
+    var barPct = Math.min(95, 5 + Math.round((elapsedSec / 480) * 90));
+    document.getElementById('provisioning-progress').style.display = 'block';
+    document.getElementById('prov-bar').style.width = barPct + '%';
+    for (var si = 0; si < 4; si++) {
+      var el = document.getElementById('pstep-' + si);
+      el.classList.remove('done', 'active');
+      if (si < activeStep) el.classList.add('done');
+      else if (si === activeStep) el.classList.add('active');
+    }
+    // Mark done steps with checkmark
+    setTimeout(function() {
+      for (var si = 0; si < 4; si++) {
+        var el = document.getElementById('pstep-' + si);
+        if (el && el.classList.contains('done')) { el.querySelector('.prov-step-dot').textContent = '✓'; }
+      }
+    }, 50);
+    setTimeout(function() { loadCustomerMe(); }, 15000);
+  } else {
+    heroTitle.textContent = 'Connect on Telegram';
+    heroSub.textContent = 'Message @MrDelegateBot and send /start to link your account.';
+    heroBtn.style.display = 'inline-flex'; heroBtn.textContent = 'Open @MrDelegateBot →';
+    banner.style.cursor = 'pointer';
+    banner.onclick = function() { window.open('https://t.me/MrDelegateBot', '_blank'); };
+    sidebarLink.href = 'https://t.me/MrDelegateBot'; sidebarLink.style.display = 'flex';
+    sidebarText.textContent = 'Connect on Telegram';
+    sidebarSub.textContent = 'Message @MrDelegateBot to start';
+  }
+}
+
+// ── Morning Brief ─────────────────────────────────────────────────────────
+function loadBrief() {
+  return fetch('/api/customer/briefs?customerId=' + CID + '&limit=1', { headers: authHeaders() })
+    .then(function(r) { if (r.ok) return r.json(); return null; })
+    .then(function(data) {
+      if (data) {
+        var briefs = data.briefs || data || [];
+        if (briefs.length > 0) { renderBrief(briefs[0]); return; }
+      }
+      renderSampleBrief();
+    })
+    .catch(function() { renderSampleBrief(); });
+}
+
+function renderSampleBrief() {
+  var container = document.getElementById('brief-inner');
+  var tz = (customer && customer.timezone) || Intl.DateTimeFormat().resolvedOptions().timeZone;
+  var tzLabel = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'short' }).formatToParts(new Date()).find(function(p) { return p.type === 'timeZoneName'; });
+  var tzStr = tzLabel ? tzLabel.value : '';
+  if (!googleConnected) {
+    container.innerHTML = '<div class="brief-empty">' +
+      '<span class="brief-empty-icon">📬</span>' +
+      '<div class="brief-empty-title">Connect Gmail to get your morning brief</div>' +
+      '<div class="brief-empty-text">Your agent will read your inbox and calendar each morning, then deliver a personalized brief — meetings, key emails, and overnight actions, all in one place.</div>' +
+      '<div style="margin-top:24px"><button class="btn-primary-orange" style="padding:12px 28px;font-size:14px" onclick="connectService(\'gmail\')">Connect Gmail</button></div>' +
+    '</div>';
+    return;
+  }
+  container.innerHTML = '<div class="brief-empty">' +
+    '<span class="brief-empty-icon">☀️</span>' +
+    '<div class="brief-empty-title">Your first morning brief arrives tomorrow at 7am</div>' +
+    '<div class="brief-empty-text">Your agent is already learning your inbox patterns — expect a brief tailored to what actually matters to you.</div>' +
+    '<div style="margin-top:16px;font-size:12px;color:var(--text-muted)">Delivered via Telegram · Powered by your agent</div>' +
+  '</div>';
+}
+
+function renderBrief(brief) {
+  var container = document.getElementById('brief-inner');
+  var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var dateObj = brief.date ? new Date(brief.date) : new Date();
+  var dayName = days[dateObj.getDay()];
+  var monthName = months[dateObj.getMonth()];
+  var dayNum = dateObj.getDate();
+
+  var tz = (customer && customer.timezone) || Intl.DateTimeFormat().resolvedOptions().timeZone;
+  var briefHour = (customer && customer.brief_time) ? parseInt(customer.brief_time.split(':')[0], 10) : 7;
+  var briefMin = (customer && customer.brief_time) ? parseInt((customer.brief_time.split(':')[1])||'0', 10) : 0;
+  var briefTimeStr = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), briefHour, briefMin));
+  var dateStr = dayName + ', ' + monthName + ' ' + dayNum + ' · ' + briefTimeStr;
+
+  var header = '<div class="brief-bar"><span class="brief-bar-diamond">◈</span><span class="brief-bar-title">Morning Brief</span><div class="brief-bar-live"><span class="brief-bar-live-dot"></span>DELIVERED</div></div>';
+
+  if (brief.content || brief.html) {
+    container.innerHTML = header + '<div class="brief-hero-date">' + dateStr + '</div><div class="brief-content">' + (brief.html || formatBriefContent(brief.content)) + '</div>';
+    return;
+  }
+
+  var meetings = brief.meetings || [];
+  var emails = brief.emails || {};
+
+  // today row
+  var conflictCount = meetings.filter(function(m) { return m.conflict; }).length;
+  var todayVal = meetings.length > 0
+    ? meetings.length + ' meeting' + (meetings.length !== 1 ? 's' : '') + (conflictCount > 0 ? ' · ' + conflictCount + ' conflict' + (conflictCount !== 1 ? 's' : '') + ' resolved' : '')
+    : 'no meetings';
+
+  // inbox row
+  var totalEmails = emails.total || 0;
+  var replyItems = (emails.items || []).filter(function(e) { return e.tagClass === 'tag-red' || e.tagClass === 'tag-amber'; });
+  var inboxVal = totalEmails > 0 ? totalEmails + ' new' + (replyItems.length > 0 ? ' · ' + replyItems.length + ' need reply' : '') : null;
+
+  // focus row — find a focus/block calendar entry
+  var focusMeeting = null;
+  for (var i = 0; i < meetings.length; i++) {
+    var mtitle = (meetings[i].title || '').toLowerCase();
+    if (mtitle.indexOf('focus') !== -1 || mtitle.indexOf('block') !== -1 || mtitle.indexOf('deep work') !== -1) { focusMeeting = meetings[i]; break; }
+  }
+  var focusVal = focusMeeting ? focusMeeting.time + ' blocked' : null;
+
+  // priority row — first high-priority email
+  var priorityPool = (emails.items || []).filter(function(e) { return e.tagClass === 'tag-red' || e.tagClass === 'tag-amber'; });
+  if (!priorityPool.length) priorityPool = emails.items || [];
+  var priorityVal = null;
+  if (priorityPool.length > 0) {
+    var p = priorityPool[0];
+    priorityVal = (p.from || '') + (p.subject ? ' re: ' + p.subject : '');
+  }
+
+  var rows = [
+    { label: 'today',    value: todayVal,    show: true },
+    { label: 'inbox',    value: inboxVal,    show: !!inboxVal },
+    { label: 'focus',    value: focusVal,    show: !!focusVal },
+    { label: 'priority', value: priorityVal, show: !!priorityVal }
+  ];
+
+  var html = header + '<div class="brief-hero-date">' + dateStr + '</div><div class="brief-hero-body"><div class="brief-hero-divider"></div>';
+  var shown = rows.filter(function(r) { return r.show; });
+  for (var i = 0; i < shown.length; i++) {
+    html += '<div class="brief-hero-row"><span class="brief-hero-label">' + shown[i].label + '</span><span class="brief-hero-dash">——</span><span class="brief-hero-value">' + shown[i].value + '</span></div>';
+  }
+  html += '<div class="brief-hero-divider"></div></div>';
+  container.innerHTML = html;
+}
+
+function formatBriefContent(text) {
+  if (!text) return '';
+  return text.replace(/\n/g, '<br>');
+}
+
+// ── Morning Briefs history tab ─────────────────────────────────────────────
+var briefsLoaded = false;
+function loadBriefs() {
+  if (briefsLoaded) return;
+  briefsLoaded = true;
+  var container = document.getElementById('briefs-list-container');
+  fetch('/api/customer/briefs?limit=20', { headers: authHeaders() })
+    .then(function(r) { if (r.ok) return r.json(); return null; })
+    .then(function(data) {
+      var briefs = (data && data.briefs) ? data.briefs : [];
+      if (briefs.length === 0) {
+        container.innerHTML = '<div class="briefs-empty">' +
+          '<span class="briefs-empty-icon">🌅</span>' +
+          '<div class="briefs-empty-title">No briefs yet — your first one arrives tomorrow at 7am</div>' +
+          '<div class="briefs-empty-text">Your agent reads your inbox and calendar each morning, then delivers a personalized brief. Past briefs appear here.</div>' +
+        '</div>';
+      } else {
+        container.innerHTML = '<div class="briefs-list">' + briefs.map(renderBriefHistoryCard).join('') + '</div>';
+      }
+    })
+    .catch(function() {
+      container.innerHTML = '<div class="briefs-empty">' +
+        '<span class="briefs-empty-icon">🌅</span>' +
+        '<div class="briefs-empty-title">No briefs yet — your first one arrives tomorrow at 7am</div>' +
+        '<div class="briefs-empty-text">Your agent reads your inbox and calendar each morning, then delivers a personalized brief. Past briefs appear here.</div>' +
+      '</div>';
+    });
+}
+
+function renderBriefHistoryCard(brief) {
+  var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var dateObj = new Date(brief.created_at);
+  var dayName = days[dateObj.getDay()];
+  var dateLabel = dayName + ', ' + months[dateObj.getMonth()] + ' ' + dateObj.getDate();
+  var timeLabel = dateObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+  // Normalize data — supports activity_log format (brief.data) or morning_briefs format (brief.content)
+  var d = brief.content || brief.data || {};
+  var meetings = d.meetings || d.today || [];
+  var emailData = d.emails || {};
+  var emailItems = Array.isArray(emailData) ? emailData : (emailData.items || []);
+  var inboxItems = d.inbox || emailItems;
+  var focusItems = d.focus || [];
+  var priorityItems = d.priority || [];
+  var overnight = d.overnight || [];
+  var weather = d.weather || null;
+  var rawContent = d.content || brief.html || null;
+
+  var html = '<div class="brief-history-card">';
+  html += '<div class="brief-date-header"><span class="brief-date-diamond">◈</span><span class="brief-date-label">' + dateLabel + '</span><span class="brief-date-time">' + timeLabel + '</span></div>';
+
+  // If raw text content, display it simply
+  if (rawContent && meetings.length === 0 && inboxItems.length === 0) {
+    html += '<div class="brief-history-section"><div style="font-family:var(--font-mono);font-size:12px;color:rgba(255,255,255,0.7);white-space:pre-wrap;line-height:1.7">' + rawContent.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div></div>';
+    html += '<div class="brief-history-footer"><span class="bh-footer-dot"></span>agent ran · delivered ' + timeLabel + '</div>';
+    html += '</div>';
+    return html;
+  }
+
+  // TODAY / CALENDAR
+  if (meetings.length > 0) {
+    html += '<div class="brief-history-section"><div class="brief-history-label">today</div>';
+    for (var i = 0; i < meetings.length; i++) {
+      var m = meetings[i];
+      var tag = m.tag || m.status || 'ready';
+      var tagClass = m.conflict ? 'bht-amber' : (tag === 'conflict' ? 'bht-amber' : (tag === 'cancelled' ? 'bht-red' : 'bht-green'));
+      html += '<div class="brief-history-line">' +
+        '<span class="brief-hk">' + (m.time || '—') + '</span>' +
+        '<span class="brief-hsep">——</span>' +
+        '<span class="brief-hv">' + escBriefText(m.title || '') + '</span>' +
+        '<span class="brief-htag ' + tagClass + '">' + escBriefText(tag) + '</span>' +
+      '</div>';
+    }
+    html += '</div>';
+  }
+
+  // INBOX
+  if (inboxItems.length > 0) {
+    var total = emailData.total || inboxItems.length;
+    html += '<div class="brief-history-section"><div class="brief-history-label">inbox &nbsp;·&nbsp; ' + total + ' new</div>';
+    for (var i = 0; i < inboxItems.length; i++) {
+      var e = inboxItems[i];
+      var etag = e.tag || '';
+      var etagClass = etag === 'action' ? 'bht-amber' : (etag === 'urgent' ? 'bht-red' : 'bht-blue');
+      html += '<div class="brief-history-line">' +
+        '<span class="brief-hk">' + escBriefText(e.from || '—') + '</span>' +
+        '<span class="brief-hsep">——</span>' +
+        '<span class="brief-hv">' + escBriefText(e.subject || e.preview || '') + '</span>' +
+        (etag ? '<span class="brief-htag ' + etagClass + '">' + escBriefText(etag) + '</span>' : '') +
+      '</div>';
+    }
+    if (emailData.sorted) {
+      html += '<div class="brief-history-line" style="opacity:0.4"><span class="brief-hk">—</span><span class="brief-hsep">——</span><span class="brief-hv">' + emailData.sorted + ' archived · ' + (emailData.deleted || 0) + ' deleted</span></div>';
+    }
+    html += '</div>';
+  }
+
+  // FOCUS
+  if (focusItems.length > 0) {
+    html += '<div class="brief-history-section"><div class="brief-history-label">focus</div>';
+    for (var i = 0; i < focusItems.length; i++) {
+      var f = typeof focusItems[i] === 'string' ? { text: focusItems[i] } : focusItems[i];
+      html += '<div class="brief-history-line"><span class="brief-hk">·</span><span class="brief-hsep">——</span><span class="brief-hv">' + escBriefText(f.text || f.title || String(focusItems[i])) + '</span></div>';
+    }
+    html += '</div>';
+  }
+
+  // PRIORITY
+  if (priorityItems.length > 0) {
+    html += '<div class="brief-history-section"><div class="brief-history-label">priority</div>';
+    for (var i = 0; i < priorityItems.length; i++) {
+      var p = typeof priorityItems[i] === 'string' ? { text: priorityItems[i] } : priorityItems[i];
+      html += '<div class="brief-history-line"><span class="brief-hk">!</span><span class="brief-hsep">——</span><span class="brief-hv">' + escBriefText(p.text || p.title || String(priorityItems[i])) + '</span></div>';
+    }
+    html += '</div>';
+  }
+
+  // OVERNIGHT
+  if (overnight.length > 0) {
+    html += '<div class="brief-history-section"><div class="brief-history-label">overnight</div>';
+    for (var i = 0; i < overnight.length; i++) {
+      html += '<div class="brief-history-line"><span class="brief-check">✓</span><span class="brief-hv">' + escBriefText(typeof overnight[i] === 'string' ? overnight[i] : (overnight[i].text || overnight[i].action || JSON.stringify(overnight[i]))) + '</span></div>';
+    }
+    html += '</div>';
+  }
+
+  // WEATHER
+  if (weather) {
+    html += '<div class="brief-history-section"><div class="brief-history-line"><span class="brief-hk">' + (weather.icon || '🌤') + '</span><span class="brief-hsep">——</span><span class="brief-hv">' + escBriefText(weather.text || '') + '</span></div></div>';
+  }
+
+  html += '<div class="brief-history-footer"><span class="bh-footer-dot"></span>agent ran · delivered ' + timeLabel + '</div>';
+  html += '</div>';
+  return html;
+}
+
+function escBriefText(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Connectors ────────────────────────────────────────────────────────────
+var CAPABILITIES = {
+  gmail: ['Triage inbox', 'Draft replies', 'Flag urgent', 'Archive newsletters', 'Extract action items'],
+  calendar: ['Block focus time', 'Detect conflicts', 'Decline low-priority', 'Meeting prep', 'Find free slots'],
+  telegram: ['Morning briefs', 'Quick approvals', 'Real-time alerts', 'Conversational commands'],
+  slack: ['Monitor channels', 'Surface @mentions', 'Draft responses', 'Channel catch-up'],
+  notion: ['Meeting notes', 'Search workspace', 'Update databases', 'Task tracking'],
+  hubspot: ['Pipeline tracking', 'Log calls', 'Follow-up nudges', 'Stalled deal alerts'],
+  zoom: ['Meeting prep', 'Join links ready', 'Post-call notes'],
+  calendly: ['Booking alerts', 'Auto-prep meetings', 'Conflict detection'],
+  github: ['PR summaries', 'Issue tracking', 'Deploy alerts'],
+  linear: ['Track issues', 'Update status', 'Sprint summaries'],
+  salesforce: ['Pipeline tracking', 'Deal alerts', 'CRM updates'],
+  outlook: ['Email triage', 'Calendar sync', 'Meeting prep'],
+  imap: ['Triage inbox', 'Draft replies', 'Flag urgent', 'SMTP replies']
+};
+
+// Learning hints — what connecting each tool teaches the agent
+var LEARNING_HINTS = {
+  gmail: 'Connected — your agent is learning which emails matter to you.',
+  calendar: 'Connected — your agent is learning your meeting patterns and protecting your time.',
+  slack: 'Connected — your agent is learning your team communication patterns.',
+  notion: 'Connected — your agent can now reference your workspace context.',
+  hubspot: 'Connected — your agent is learning your pipeline and follow-up patterns.',
+  calendly: 'Connected — your agent will prep you before every booked meeting.',
+  imap: 'Connected — your agent is triaging this inbox every 30 minutes.'
+};
+
+var CONNECTORS = [
+  { id: 'gmail',       icon: '📧', name: 'Gmail',           desc: 'Your agent reads, prioritizes, and drafts — so your inbox works for you.',         core: true,  google: true,  tier: 1 },
+  { id: 'calendar',    icon: '📅', name: 'Google Calendar', desc: 'Focus time blocked. Conflicts resolved. Meeting prep ready. Every morning.',        core: true,  google: true,  tier: 1 },
+  { id: 'telegram',    icon: '✈️', name: 'Telegram',        desc: 'Where your agent talks to you via @MrDelegateBot. Briefs, alerts, approvals — all here.',              core: true,  google: false, tier: 1 },
+  { id: 'slack',       icon: '💬', name: 'Slack',           desc: 'Your agent watches your channels and surfaces what actually needs you.',             core: false, google: false, tier: 2 },
+  { id: 'notion',      icon: '📝', name: 'Notion',          desc: 'Meeting notes auto-created. Workspace searched. Databases updated.',                 core: false, google: false, tier: 2 },
+  { id: 'hubspot',     icon: '🔶', name: 'HubSpot',         desc: 'CRM updates, deal tracking, follow-up nudges — without you lifting a finger.',       core: false, google: false, tier: 2 },
+  { id: 'calendly',    icon: '📆', name: 'Calendly',        desc: 'New booking alerts + context prep before every call.',                               core: false, google: false, tier: 2 },
+  { id: 'imap',        icon: '✉️', name: 'Custom Email',     desc: 'iCloud, Yahoo, Zoho, GoDaddy, Exchange — any email with IMAP. No OAuth needed.',  core: false, google: false, tier: 2 },
+  { id: 'zoom',        icon: '📹', name: 'Zoom',            desc: 'Meeting prep, join links, and post-call notes.',                                     core: false, google: false, tier: 3, soon: true },
+  { id: 'linear',      icon: '◆',  name: 'Linear',          desc: 'Issue tracking + sprint summaries in your brief.',                                   core: false, google: false, tier: 3, soon: true },
+  { id: 'github',      icon: '🐙', name: 'GitHub',          desc: 'PR summaries, issue tracking, deploy alerts.',                                       core: false, google: false, tier: 3, soon: true },
+  { id: 'salesforce',  icon: '☁️', name: 'Salesforce',      desc: 'Enterprise CRM — custom integration available.',                                     core: false, google: false, tier: 3, soon: true },
+  { id: 'outlook',     icon: '📨', name: 'Outlook',         desc: 'Microsoft 365 email and calendar.',                                                   core: false, google: false, tier: 3, soon: true }
+];
+
+// Per-connector health data from /api/customer/connectors (keyed by connector_type)
+var connectorHealth = {};
+
+function loadConnectors() {
+  var googleStatusP = fetch('/api/oauth/google/status?customerId=' + CID, { headers: authHeaders() })
+    .then(function(r) { if (r.ok) return r.json(); return null; })
+    .then(function(d) { if (d && d.connected) googleConnected = true; })
+    .catch(function() {});
+
+  var healthP = fetch('/api/customer/connectors', { headers: authHeaders() })
+    .then(function(r) { if (r.ok) return r.json(); return null; })
+    .then(function(d) {
+      if (!d || !d.connectors) return;
+      connectorHealth = {};
+      for (var i = 0; i < d.connectors.length; i++) {
+        var conn = d.connectors[i];
+        connectorHealth[conn.type] = conn;
+      }
+    })
+    .catch(function() {});
+
+  return Promise.all([googleStatusP, healthP]).then(function() {
+    if (customer && (customer.telegram_connected || customer.telegram_chat_id || customer.telegramConnected)) telegramConnected = true;
+    renderConnectors();
+    renderMiniConnectors();
+  });
+}
+
+function isConnected(c) {
+  // Check live connector health data first (authoritative)
+  if (c.id === 'gmail' || c.id === 'calendar') {
+    var key = c.id === 'gmail' ? 'gmail' : 'google_calendar';
+    if (connectorHealth[key]) return connectorHealth[key].connected === true;
+    return c.google && googleConnected;
+  }
+  if (c.id === 'imap' && connectorHealth['imap']) return connectorHealth['imap'].connected === true;
+  if (c.id === 'outlook' && connectorHealth['outlook']) return connectorHealth['outlook'].connected === true;
+  if (c.id === 'slack' && connectorHealth['slack']) return connectorHealth['slack'].connected === true;
+  if (c.id === 'calendly') {
+    if (connectorHealth['calendly']) return connectorHealth['calendly'].connected === true;
+    return !!(customerMe && customerMe.calendly_connected);
+  }
+  return (c.google && googleConnected) || (c.id === 'telegram' && telegramConnected);
+}
+
+function isBroken(c) {
+  // Show Reconnect if connector was previously connected but is now failing
+  var key = c.id === 'calendar' ? 'google_calendar' : c.id;
+  var health = connectorHealth[key];
+  if (health && !health.connected && health.consecutive_failures > 0) return true;
+  // Legacy: Google expired flag from /me
+  if (c.google && customerMe && customerMe.google_connected === false && customerMe.had_google) return true;
+  return false;
+}
+
+function isExpired(c) {
+  return isBroken(c);
+}
+
+function renderConnectors() {
+  var coreEl = document.getElementById('core-connectors');
+  var coreHtml = '';
+  for (var i = 0; i < CONNECTORS.length; i++) {
+    if (CONNECTORS[i].core) coreHtml += renderConnectorCard(CONNECTORS[i]);
+  }
+  coreEl.innerHTML = coreHtml;
+
+  var expandEl = document.getElementById('expand-connectors');
+  var expandHtml = '';
+  for (var i = 0; i < CONNECTORS.length; i++) {
+    if (!CONNECTORS[i].core) expandHtml += renderConnectorCard(CONNECTORS[i]);
+  }
+  expandEl.innerHTML = expandHtml;
+}
+
+function renderConnectorCard(c) {
+  var connected = isConnected(c);
+  var isSoon = c.soon === true;
+  var expired = isExpired(c);
+  var caps = CAPABILITIES[c.id] || [];
+
+  var actionHtml;
+  if (isSoon) {
+    actionHtml = '<span class="btn-coming-soon">Coming soon</span>';
+  } else if (connected && !expired) {
+    var healthKey = c.id === 'calendar' ? 'google_calendar' : c.id;
+    var verifiedTs = (connectorHealth[healthKey] && connectorHealth[healthKey].last_verified)
+      ? connectorHealth[healthKey].last_verified
+      : (c.google && customerMe ? customerMe.google_last_verified : null);
+    var verifiedAt = verifiedTs
+      ? '<div style="font-size:10px;color:var(--text-muted);margin-top:4px">Verified ' + timeAgo(verifiedTs) + '</div>' : '';
+    actionHtml = '<span class="btn-connected">✓ Connected</span>' + verifiedAt;
+  } else if (expired) {
+    actionHtml = '<button class="btn-reconnect" onclick="reconnectService(\'' + c.id + '\')">⚠ Reconnect</button><div style="font-size:10px;color:#c0392b;margin-top:4px">Connection expired — tap to fix</div>';
+  } else {
+    actionHtml = '<button class="btn-connect" onclick="connectService(\'' + c.id + '\')">' + (c.id === 'telegram' ? 'Set up' : 'Connect') + '</button>';
+  }
+
+  var capsHtml = '';
+  if (caps.length > 0 && connected) {
+    capsHtml = '<div class="connector-capabilities">';
+    for (var i = 0; i < caps.length; i++) capsHtml += '<span class="cap-tag">' + caps[i] + '</span>';
+    capsHtml += '</div>';
+  }
+
+  // Learning hint for connected connectors
+  var learningHtml = '';
+  if (connected && !isSoon && LEARNING_HINTS[c.id]) {
+    learningHtml = '<div class="connector-learning-hint">🧠 ' + LEARNING_HINTS[c.id] + '</div>';
+  }
+
+  var statusHtml = isSoon ? '' : '<div class="connector-status ' + (connected ? 'on' : 'off') + '">' + (connected ? '● Connected' : 'Not connected') + '</div>';
+
+  return '<div class="connector-card' + (isSoon ? ' coming-soon' : '') + '">' +
+    '<div class="connector-icon">' + c.icon + '</div>' +
+    '<div class="connector-info">' +
+      '<div class="connector-name">' + c.name + (isSoon ? ' <span style="font-size:10px;color:var(--text-muted);font-weight:400">Coming Soon</span>' : '') + '</div>' +
+      '<div class="connector-desc">' + c.desc + '</div>' +
+      statusHtml +
+      capsHtml +
+      learningHtml +
+    '</div>' +
+    '<div class="connector-action">' + actionHtml + '</div>' +
+  '</div>';
+}
+
+function renderMiniConnectors() {
+  var el = document.getElementById('connectors-mini');
+  var show = ['gmail', 'calendar', 'telegram'];
+  var html = '';
+  for (var i = 0; i < CONNECTORS.length; i++) {
+    var c = CONNECTORS[i];
+    if (show.indexOf(c.id) === -1) continue;
+    var connected = isConnected(c);
+    var badgeHtml = connected
+      ? '<span class="conn-mini-badge on">✓</span>'
+      : '<span class="conn-mini-badge off" onclick="connectService(\'' + c.id + '\')">Connect</span>';
+    html += '<div class="conn-mini">' +
+      '<span class="conn-mini-icon">' + c.icon + '</span>' +
+      '<div class="conn-mini-info">' +
+        '<div class="conn-mini-name">' + c.name + '</div>' +
+        '<div class="conn-mini-status ' + (connected ? 'on' : 'off') + '">' + (connected ? '● Connected' : 'Not connected') + '</div>' +
+      '</div>' +
+      badgeHtml +
+    '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function connectService(id) {
+  if (id === 'gmail' || id === 'calendar') {
+    window.location.href = '/api/oauth/google/start?customerId=' + CID;
+  } else if (id === 'telegram') {
+    openTelegramLink();
+  } else if (id === 'imap') {
+    openImapModal();
+  } else if (id === 'slack' || id === 'notion' || id === 'hubspot' || id === 'calendly') {
+    window.location.href = '/api/oauth/' + id + '/start?customerId=' + CID;
+  }
+}
+
+function reconnectService(id) {
+  if (id === 'gmail' || id === 'calendar') {
+    window.location.href = '/api/oauth/google/start?customerId=' + CID + '&reconnect=true';
+  } else if (id === 'imap') {
+    openImapModal();
+  } else if (id === 'outlook') {
+    window.location.href = '/api/oauth/microsoft/start?customerId=' + CID + '&reconnect=true';
+  } else if (id === 'slack') {
+    window.location.href = '/api/oauth/slack/start?customerId=' + CID + '&reconnect=true';
+  } else if (id === 'calendly') {
+    window.location.href = '/api/oauth/calendly/start?customerId=' + CID + '&reconnect=true';
+  }
+}
+
+// ── IMAP connector modal ────────────────────────────────────────────────────
+
+var IMAP_PRESETS = {
+  icloud:    { imapHost: 'imap.mail.me.com',        imapPort: 993, smtpHost: 'smtp.mail.me.com',        smtpPort: 587, help: 'Generate an app-specific password at appleid.apple.com → Sign-In and Security.' },
+  yahoo:     { imapHost: 'imap.mail.yahoo.com',      imapPort: 993, smtpHost: 'smtp.mail.yahoo.com',      smtpPort: 587, help: 'Enable "Allow apps that use less secure sign in" and create an app password at Yahoo Account Security.' },
+  zoho:      { imapHost: 'imap.zoho.com',            imapPort: 993, smtpHost: 'smtp.zoho.com',            smtpPort: 587, help: 'Enable IMAP in Zoho Mail settings, then create an app password under Security.' },
+  fastmail:  { imapHost: 'imap.fastmail.com',        imapPort: 993, smtpHost: 'smtp.fastmail.com',        smtpPort: 587, help: 'Create an app password at Fastmail → Settings → Privacy & Security → App passwords.' },
+  godaddy:   { imapHost: 'imap.secureserver.net',    imapPort: 993, smtpHost: 'smtpout.secureserver.net', smtpPort: 587, help: 'Use your GoDaddy Workspace email credentials. IMAP must be enabled in Workspace settings.' },
+  rackspace: { imapHost: 'secure.emailsrvr.com',     imapPort: 993, smtpHost: 'secure.emailsrvr.com',     smtpPort: 465, help: 'Use your Rackspace email address and password. No app password needed.' },
+};
+
+function applyImapPreset(value) {
+  var preset = IMAP_PRESETS[value];
+  if (!preset) return;
+  document.getElementById('imap-host').value = preset.imapHost;
+  document.getElementById('imap-port').value = preset.imapPort;
+  document.getElementById('smtp-host').value = preset.smtpHost;
+  document.getElementById('smtp-port').value = preset.smtpPort;
+  if (preset.help) document.getElementById('imap-help-text').textContent = preset.help;
+}
+
+function openImapModal() {
+  document.getElementById('imap-error').style.display = 'none';
+  document.getElementById('imap-success').style.display = 'none';
+  document.getElementById('imap-modal').classList.add('open');
+}
+
+function closeImapModal() {
+  document.getElementById('imap-modal').classList.remove('open');
+}
+
+function submitImapConnector() {
+  var imapHost = document.getElementById('imap-host').value.trim();
+  var imapPort = parseInt(document.getElementById('imap-port').value, 10);
+  var smtpHost = document.getElementById('smtp-host').value.trim();
+  var smtpPort = parseInt(document.getElementById('smtp-port').value, 10);
+  var email = document.getElementById('imap-email').value.trim();
+  var password = document.getElementById('imap-password').value;
+
+  var errEl = document.getElementById('imap-error');
+  var successEl = document.getElementById('imap-success');
+  var btn = document.getElementById('imap-submit-btn');
+
+  errEl.style.display = 'none';
+  successEl.style.display = 'none';
+
+  if (!imapHost || !smtpHost || !email || !password) {
+    errEl.textContent = 'All fields are required.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Testing connection…';
+
+  fetch('/api/customer/connectors/imap/connect', {
+    method: 'POST',
+    headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()),
+    body: JSON.stringify({
+      imap_host: imapHost, imap_port: imapPort,
+      smtp_host: smtpHost, smtp_port: smtpPort,
+      email: email, password: password,
+      use_ssl: true,
+    }),
+  })
+  .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+  .then(function(result) {
+    btn.disabled = false;
+    btn.textContent = 'Test & Connect';
+    if (result.ok && result.data.ok) {
+      successEl.textContent = 'Connected! Your agent is now triaging ' + result.data.email;
+      successEl.style.display = 'block';
+      // Clear password from DOM
+      document.getElementById('imap-password').value = '';
+      // Refresh connectors after short delay
+      setTimeout(function() {
+        closeImapModal();
+        loadConnectors();
+      }, 1800);
+    } else {
+      errEl.textContent = result.data.error || 'Connection failed. Check your settings and try again.';
+      errEl.style.display = 'block';
+    }
+  })
+  .catch(function(e) {
+    btn.disabled = false;
+    btn.textContent = 'Test & Connect';
+    errEl.textContent = 'Network error. Please try again.';
+    errEl.style.display = 'block';
+  });
+}
+
+function timeAgo(isoString) {
+  if (!isoString) return '';
+  var ms = Date.now() - new Date(isoString).getTime();
+  var min = Math.floor(ms / 60000);
+  if (min < 1) return 'just now';
+  if (min < 60) return min + 'm ago';
+  var hr = Math.floor(min / 60);
+  if (hr < 24) return hr + 'h ago';
+  return Math.floor(hr / 24) + 'd ago';
+}
+
+function openTelegramLink() {
+  window.open('https://t.me/MrDelegateBot', '_blank');
+}
+
+// ── Activity ──────────────────────────────────────────────────────────────
+function loadActivity() {
+  return fetch('/api/customer/activity?customerId=' + CID + '&limit=20', { headers: authHeaders() })
+    .then(function(r) { if (r.ok) return r.json(); return null; })
+    .then(function(data) {
+      if (data) {
+        var items = data.activities || data || [];
+        if (items.length > 0) { renderActivity(items); return; }
+      }
+      renderDemoActivity();
+    })
+    .catch(function() { renderDemoActivity(); });
+}
+
+function renderDemoActivity() {
+  var container = document.getElementById('activity-content');
+  var earlyBanner = daysActive < 7
+    ? '<div class="activity-early-banner"><span class="activity-early-icon">⚡</span><div class="activity-early-text"><strong>Early days</strong> — your agent is building a picture of how you work. It gets noticeably better after day 7.</div></div>'
+    : '';
+
+  if (!googleConnected) {
+    container.innerHTML = earlyBanner + '<div class="activity-empty">' +
+      '<span class="activity-empty-icon">🤖</span>' +
+      '<div class="activity-empty-title">Your agent is getting ready</div>' +
+      '<div class="activity-empty-text">Connect Gmail and Calendar to activate your agent. Every action will show up here in real-time.</div>' +
+    '</div>';
+    return;
+  }
+
+  container.innerHTML = earlyBanner + '<div class="activity-empty">' +
+    '<span class="activity-empty-icon">⏳</span>' +
+    '<div class="activity-empty-title">Activity will appear here</div>' +
+    '<div class="activity-empty-text">Your agent is connected and working. Activities show up after your first morning brief at 7:00 AM.</div>' +
+  '</div>';
+}
+
+function renderActivity(items) {
+  var container = document.getElementById('activity-content');
+  var icons = { 'brief': '🧠', 'email': '📧', 'calendar': '📅', 'triage': '📬', 'draft': '✍️', 'move': '🔄', 'connect': '🔌', 'login': '🔐' };
+  var earlyBanner = daysActive < 7
+    ? '<div class="activity-early-banner"><span class="activity-early-icon">⚡</span><div class="activity-early-text"><strong>Early days</strong> — your agent is building a picture of how you work. It gets noticeably better after day 7.</div></div>'
+    : '';
+  var html = earlyBanner + '<div class="activity-list">';
+  for (var i = 0; i < items.length; i++) {
+    var item = items[i];
+    var icon = icons[item.type] || icons[item.category] || '✦';
+    var time = item.created_at || item.timestamp;
+    var timeStr = time ? formatRelativeTime(new Date(time)) : '';
+    html += '<div class="activity-item">' +
+      '<div class="activity-icon">' + icon + '</div>' +
+      '<div class="activity-content">' +
+        '<div class="activity-text">' + (item.description || item.text || item.action || '—') + '</div>' +
+        '<div class="activity-time">' + timeStr + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function formatRelativeTime(date) {
+  var tz = (customer && customer.timezone) || Intl.DateTimeFormat().resolvedOptions().timeZone;
+  var now = new Date();
+  var diff = now - date;
+  var mins = Math.floor(diff / 60000);
+  var hours = Math.floor(diff / 3600000);
+  var days = Math.floor(diff / 86400000);
+  if (mins < 1) return 'Just now';
+  if (mins < 60) return mins + ' min ago';
+  var timeStr = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit' }).format(date);
+  if (hours < 24) return 'Today ' + timeStr;
+  if (days === 1) return 'Yesterday ' + timeStr;
+  return date.toLocaleDateString('en-US', { timeZone: tz, month: 'short', day: 'numeric' }) + ' · ' + date.toLocaleTimeString('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit' });
+}
+
+// ── Billing ───────────────────────────────────────────────────────────────
+function loadBilling() {
+  if (!customer || !customer.stripe_customer_id) return Promise.resolve();
+  return fetch('/api/stripe/subscription/' + customer.stripe_customer_id, { headers: authHeaders(), credentials: 'include' })
+    .then(function(r) { if (r.ok) return r.json(); return null; })
+    .then(function(data) {
+      if (!data || !data.subscription) return;
+      var sub = data.subscription;
+      var planDesc = document.getElementById('billing-plan-desc');
+      var nextCharge = document.getElementById('billing-next');
+      var paymentMethod = document.getElementById('billing-method');
+      var statusText = document.getElementById('billing-status');
+      var statusBadge = document.getElementById('billing-status-badge');
+
+      // Real plan price
+      var amountStr = sub.amount_dollars > 0 ? ('$' + sub.amount_dollars.toFixed(0)) : '$47';
+      var intervalStr = sub.interval === 'year' ? '/yr' : '/mo';
+      if (planDesc) planDesc.textContent = amountStr + intervalStr + ' · OpenClaw hosting platform';
+
+      // Real next charge date
+      var periodEnd = sub.status === 'trialing' ? sub.trial_end : sub.current_period_end;
+      if (nextCharge && periodEnd) {
+        var d = new Date(periodEnd);
+        var label = sub.status === 'trialing' ? 'Trial ends' : (sub.cancel_at_period_end ? 'Cancels' : 'Next charge');
+        nextCharge.textContent = label + ' ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+
+      // Real payment method
+      if (paymentMethod && sub.payment_last4) {
+        var brand = sub.payment_brand ? (sub.payment_brand.charAt(0).toUpperCase() + sub.payment_brand.slice(1) + ' ') : '';
+        paymentMethod.textContent = brand + '•••• ' + sub.payment_last4;
+      }
+
+      // Real status
+      if (sub.cancel_at_period_end && statusBadge) {
+        statusBadge.textContent = 'Cancelling';
+        statusBadge.style.background = 'var(--warning-bg)'; statusBadge.style.color = 'var(--warning)'; statusBadge.style.border = '1px solid var(--warning-border)';
+        if (statusText) { statusText.textContent = 'Cancels at period end'; statusText.style.color = 'var(--warning)'; }
+      }
+    })
+    .catch(function() {});
+}
+
+function openBillingPortal() {
+  if (!customer || !customer.stripe_customer_id) {
+    alert('No billing account found. Contact support at team@mrdelegate.ai');
+    return;
+  }
+  fetch('/api/stripe/portal/' + customer.stripe_customer_id)
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.url) window.open(d.url, '_blank');
+      else alert('Could not open billing portal. Contact team@mrdelegate.ai');
+    })
+    .catch(function() { alert('Connection error. Try again.'); });
+}
+
+function showCancelModal() {
+  // Update modal copy based on days active
+  var cancelText = document.getElementById('cancel-modal-text');
+  var cancelReason = document.getElementById('cancel-reason');
+  if (cancelText && daysActive < 14) {
+    cancelText.textContent = 'Your agent will stop working at the end of your billing period. Most members say things click around day 14 — you\'re on day ' + daysActive + '. Sure you want to cancel?';
+  } else if (cancelText) {
+    cancelText.textContent = 'Your agent will continue working until the end of your current billing period. After that, your VPS and all connected services will be deactivated.';
+  }
+  if (cancelReason) cancelReason.value = '';
+  document.getElementById('cancel-modal').classList.add('open');
+}
+
+function closeCancelModal() {
+  document.getElementById('cancel-modal').classList.remove('open');
+}
+
+async function confirmCancel() {
+  var cancelReason = document.getElementById('cancel-reason');
+  var reason = cancelReason ? cancelReason.value : '';
+  if (!reason) {
+    alert('Pick the main reason first.');
+    return;
+  }
+
+  try {
+    await fetch('/api/customer/cancel-feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason: reason })
+    });
+  } catch (e) {}
+
+  closeCancelModal();
+  openBillingPortal();
+}
+
+// ── BYOK / Settings ───────────────────────────────────────────────────────
+function updateByokUI(cust) {
+  if (!cust) return;
+  var isSet = cust.aiKeySet || cust.ai_key_set;
+  var prov = cust.aiProvider || cust.ai_provider || 'gemini';
+  var preview = cust.aiKeyPreview || cust.ai_key_preview || '';
+  var radios = document.querySelectorAll('input[name="byok-provider"]');
+  radios.forEach(function(r) { r.checked = (r.value === prov); });
+  updateProviderStyles(prov);
+  updateProviderDesc(prov);
+  var statusEl = document.getElementById('byok-status');
+  var banner = document.getElementById('byok-status-banner');
+  if (isSet && preview) {
+    document.getElementById('setting-api-key').value = preview;
+    document.getElementById('setting-api-key').setAttribute('data-has-key', 'true');
+    statusEl.textContent = '✅ Your ' + (prov === 'gemini' ? 'Gemini' : 'Claude') + ' key is active';
+    statusEl.style.color = 'var(--success)';
+    banner.style.display = 'block'; banner.style.background = 'var(--success-bg)'; banner.style.color = 'var(--success)'; banner.style.border = '1px solid var(--success-border)';
+    banner.textContent = '✅ AI key active — your agent is powered by ' + (prov === 'gemini' ? 'Gemini Flash 2.0' : 'Claude');
+  } else {
+    statusEl.textContent = '⚠️ No key set — add one to activate your agent';
+    statusEl.style.color = 'var(--warning)';
+    banner.style.display = 'block'; banner.style.background = 'var(--warning-bg)'; banner.style.color = 'var(--warning)'; banner.style.border = '1px solid var(--warning-border)';
+    banner.textContent = '⚠️ Your agent needs an AI key to work. Add one below.';
+  }
+}
+
+function updateProviderStyles(prov) {
+  var gemOpt = document.getElementById('byok-opt-gemini');
+  var claOpt = document.getElementById('byok-opt-claude');
+  if (prov === 'gemini') {
+    gemOpt.style.borderColor = 'var(--accent-border)'; gemOpt.style.background = 'var(--accent-bg)';
+    claOpt.style.borderColor = 'var(--border)'; claOpt.style.background = 'var(--surface)';
+  } else {
+    claOpt.style.borderColor = 'var(--accent-border)'; claOpt.style.background = 'var(--accent-bg)';
+    gemOpt.style.borderColor = 'var(--border)'; gemOpt.style.background = 'var(--surface)';
+  }
+}
+
+function updateProviderDesc(prov) {
+  var desc = document.getElementById('byok-key-desc');
+  var input = document.getElementById('setting-api-key');
+  if (prov === 'gemini') {
+    desc.innerHTML = 'Get your free Gemini key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;text-decoration:underline">aistudio.google.com</a>';
+    input.placeholder = 'AIza...';
+  } else {
+    desc.innerHTML = 'Get your Claude key at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;text-decoration:underline">console.anthropic.com</a>';
+    input.placeholder = 'sk-ant-api03-...';
+  }
+}
+
+document.addEventListener('change', function(e) {
+  if (e.target.name === 'byok-provider') {
+    updateProviderStyles(e.target.value);
+    updateProviderDesc(e.target.value);
+    var inp = document.getElementById('setting-api-key');
+    if (inp.getAttribute('data-has-key') === 'true' && inp.value.indexOf('...') !== -1) {
+      inp.value = ''; inp.removeAttribute('data-has-key');
+    }
+  }
+});
+
+function toggleKeyVisibility() {
+  var input = document.getElementById('setting-api-key');
+  var btn = document.getElementById('byok-toggle-vis');
+  if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+  else { input.type = 'password'; btn.textContent = '👁️'; }
+}
+
+function saveByokKey() {
+  var input = document.getElementById('setting-api-key');
+  var key = input.value.trim();
+  var prov = document.querySelector('input[name="byok-provider"]:checked').value;
+  var btn = document.getElementById('byok-save-btn');
+  var btnText = document.getElementById('byok-save-text');
+  var msgEl = document.getElementById('byok-save-msg');
+  if (!key) { msgEl.style.display = 'block'; msgEl.style.color = 'var(--error)'; msgEl.textContent = 'Enter your API key first.'; return; }
+  if (prov === 'gemini' && !key.startsWith('AIza')) { msgEl.style.display = 'block'; msgEl.style.color = 'var(--error)'; msgEl.textContent = 'Gemini keys start with AIza... — double-check your key.'; return; }
+  if (prov === 'claude' && !key.startsWith('sk-ant-')) { msgEl.style.display = 'block'; msgEl.style.color = 'var(--error)'; msgEl.textContent = 'Claude keys start with sk-ant-... — double-check your key.'; return; }
+  btn.disabled = true; btnText.textContent = 'Validating...'; msgEl.style.display = 'none';
+  fetch('/api/customer/save-key', {
+    method: 'POST',
+    headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()),
+    credentials: 'include',
+    body: JSON.stringify({ apiKey: key, provider: prov })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.ok) {
+      msgEl.style.display = 'block'; msgEl.style.color = 'var(--success)';
+      msgEl.textContent = d.message || 'Key saved!';
+      btnText.textContent = 'Saved ✓'; btn.style.background = 'var(--success)';
+      if (customer) { customer.aiKeySet = true; customer.ai_key_set = true; customer.aiProvider = prov; customer.ai_provider = prov; customer.aiKeyPreview = d.preview; customer.ai_key_preview = d.preview; }
+      updateByokUI(customer || { aiKeySet: true, aiProvider: prov, aiKeyPreview: d.preview });
+      if (d.vps_deploying) msgEl.textContent += ' — deploying to your agent now...';
+      setTimeout(function() { btn.disabled = false; btnText.textContent = 'Test & save key'; btn.style.background = 'var(--accent)'; }, 4000);
+    } else {
+      msgEl.style.display = 'block'; msgEl.style.color = 'var(--error)';
+      msgEl.textContent = d.error || 'Could not save key. Try again.';
+      btn.disabled = false; btnText.textContent = 'Test & save key';
+    }
+  })
+  .catch(function() {
+    msgEl.style.display = 'block'; msgEl.style.color = 'var(--error)';
+    msgEl.textContent = 'Connection error. Check your internet and try again.';
+    btn.disabled = false; btnText.textContent = 'Test & save key';
+  });
+}
+
+function resendWelcomeEmail() {
+  var btn = document.getElementById('resend-welcome-btn');
+  var btnText = document.getElementById('resend-welcome-text');
+  var msgEl = document.getElementById('resend-welcome-msg');
+  btn.disabled = true; btnText.textContent = 'Sending...'; msgEl.style.display = 'none';
+  fetch('/api/customer/resend-welcome', { method: 'POST', headers: authHeaders(), credentials: 'include' })
+  .then(function(r) { return r.json().then(function(d) { return { status: r.status, data: d }; }); })
+  .then(function(result) {
+    var d = result.data;
+    if (d.ok) {
+      msgEl.style.display = 'block'; msgEl.style.color = 'var(--success)';
+      msgEl.textContent = d.message || 'Welcome email sent! Check your inbox.';
+      btnText.textContent = 'Sent ✓'; btn.style.borderColor = 'var(--success-border)'; btn.style.color = 'var(--success)';
+      setTimeout(function() { btn.disabled = false; btnText.textContent = 'Resend welcome email'; btn.style.borderColor = ''; btn.style.color = ''; }, 10000);
+    } else if (result.status === 429) {
+      msgEl.style.display = 'block'; msgEl.style.color = 'var(--warning)';
+      msgEl.textContent = d.error || 'Please wait a few minutes before requesting another resend.';
+      btn.disabled = false; btnText.textContent = 'Resend welcome email';
+    } else {
+      msgEl.style.display = 'block'; msgEl.style.color = 'var(--error)';
+      msgEl.textContent = d.error || 'Failed to send. Try again.';
+      btn.disabled = false; btnText.textContent = 'Resend welcome email';
+    }
+  })
+  .catch(function() {
+    msgEl.style.display = 'block'; msgEl.style.color = 'var(--error)';
+    msgEl.textContent = 'Connection error. Check your internet and try again.';
+    btn.disabled = false; btnText.textContent = 'Resend welcome email';
+  });
+}
+
+// ── Save Settings ──────────────────────────────────────────────────────────
+function saveSettings() {
+  var btn = document.getElementById('save-settings-btn');
+  var btnText = document.getElementById('save-settings-text');
+  var msgEl = document.getElementById('save-settings-msg');
+  var tz = document.getElementById('setting-tz').value;
+  var briefTime = document.getElementById('setting-brief-time').value;
+  btn.disabled = true; btnText.textContent = 'Saving...'; msgEl.style.display = 'none';
+  fetch('/api/customer/settings', {
+    method: 'PATCH',
+    headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()),
+    credentials: 'include',
+    body: JSON.stringify({ timezone: tz, brief_time: briefTime }),
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.ok) {
+      msgEl.style.display = 'block'; msgEl.style.color = 'var(--success)';
+      msgEl.textContent = 'Saved. Morning brief at ' + briefTime + ' · ' + tz + '.';
+      btnText.textContent = 'Saved ✓';
+      setTimeout(function() { btn.disabled = false; btnText.textContent = 'Save settings'; }, 3000);
+    } else {
+      msgEl.style.display = 'block'; msgEl.style.color = 'var(--error)';
+      msgEl.textContent = d.error || 'Failed to save. Try again.';
+      btn.disabled = false; btnText.textContent = 'Save settings';
+    }
+  })
+  .catch(function() {
+    msgEl.style.display = 'block'; msgEl.style.color = 'var(--error)';
+    msgEl.textContent = 'Connection error. Try again.';
+    btn.disabled = false; btnText.textContent = 'Save settings';
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+function init() {
+  loadCustomerMe()
+    .then(function() { return loadProfile(); })
+    .then(function() { return Promise.all([loadBrief(), loadConnectors(), loadActivity(), loadBilling()]); })
+    .then(function() { updateTelegramUI(); })
+    .catch(function(e) { console.error('init:', e); })
+    .then(function() {
+      setTimeout(function() { document.getElementById('app-loading').classList.add('hidden'); }, 300);
+    });
+}
+
+init();
+</script>
+</body>
+</html>

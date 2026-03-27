@@ -1,0 +1,3835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MrDelegate — Operations</title>
+<link rel="icon" type="image/x-icon" href="https://mrdelegate.ai/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="https://mrdelegate.ai/favicon-32.png">
+<link rel="apple-touch-icon" href="https://mrdelegate.ai/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/design-system.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ── Default: LIGHT THEME ── */
+:root {
+  --bg:      oklch(98% 0.005 60);
+  --surface: oklch(100% 0 0);
+  --surface2: oklch(97% 0.006 60);
+  --border:  oklch(90% 0.005 260);
+  --border2: oklch(84% 0.008 260);
+  --text1:   oklch(15% 0.01 260);
+  --text2:   oklch(35% 0.015 260);
+  --text3:   oklch(52% 0.02 260);
+  --accent:  oklch(55% 0.18 250);
+  --accent2: oklch(58% 0.17 265);
+  --green:   oklch(55% 0.15 145);
+  --red:     oklch(55% 0.18 25);
+  --yellow:  oklch(65% 0.15 60);
+  --blue:    oklch(60% 0.15 230);
+  --orange:  oklch(62% 0.17 45);
+}
+
+/* ── Dark Mode (opt-in via class) ── */
+:root.dark {
+  --bg:      oklch(98% 0.005 60);
+  --surface: oklch(100% 0 0);
+  --surface2: #10111a;
+  --border:  rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.12);
+  --text1:   #f4f4f7;
+  --text2:   #9ca3b4;
+  --text3:   #5c6478;
+  --accent:  #ff6b35;
+  --accent2: #f7931a;
+  --green:   #22c55e;
+  --red:     #ef4444;
+  --yellow:  #f59e0b;
+  --blue:    #3b82f6;
+  --orange:  #ff6b35;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text2);
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── SUBTLE GRID — light mode ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 35% at 50% 0%, oklch(55% 0.18 250 / 0.03), transparent 65%),
+    linear-gradient(oklch(85% 0.005 260 / 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(85% 0.005 260 / 0.5) 1px, transparent 1px);
+  background-size: 100% 100%, 48px 48px, 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+:root.dark body::before {
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,107,53,0.04), transparent 70%),
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 100% 100%, 48px 48px, 48px 48px;
+}
+
+/* ── SIDEBAR ── */
+aside {
+  position: fixed;
+  top: 0; left: 0;
+  width: 196px;
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 14px 10px;
+  z-index: 100;
+  box-shadow: 1px 0 0 0 var(--border);
+}
+:root.dark aside { background: #0B0B12; }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.logo-mark {
+  width: 32px; height: 32px;
+  flex-shrink: 0;
+}
+
+.logo-mark svg { width: 32px; height: 32px; }
+
+.logo-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text1);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.logo-tag {
+  font-size: 9px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ops-badge {
+  margin-left: auto;
+  background: rgba(99,102,241,0.15);
+  border: 1px solid rgba(99,102,241,0.3);
+  color: var(--accent);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+}
+
+.nav-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 0 8px 5px;
+  margin-top: 10px;
+}
+
+nav a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: var(--text2);
+  font-size: 12.5px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-bottom: 1px;
+  position: relative;
+}
+
+nav a:hover {
+  background: oklch(55% 0.18 250 / 0.06);
+  color: var(--text1);
+}
+:root.dark nav a:hover { background: rgba(255,255,255,0.05); }
+
+nav a.active {
+  background: oklch(55% 0.18 250 / 0.08);
+  color: var(--accent);
+  font-weight: 600;
+  border: none;
+  border-left: 2px solid var(--accent);
+  padding-left: 6px;
+}
+:root.dark nav a.active {
+  background: rgba(99,102,241,0.1);
+  color: var(--text1);
+}
+
+.nav-ico { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+
+.badge-pill {
+  margin-left: auto;
+  background: var(--red);
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  box-shadow: 0 0 8px rgba(239,68,68,0.4);
+}
+.badge-pill.active {
+  background: var(--green);
+  box-shadow: 0 0 8px rgba(16,185,129,0.5);
+}
+.badge-pill.idle {
+  background: var(--text3);
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+.sidebar-foot {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.foot-row { display: flex; align-items: center; gap: 8px; }
+
+.foot-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.foot-name { font-size: 12px; font-weight: 600; color: var(--text1); }
+
+.foot-email {
+  font-size: 10px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+}
+
+.foot-logout {
+  font-size: 11px;
+  color: var(--text3);
+  cursor: pointer;
+  margin-top: 6px;
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  transition: color 0.2s;
+}
+.foot-logout:hover { color: var(--red); }
+
+.foot-version {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+}
+.foot-live-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--green); }
+  50% { opacity: 0.6; box-shadow: 0 0 14px var(--green); }
+}
+
+/* ── MAIN ── */
+main {
+  margin-left: 196px;
+  flex: 1;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+.topbar {
+  height: 48px;
+  background: oklch(99% 0.003 60 / 0.92);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+:root.dark .topbar { background: rgba(11,11,18,0.9); }
+
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+
+.page-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text1);
+  letter-spacing: -0.01em;
+}
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: oklch(55% 0.15 145 / 0.07);
+  border: 1px solid oklch(55% 0.15 145 / 0.18);
+  border-radius: 20px;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: var(--green);
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+:root.dark .live-badge { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.2); }
+
+.live-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: ds-breathe 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  flex-shrink: 0;
+}
+:root.dark .live-dot { box-shadow: 0 0 8px var(--green); animation: pulse-glow 2s infinite; }
+
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+
+.ts {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.btn-refresh {
+  background: oklch(55% 0.18 250 / 0.07);
+  border: 1px solid oklch(55% 0.18 250 / 0.2);
+  color: var(--accent);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  letter-spacing: 0.02em;
+}
+.btn-refresh:hover {
+  background: oklch(55% 0.18 250 / 0.12);
+  border-color: oklch(55% 0.18 250 / 0.35);
+  box-shadow: 0 2px 8px oklch(55% 0.18 250 / 0.1);
+}
+
+.content {
+  padding: 20px 24px 24px;
+  max-width: 1600px;
+}
+
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── KPI GRID ── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.kpi-row-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* Animated gradient border keyframes */
+@keyframes grad-border {
+  0%   { border-color: rgba(99,102,241,0.5); box-shadow: 0 0 16px rgba(99,102,241,0.12); }
+  33%  { border-color: rgba(139,92,246,0.5); box-shadow: 0 0 16px rgba(139,92,246,0.12); }
+  66%  { border-color: rgba(16,185,129,0.4); box-shadow: 0 0 16px rgba(16,185,129,0.1); }
+  100% { border-color: rgba(99,102,241,0.5); box-shadow: 0 0 16px rgba(99,102,241,0.12); }
+}
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 3px oklch(15% 0.01 260 / 0.05), 0 1px 2px oklch(15% 0.01 260 / 0.03);
+}
+:root.dark .kpi {
+  background: rgba(255,255,255,0.025);
+  box-shadow: none;
+  backdrop-filter: blur(12px);
+}
+
+.kpi.glow-card {
+  animation: grad-border 3s ease-in-out infinite;
+}
+
+.kpi:hover { border-color: var(--border2); transform: translateY(-1px); box-shadow: 0 4px 16px oklch(15% 0.01 260 / 0.08); }
+:root.dark .kpi:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+
+.kpi-accent {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 10px 10px 0 0;
+}
+
+.kpi-label {
+  font-size: 9.5px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.kpi-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text1);
+  line-height: 1;
+  margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.kpi-sub {
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 4px;
+}
+
+.kpi-trend {
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.kpi-trend.up { color: var(--green); }
+.kpi-trend.flat { color: var(--text3); }
+
+/* ── CHART ROW ── */
+.chart-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px oklch(15% 0.01 260 / 0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+:root.dark .chart-card { background: rgba(255,255,255,0.02); box-shadow: none; backdrop-filter: blur(12px); }
+
+.chart-head {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.chart-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text1);
+  letter-spacing: -0.01em;
+}
+
+.chart-sub {
+  font-size: 10px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 1px;
+}
+
+.chart-body { padding: 14px 16px 16px; }
+.chart-body canvas { display: block; }
+
+/* ── STAT ROWS ── */
+.stat-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* ── PANEL ── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px oklch(15% 0.01 260 / 0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+:root.dark .panel { background: rgba(255,255,255,0.02); box-shadow: none; backdrop-filter: blur(12px); }
+
+.panel-head {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-subtle, oklch(98.5% 0.004 60));
+}
+:root.dark .panel-head { background: rgba(255,255,255,0.015); }
+
+.panel-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text1);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.panel-meta {
+  font-size: 10px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── TABLE ── */
+table { width: 100%; border-collapse: collapse; }
+
+th {
+  font-size: 10px;
+  color: var(--text3);
+  text-align: left;
+  padding: 7px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  background: var(--bg-subtle, oklch(98.5% 0.004 60));
+  border-bottom: 1px solid var(--border);
+}
+:root.dark th { background: rgba(255,255,255,0.015); }
+
+td {
+  font-size: 12.5px;
+  padding: 7px 12px;
+  border-bottom: 1px solid rgba(42,42,58,0.4);
+  vertical-align: middle;
+  font-variant-numeric: tabular-nums;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: oklch(98% 0.003 260 / 0.5); }
+tbody tr:hover td { background: oklch(55% 0.18 250 / 0.04); }
+:root.dark tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
+:root.dark tbody tr:hover td { background: rgba(99,102,241,0.05); }
+
+/* ── PILLS / STATUS ── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.pill-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.pill-active  { background: rgba(16,185,129,0.12); color: var(--green); border: 1px solid rgba(16,185,129,0.3); box-shadow: 0 0 8px rgba(16,185,129,0.15); }
+.pill-founder { background: rgba(99,102,241,0.12); color: var(--accent); border: 1px solid rgba(99,102,241,0.3); box-shadow: 0 0 8px rgba(99,102,241,0.15); }
+.pill-trial   { background: rgba(245,158,11,0.12); color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); box-shadow: 0 0 8px rgba(245,158,11,0.15); }
+.pill-lead    { background: rgba(90,90,122,0.12); color: var(--text3); border: 1px solid rgba(90,90,122,0.3); }
+.pill-cancelled { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.3); box-shadow: 0 0 8px rgba(239,68,68,0.12); }
+.pill-open    { background: rgba(245,158,11,0.12); color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); box-shadow: 0 0 6px rgba(245,158,11,0.12); }
+.pill-resolved { background: rgba(16,185,129,0.1); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+.pill-escalated { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.3); box-shadow: 0 0 8px rgba(239,68,68,0.12); }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  box-shadow: 0 0 12px rgba(99,102,241,0.2);
+}
+.btn:hover { background: #5254cc; box-shadow: 0 0 20px rgba(99,102,241,0.4); }
+
+.btn-sm { padding: 4px 10px; font-size: 11px; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text2);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+.btn-ghost:hover { border-color: var(--border2); color: var(--text1); background: rgba(255,255,255,0.04); box-shadow: none; }
+
+/* ── TICKETS ── */
+.ticket {
+  border-bottom: 1px solid var(--border);
+  padding: 14px 16px;
+  transition: background 0.15s;
+}
+.ticket:last-child { border-bottom: none; }
+.ticket:hover { background: rgba(255,255,255,0.02); }
+
+.ticket-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.ticket-subject { font-size: 13px; font-weight: 600; color: var(--text1); }
+.ticket-badges { display: flex; gap: 6px; flex-shrink: 0; }
+.ticket-meta { font-size: 11px; color: var(--text3); margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+.ticket-msg { font-size: 12px; color: var(--text2); line-height: 1.5; margin-bottom: 10px; }
+.ticket-actions { display: flex; gap: 6px; }
+
+/* ── ORG CHART ── */
+.org { text-align: center; padding: 24px 0 16px; }
+.org-tier { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.org-connector { display: flex; justify-content: center; margin: 6px 0 10px; }
+.org-line { width: 2px; height: 28px; background: var(--border2); border-radius: 2px; }
+
+.org-node {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  min-width: 180px;
+  max-width: 190px;
+  text-align: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px oklch(15% 0.01 260 / 0.05);
+}
+:root.dark .org-node { background: rgba(255,255,255,0.02); box-shadow: none; backdrop-filter: blur(12px); }
+.org-node:hover { border-color: var(--border2); background: var(--bg-subtle, oklch(98.5% 0.004 60)); box-shadow: 0 3px 10px oklch(15% 0.01 260 / 0.07); }
+:root.dark .org-node:hover { background: rgba(255,255,255,0.04); box-shadow: none; }
+.org-node.founder { border-color: oklch(55% 0.18 250 / 0.3); }
+.org-node.ceo { border-top: 2px solid var(--accent); box-shadow: 0 0 20px oklch(55% 0.18 250 / 0.08); }
+:root.dark .org-node.founder { border-color: rgba(99,102,241,0.4); box-shadow: 0 0 20px rgba(99,102,241,0.08); }
+:root.dark .org-node.ceo { box-shadow: 0 0 24px rgba(99,102,241,0.1); }
+.org-node.empty { border-style: dashed; opacity: 0.5; }
+
+.org-icon { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font-size: 22px; margin: 0 auto 10px; }
+.org-name { font-size: 14px; font-weight: 700; color: var(--text1); margin-bottom: 3px; }
+.org-role { font-size: 11px; color: var(--text3); margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+.org-desc { font-size: 11px; color: var(--text2); line-height: 1.5; }
+.org-pills { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+
+/* ── QUICK ACTIONS ── */
+.qa-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.qa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 12px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  color: var(--text1);
+  box-shadow: 0 1px 2px oklch(15% 0.01 260 / 0.04);
+}
+:root.dark .qa { background: rgba(255,255,255,0.02); box-shadow: none; backdrop-filter: blur(12px); }
+.qa:hover { border-color: oklch(55% 0.18 250 / 0.3); background: oklch(55% 0.18 250 / 0.04); box-shadow: 0 2px 12px oklch(55% 0.18 250 / 0.07); }
+:root.dark .qa:hover { border-color: rgba(99,102,241,0.4); background: rgba(99,102,241,0.06); box-shadow: 0 0 16px rgba(99,102,241,0.08); }
+.qa-ico { font-size: 24px; }
+.qa-label { font-size: 11px; font-weight: 600; color: var(--text2); text-align: center; }
+
+/* ── MILESTONE (TIMELINE) ── */
+.timeline-wrap { padding: 16px; }
+
+.milestone {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 10px 0;
+  position: relative;
+}
+
+.milestone::before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 26px;
+  bottom: -10px;
+  width: 1px;
+  background: var(--border);
+}
+
+.milestone:last-child::before { display: none; }
+
+.ml-dot {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  border: 2px solid currentColor;
+  margin-top: 1px;
+}
+
+.ml-dot.done { background: rgba(16,185,129,0.15); color: var(--green); border-color: var(--green); box-shadow: 0 0 10px rgba(16,185,129,0.3); }
+.ml-dot.current { background: rgba(99,102,241,0.2); color: var(--accent); border-color: var(--accent); box-shadow: 0 0 12px rgba(99,102,241,0.4); animation: pulse-glow-accent 2s infinite; }
+.ml-dot.upcoming { background: transparent; color: var(--text3); border-color: var(--border2); }
+
+@keyframes pulse-glow-accent {
+  0%, 100% { box-shadow: 0 0 8px rgba(99,102,241,0.3); }
+  50% { box-shadow: 0 0 18px rgba(99,102,241,0.6); }
+}
+
+.ml-body { flex: 1; }
+.ml-label { font-size: 13px; font-weight: 600; color: var(--text1); line-height: 1.3; }
+.ml-meta {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+
+/* ── HEALTH ── */
+.health-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.health-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 1px 2px oklch(15% 0.01 260 / 0.04);
+}
+:root.dark .health-item { background: rgba(255,255,255,0.02); box-shadow: none; }
+
+.health-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.health-dot.ok  { background: var(--green); }
+.health-dot.warn { background: var(--yellow); }
+.health-dot.err  { background: var(--red); }
+:root.dark .health-dot.ok  { box-shadow: 0 0 8px var(--green); }
+:root.dark .health-dot.warn { box-shadow: 0 0 8px var(--yellow); }
+:root.dark .health-dot.err  { box-shadow: 0 0 8px var(--red); }
+
+.health-label { font-size: 12px; font-weight: 600; color: var(--text1); }
+.health-val { font-size: 10px; color: var(--text3); font-family: 'JetBrains Mono', monospace; margin-left: auto; }
+
+/* ── EMPTY ── */
+.empty { text-align: center; padding: 32px 24px; color: var(--text3); }
+.empty-ico { font-size: 28px; margin-bottom: 8px; }
+.empty-txt { font-size: 13px; }
+
+/* ── SECTION HEADING ── */
+.section-heading {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+/* ── ARR PROGRESS ── */
+.arr-progress-wrap {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.arr-bar-track {
+  height: 6px;
+  background: var(--surface2);
+  border-radius: 3px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.arr-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 100%);
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(99,102,241,0.6);
+  transition: width 0.5s ease;
+}
+.arr-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text3);
+}
+
+/* ── LIGHT THEME ── */
+/* ═══════════════════════════════════════════════
+   LIGHT THEME — now the default. See :root vars at top.
+   .light class kept for backwards compat with any saved localStorage.
+   Any :root.light selectors below just reinforce defaults.
+════════════════════════════════════════════════ */
+:root.light { /* identical to :root — intentional */ }
+
+/* Smooth theme transitions */
+body, aside, .topbar, .kpi, .chart-card, .panel, .panel-head,
+th, td, .health-item, .org-node, .qa, .ticket, .sidebar-foot,
+nav a, .mobile-top {
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ── THEME TOGGLE ── */
+#theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  border-radius: 6px;
+  width: 30px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+#theme-toggle:hover { border-color: var(--border2); color: var(--text2); background: rgba(128,128,128,0.06); }
+/* Default = light → show moon (to switch to dark) */
+#theme-toggle .sun-icon { display: none; }
+#theme-toggle .moon-icon { display: block; }
+/* Dark mode = show sun (to switch back to light) */
+:root.dark #theme-toggle .sun-icon { display: block; }
+:root.dark #theme-toggle .moon-icon { display: none; }
+
+/* ── MOBILE ── */
+.mobile-top {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  background: rgba(13,13,20,0.95);
+  border-bottom: 1px solid var(--border);
+  z-index: 200;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(12px);
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text1);
+}
+
+@media (max-width: 1200px) {
+  aside { transform: translateX(-100%); transition: transform 0.25s ease; }
+  aside.open { transform: translateX(0); }
+  main { margin-left: 0; }
+  .topbar { padding: 0 16px; }
+  .content { padding: 16px; }
+  .mobile-top { display: flex; }
+  .kpi-row { grid-template-columns: repeat(3, 1fr); }
+  .kpi-row-4 { grid-template-columns: repeat(2, 1fr); }
+  .chart-row { grid-template-columns: 1fr; }
+  .stat-row, .stat-row-3 { grid-template-columns: 1fr; }
+  .qa-grid { grid-template-columns: repeat(2, 1fr); }
+  .health-grid { grid-template-columns: 1fr; }
+  .org-tier { flex-direction: column; align-items: center; }
+}
+
+@media (max-width: 640px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .kpi-row-4 { grid-template-columns: 1fr; }
+  .qa-grid { grid-template-columns: 1fr; }
+}
+
+/* ── PAGINATION ── */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pager-info {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+}
+.pager-btns {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.pager-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  border-radius: 5px;
+  padding: 4px 9px;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.15s;
+}
+.pager-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.pager-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+.pager-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+:root.light .pager { border-top-color: rgba(0,0,0,0.07); }
+:root.light .pager-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+</style>
+<style>
+#agents-badge {
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+  transition: all 0.3s ease;
+}
+#agents-badge.active {
+  display: inline-flex;
+  background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
+  animation: badge-pulse 2s infinite;
+}
+#agents-badge.idle {
+  display: none;
+}
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 2px 8px rgba(16, 185, 129, 0.5); }
+  50% { box-shadow: 0 2px 12px rgba(16, 185, 129, 0.8); }
+}
+</style> 
+</head>
+<body>
+
+<div class="mobile-top">
+  <button class="hamburger" id="burger">☰</button>
+  <span style="font-size:14px;font-weight:900;color:var(--text1)"><span style="color:oklch(55% 0.18 250)">MR</span>DELEGATE OPS</span>
+  <span></span>
+</div>
+
+<aside id="sidebar">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <line x1="50" y1="8" x2="92" y2="50" stroke="oklch(55% 0.18 250)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="92" y1="50" x2="50" y2="92" stroke="oklch(55% 0.18 250)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="50" y1="92" x2="8" y2="50" stroke="oklch(55% 0.18 250)" stroke-width="5" stroke-linecap="round"/>
+        <line x1="8" y1="50" x2="50" y2="8" stroke="oklch(55% 0.18 250)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="50" cy="8" r="10" fill="oklch(55% 0.18 250)"/>
+        <circle cx="92" cy="50" r="10" fill="oklch(55% 0.18 250)"/>
+        <circle cx="50" cy="92" r="10" fill="oklch(55% 0.18 250)"/>
+        <circle cx="8" cy="50" r="10" fill="oklch(55% 0.18 250)"/>
+        <circle cx="50" cy="50" r="14" fill="#fff"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-name"><span style="color:oklch(55% 0.18 250)">MR</span>DELEGATE</div>
+      <div class="logo-tag">Operations</div>
+    </div>
+    <div class="ops-badge">OPS</div>
+  </div>
+
+  <div class="nav-label">Overview</div>
+  <nav>
+    <a onclick="showView('overview',this)" class="active">
+      <span class="nav-ico">📊</span>Overview
+    </a>
+    <a href="/ops/mission-board">
+      <span class="nav-ico">🎯</span>Mission Board
+    </a>
+    <a onclick="showView('milestones',this)">
+      <span class="nav-ico">🚀</span>Milestones
+    </a>
+  </nav>
+
+  <div class="nav-label">Customers</div>
+  <nav>
+    <a onclick="showView('customers',this)">
+      <span class="nav-ico">👥</span>Customers
+    </a>
+    <a onclick="showView('leads',this)">
+      <span class="nav-ico">🧲</span>Leads
+    </a>
+    <a onclick="showView('churn',this)">
+      <span class="nav-ico">📉</span>Churn
+      <span class="badge-pill" id="churn-badge" style="display:none"></span>
+    </a>
+  </nav>
+
+  <div class="nav-label">Operations</div>
+  <nav>
+    <a onclick="showView('support',this)">
+      <span class="nav-ico">🎫</span>Support
+      <span class="badge-pill" id="open-badge" style="display:none"></span>
+    </a>
+    <a onclick="showView('vps',this)">
+      <span class="nav-ico">🖥️</span>VPS Fleet
+    </a>
+    <a onclick="showView('system',this)">
+      <span class="nav-ico">⚙️</span>System
+    </a>
+    <a onclick="showView('emails',this)">
+      <span class="nav-ico">📧</span>Email
+    </a>
+    <a onclick="showView('team',this)">
+      <span class="nav-ico">🏢</span>Team
+      <span class="badge-pill" id="agents-badge" style="display:none">0</span>
+    </a>
+    <a href="/office" target="_blank" rel="noopener">
+      <span class="nav-ico">🧊</span>Claw3D Office
+      <span style="font-size:10px;opacity:0.5;margin-left:auto">↗</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-foot">
+    <div class="foot-row">
+      <div class="foot-avatar">B</div>
+      <div style="overflow:hidden;min-width:0">
+        <div class="foot-name">Bart Strellz</div>
+        <div class="foot-email">jerzydawgg@gmail.com</div>
+      </div>
+    </div>
+    <div class="foot-version">
+      <span class="foot-live-dot"></span>
+      v1.0 · Live
+    </div>
+    <span class="foot-logout" onclick="logout()">→ Sign out</span>
+  </div>
+</aside>
+
+<main>
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="page-title" id="topbar-title">Overview</div>
+      <div class="live-badge">
+        <span class="live-dot"></span>Live
+      </div>
+      <!-- Premium live agent count chip -->
+      <div class="ds-live-chip brand" id="topbar-agent-chip" style="display:none">
+        <span class="ds-live-dot brand"></span>
+        <span id="topbar-agent-count">0</span> agents
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="ts" id="ts-now">—</span>
+      <button class="btn-refresh" onclick="loadAll()">↻ Refresh</button>
+      <button id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark theme">
+        <svg class="sun-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="moon-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══════════ OVERVIEW ═══════════ -->
+    <div class="view active" id="view-overview">
+
+      <!-- Row 1: Revenue & Core KPIs -->
+      <div class="kpi-row">
+        <div class="kpi glow-card">
+          <div class="kpi-accent" style="background:linear-gradient(90deg,var(--green),var(--accent))"></div>
+          <div class="kpi-label">MRR</div>
+          <div class="kpi-val" id="kpi-mrr" style="color:var(--green)">Loading...</div>
+          <div class="kpi-sub">Monthly recurring</div>
+          <div class="kpi-trend flat" id="kpi-mrr-trend">Checking...</div>
+        </div>
+
+        <div class="kpi">
+          <div class="kpi-accent" style="background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>
+          <div class="kpi-label">ARR</div>
+          <div class="kpi-val" id="kpi-arr" style="color:var(--accent)">Loading...</div>
+          <div class="kpi-sub">Annual run rate</div>
+          <div class="kpi-trend flat">MRR × 12</div>
+        </div>
+
+        <div class="kpi">
+          <div class="kpi-accent" style="background:var(--blue)"></div>
+          <div class="kpi-label">Active</div>
+          <div class="kpi-val" id="kpi-active" style="color:var(--blue)">0</div>
+          <div class="kpi-sub">Paying customers</div>
+        </div>
+
+        <div class="kpi">
+          <div class="kpi-accent" style="background:var(--yellow)"></div>
+          <div class="kpi-label">Trials</div>
+          <div class="kpi-val" id="kpi-trial" style="color:var(--yellow)">0</div>
+          <div class="kpi-sub">In 3-day trial</div>
+        </div>
+
+        <div class="kpi">
+          <div class="kpi-accent" style="background:var(--text3)"></div>
+          <div class="kpi-label">Leads</div>
+          <div class="kpi-val" id="kpi-leads">0</div>
+          <div class="kpi-sub">Not yet billed</div>
+        </div>
+
+        <div class="kpi">
+          <div class="kpi-accent" style="background:var(--red)"></div>
+          <div class="kpi-label">Open Tickets</div>
+          <div class="kpi-val" id="kpi-tickets" style="color:var(--red)">0</div>
+          <div class="kpi-sub">Support queue</div>
+        </div>
+      </div>
+
+      <!-- Row 2: Growth & Health KPIs -->
+      <div class="kpi-row-4">
+        <div class="kpi">
+          <div class="kpi-accent" style="background:linear-gradient(90deg,var(--green),var(--blue))"></div>
+          <div class="kpi-label">New This Week</div>
+          <div class="kpi-val" id="kpi-new-week" style="color:var(--green)">0</div>
+          <div class="kpi-sub">Signups (7 days)</div>
+          <div class="kpi-trend flat" id="kpi-new-month-sub">0 this month</div>
+        </div>
+
+        <div class="kpi">
+          <div class="kpi-accent" style="background:var(--accent)"></div>
+          <div class="kpi-label">Trial → Paid</div>
+          <div class="kpi-val" id="kpi-conversion" style="color:var(--accent)">0%</div>
+          <div class="kpi-sub">Conversion rate</div>
+          <div class="kpi-trend flat" id="kpi-arpu-sub">$0 ARPU</div>
+        </div>
+
+        <div class="kpi">
+          <div class="kpi-accent" style="background:var(--red)"></div>
+          <div class="kpi-label">Cancellations</div>
+          <div class="kpi-val" id="kpi-cancellations" style="color:var(--red)">0</div>
+          <div class="kpi-sub">This month</div>
+          <div class="kpi-trend flat" id="kpi-failed-sub">0 failed payments</div>
+        </div>
+
+        <div class="kpi">
+          <div class="kpi-accent" style="background:var(--orange)"></div>
+          <div class="kpi-label">Total Customers</div>
+          <div class="kpi-val" id="kpi-total" style="color:var(--orange)">0</div>
+          <div class="kpi-sub">All time (incl. leads)</div>
+          <div class="kpi-trend flat" id="kpi-vps-sub">0 VPS provisioned</div>
+        </div>
+      </div>
+
+      <!-- Row 2b: VPS Pool -->
+      <div class="kpi-row-4" style="margin-bottom:16px;">
+        <div class="kpi" style="grid-column:span 2;">
+          <div class="kpi-accent" style="background:linear-gradient(90deg,var(--green),var(--blue))"></div>
+          <div class="kpi-label">VPS Pool</div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin:4px 0 2px;">
+            <div class="kpi-val" id="pool-count" style="color:var(--green)">—</div>
+            <div style="font-size:12px;color:var(--text3)">warm available</div>
+          </div>
+          <div class="kpi-sub" id="pool-status">Loading...</div>
+          <div class="kpi-sub" id="pool-ip" style="font-family:'JetBrains Mono',monospace;font-size:10px;margin-top:4px;"></div>
+        </div>
+      </div>
+
+      <!-- Row 3: AI Usage -->
+      <div class="kpi-row" style="margin-bottom:16px;">
+        <div class="kpi" style="grid-column:span 2;">
+          <div class="kpi-accent" style="background:linear-gradient(90deg,#CC785C,#E8590C)"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="kpi-label">Claude Max</div>
+            <span style="font-size:10px;font-weight:600;background:oklch(55% 0.18 250);color:#fff;padding:2px 7px;border-radius:20px;">$100/mo</span>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin:4px 0 2px;">
+            <div class="kpi-val" id="claude-agents" style="color:#E8590C">0</div>
+            <div style="font-size:12px;color:var(--text3)">agents running</div>
+          </div>
+          <div class="kpi-sub" id="claude-plan-status">OAuth · Bart's Max plan · No API charges</div>
+          <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+            <span style="font-size:10px;background:rgba(247,103,7,0.1);color:oklch(55% 0.18 250);border:1px solid rgba(247,103,7,0.25);border-radius:4px;padding:2px 6px;" id="claude-auth-badge">✓ OAuth active</span>
+            <span style="font-size:10px;background:rgba(14,180,114,0.1);color:var(--green);border:1px solid rgba(14,180,114,0.25);border-radius:4px;padding:2px 6px;">✓ Subscription — flat rate</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:6px;">
+            <div style="font-size:10px;color:var(--text3)" id="claude-bar-label">Token expires: checking…</div>
+            <a href="https://claude.ai/settings/billing" target="_blank" style="font-size:10px;color:var(--accent);text-decoration:none;">Manage →</a>
+          </div>
+        </div>
+        <div class="kpi" style="grid-column:span 2;">
+          <div class="kpi-accent" style="background:linear-gradient(90deg,#7C3AED,#A855F7)"></div>
+          <div class="kpi-label">Perplexity API</div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin:4px 0 2px;">
+            <div class="kpi-val" style="color:#A855F7;font-size:14px;">configured</div>
+          </div>
+          <div class="kpi-sub">SEO research · Post enricher</div>
+          <div style="margin-top:6px;font-size:10px;color:var(--text3);">Balance not available via API</div>
+        </div>
+        <div class="kpi" style="grid-column:span 2;">
+          <div class="kpi-accent" style="background:linear-gradient(90deg,#0891B2,#06B6D4)"></div>
+          <div class="kpi-label">Active Agents</div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin:4px 0 2px;">
+            <div class="kpi-val" id="active-agent-count" style="color:#06B6D4">0</div>
+            <div style="font-size:12px;color:var(--text3)">running now</div>
+          </div>
+          <div class="kpi-sub" id="active-agent-names">No agents running</div>
+          <div style="margin-top:6px;font-size:10px;color:var(--text3)">Updates every 5 min</div>
+        </div>
+      </div>
+
+      <div class="chart-row">
+        <div class="chart-card">
+          <div class="chart-head">
+            <div>
+              <div class="chart-title">Revenue Growth</div>
+              <div class="chart-sub">MRR trajectory</div>
+            </div>
+          </div>
+          <div class="chart-body">
+            <canvas id="mrr-chart" height="130"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-head">
+            <div>
+              <div class="chart-title">Customer Mix</div>
+              <div class="chart-sub">Segmentation</div>
+            </div>
+          </div>
+          <div class="chart-body" style="display:flex;align-items:center;justify-content:center;padding-top:6px">
+            <canvas id="pie-chart" width="160" height="160"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-head">
+            <div>
+              <div class="chart-title">Weekly Signups</div>
+              <div class="chart-sub">Acquisition</div>
+            </div>
+          </div>
+          <div class="chart-body">
+            <canvas id="signup-chart" height="130"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="panel" style="margin-bottom:0">
+          <div class="panel-head">
+            <span class="panel-title">Recent Signups</span>
+            <span class="panel-meta" id="cust-count">—</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Trial</th>
+                <th>Joined</th>
+              </tr>
+            </thead>
+            <tbody id="recent-tbody">
+              <tr><td colspan="4" class="empty" style="border:none">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel" style="margin-bottom:0">
+          <div class="panel-head">
+            <span class="panel-title">Support Queue</span>
+            <span class="panel-meta" id="ticket-count-head">—</span>
+          </div>
+          <div id="support-preview" style="padding:0"></div>
+        </div>
+      </div>
+
+      <!-- ── TRAFFIC + REVENUE ROW ── -->
+      <div class="stat-row" style="margin-top:16px">
+
+        <!-- GA Traffic Panel -->
+        <div class="panel" style="margin-bottom:0">
+          <div class="panel-head">
+            <span class="panel-title">🌐 Traffic <span style="font-size:9px;font-weight:600;background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25);border-radius:4px;padding:2px 6px;font-family:'JetBrains Mono',monospace;margin-left:6px">GA4 LIVE</span></span>
+            <span class="panel-meta" id="ga-updated">—</span>
+          </div>
+          <div style="padding:12px 16px">
+            <!-- Visitor KPIs -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+              <div style="text-align:center;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:10px 6px">
+                <div style="font-size:18px;font-weight:800;color:var(--orange);font-variant-numeric:tabular-nums" id="ga-users-today">—</div>
+                <div style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;text-transform:uppercase;margin-top:2px">Today</div>
+              </div>
+              <div style="text-align:center;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:10px 6px">
+                <div style="font-size:18px;font-weight:800;color:var(--text1);font-variant-numeric:tabular-nums" id="ga-users-7d">—</div>
+                <div style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;text-transform:uppercase;margin-top:2px">7 Days</div>
+              </div>
+              <div style="text-align:center;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:10px 6px">
+                <div style="font-size:18px;font-weight:800;color:var(--text1);font-variant-numeric:tabular-nums" id="ga-users-30d">—</div>
+                <div style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;text-transform:uppercase;margin-top:2px">30 Days</div>
+              </div>
+            </div>
+            <!-- Pageviews row -->
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;margin-bottom:12px">
+              <span style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">Page Views (30d)</span>
+              <span style="font-size:13px;font-weight:700;color:var(--text1);font-variant-numeric:tabular-nums" id="ga-pageviews-30d">—</span>
+            </div>
+            <!-- Top 5 Pages -->
+            <div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-family:'JetBrains Mono',monospace">Top Pages (30d)</div>
+            <div id="ga-top-pages" style="display:flex;flex-direction:column;gap:4px">
+              <div style="color:var(--text3);font-size:11px;font-family:'JetBrains Mono',monospace">Loading…</div>
+            </div>
+            <!-- Traffic Sources -->
+            <div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px;font-family:'JetBrains Mono',monospace">Traffic Sources (30d)</div>
+            <div id="ga-sources" style="display:flex;flex-direction:column;gap:4px">
+              <div style="color:var(--text3);font-size:11px;font-family:'JetBrains Mono',monospace">Loading…</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revenue Panel -->
+        <div class="panel" style="margin-bottom:0">
+          <div class="panel-head">
+            <span class="panel-title">💳 Revenue <span style="font-size:9px;font-weight:600;background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.25);border-radius:4px;padding:2px 6px;font-family:'JetBrains Mono',monospace;margin-left:6px">STRIPE LIVE</span></span>
+            <span class="panel-meta" id="rev-updated">—</span>
+          </div>
+          <div style="padding:12px 16px">
+            <!-- MRR / ARR -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+              <div style="background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:10px 12px">
+                <div style="font-size:9px;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px">MRR</div>
+                <div style="font-size:22px;font-weight:800;color:var(--green);font-variant-numeric:tabular-nums;margin-top:2px" id="rev-mrr">—</div>
+              </div>
+              <div style="background:rgba(99,102,241,0.05);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:10px 12px">
+                <div style="font-size:9px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px">ARR</div>
+                <div style="font-size:22px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;margin-top:2px" id="rev-arr">—</div>
+              </div>
+            </div>
+            <!-- Customer breakdown -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px">
+              <div style="text-align:center;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:8px 4px">
+                <div style="font-size:16px;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums" id="rev-paying">—</div>
+                <div style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px">Paying</div>
+              </div>
+              <div style="text-align:center;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:8px 4px">
+                <div style="font-size:16px;font-weight:800;color:var(--yellow);font-variant-numeric:tabular-nums" id="rev-trials">—</div>
+                <div style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px">Trials</div>
+              </div>
+              <div style="text-align:center;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:8px 4px">
+                <div style="font-size:16px;font-weight:800;font-variant-numeric:tabular-nums" id="rev-churn" style="color:var(--red)">—</div>
+                <div style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px">Churn</div>
+              </div>
+            </div>
+            <!-- Revenue rows -->
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px">
+                <span style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">Revenue today</span>
+                <span style="font-size:13px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums" id="rev-today">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px">
+                <span style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">Revenue this month</span>
+                <span style="font-size:13px;font-weight:700;color:var(--text1);font-variant-numeric:tabular-nums" id="rev-month">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px">
+                <span style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">Est. LTV</span>
+                <span style="font-size:13px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums" id="rev-ltv">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── FUNNEL ── -->
+      <div class="panel" style="margin-top:16px;margin-bottom:0">
+        <div class="panel-head">
+          <span class="panel-title">📊 Conversion Funnel</span>
+          <span class="panel-meta" id="funnel-updated">—</span>
+        </div>
+        <div style="padding:16px 20px">
+          <div id="funnel-row" style="display:flex;align-items:stretch;gap:0">
+            <div class="funnel-stage" style="flex:1;text-align:center;padding:12px 8px;background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.2);border-radius:8px 0 0 8px">
+              <div style="font-size:9px;font-weight:700;color:var(--orange);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Visitors</div>
+              <div style="font-size:22px;font-weight:800;color:var(--orange);font-variant-numeric:tabular-nums" id="funnel-visitors">—</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:2px">30d</div>
+            </div>
+            <div style="display:flex;align-items:center;padding:0 4px;color:var(--text3);font-size:16px">→</div>
+            <div class="funnel-stage" style="flex:1;text-align:center;padding:12px 8px;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2)">
+              <div style="font-size:9px;font-weight:700;color:var(--blue);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Signups</div>
+              <div style="font-size:22px;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums" id="funnel-signups">—</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:2px" id="funnel-signup-rate">—</div>
+            </div>
+            <div style="display:flex;align-items:center;padding:0 4px;color:var(--text3);font-size:16px">→</div>
+            <div class="funnel-stage" style="flex:1;text-align:center;padding:12px 8px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2)">
+              <div style="font-size:9px;font-weight:700;color:var(--yellow);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Trials</div>
+              <div style="font-size:22px;font-weight:800;color:var(--yellow);font-variant-numeric:tabular-nums" id="funnel-trials">—</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:2px" id="funnel-trial-rate">—</div>
+            </div>
+            <div style="display:flex;align-items:center;padding:0 4px;color:var(--text3);font-size:16px">→</div>
+            <div class="funnel-stage" style="flex:1;text-align:center;padding:12px 8px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2)">
+              <div style="font-size:9px;font-weight:700;color:var(--green);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Paid</div>
+              <div style="font-size:22px;font-weight:800;color:var(--green);font-variant-numeric:tabular-nums" id="funnel-paid">—</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:2px" id="funnel-paid-rate">—</div>
+            </div>
+            <div style="display:flex;align-items:center;padding:0 4px;color:var(--text3);font-size:16px">→</div>
+            <div class="funnel-stage" style="flex:1;text-align:center;padding:12px 8px;background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.2);border-radius:0 8px 8px 0">
+              <div style="font-size:9px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">MRR</div>
+              <div style="font-size:22px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums" id="funnel-mrr">—</div>
+              <div style="font-size:10px;color:var(--text3);margin-top:2px">monthly</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ MILESTONES ═══════════ -->
+    <div class="view" id="view-milestones">
+      <div style="margin-bottom:20px">
+        <div style="font-size:20px;font-weight:800;color:var(--text1);letter-spacing:-0.02em">Road to $1M ARR 🚀</div>
+        <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:4px">2,128 customers × $47/mo · Net $35.32/customer · 75.1% gross margin</div>
+      </div>
+
+      <!-- P&L Milestone Cards -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+        <div style="background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:14px;backdrop-filter:blur(12px)">
+          <div style="font-size:10px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:6px;font-family:'JetBrains Mono',monospace">MONTH 1</div>
+          <div style="font-size:20px;font-weight:800;color:var(--green);margin-bottom:2px;font-variant-numeric:tabular-nums">$470 MRR</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-family:'JetBrains Mono',monospace">10 customers</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.8;font-family:'JetBrains Mono',monospace">
+            Revenue: $470<br>VPS: -$100<br>Stripe: -$17<br>Infra: -$20<br>
+            <span style="color:var(--green);font-weight:700">✓ $333/mo profit</span>
+          </div>
+        </div>
+        <div style="background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.25);border-radius:10px;padding:14px;backdrop-filter:blur(12px)">
+          <div style="font-size:10px;font-weight:700;color:var(--blue);letter-spacing:1px;margin-bottom:6px;font-family:'JetBrains Mono',monospace">MONTH 3</div>
+          <div style="font-size:20px;font-weight:800;color:var(--blue);margin-bottom:2px;font-variant-numeric:tabular-nums">$4,700 MRR</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-family:'JetBrains Mono',monospace">100 customers</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.8;font-family:'JetBrains Mono',monospace">
+            Revenue: $4,700<br>VPS: -$1,000<br>Stripe: -$166<br>Infra: -$40<br>
+            <span style="color:var(--blue);font-weight:700">✓ $3,494/mo profit</span>
+          </div>
+        </div>
+        <div style="background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:14px;backdrop-filter:blur(12px)">
+          <div style="font-size:10px;font-weight:700;color:var(--accent2);letter-spacing:1px;margin-bottom:6px;font-family:'JetBrains Mono',monospace">MONTH 6</div>
+          <div style="font-size:20px;font-weight:800;color:var(--accent2);margin-bottom:2px;font-variant-numeric:tabular-nums">$23,500 MRR</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-family:'JetBrains Mono',monospace">500 customers</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.8;font-family:'JetBrains Mono',monospace">
+            Revenue: $23,500<br>VPS: -$5,000<br>Stripe: -$829<br>Infra: -$80<br>
+            <span style="color:var(--accent2);font-weight:700">✓ $17,591/mo profit</span>
+          </div>
+        </div>
+        <div style="background:rgba(249,115,22,0.05);border:1px solid rgba(249,115,22,0.3);border-radius:10px;padding:14px;backdrop-filter:blur(12px);box-shadow:0 0 20px rgba(249,115,22,0.08)">
+          <div style="font-size:10px;font-weight:700;color:var(--orange);letter-spacing:1px;margin-bottom:6px;font-family:'JetBrains Mono',monospace">MONTH 12 🏆</div>
+          <div style="font-size:20px;font-weight:800;color:var(--orange);margin-bottom:2px;font-variant-numeric:tabular-nums">$100K MRR</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-family:'JetBrains Mono',monospace">2,128 customers</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.8;font-family:'JetBrains Mono',monospace">
+            Revenue: $100,016<br>VPS: -$21,280<br>Stripe: -$3,531<br>Infra: -$200<br>
+            <span style="color:var(--orange);font-weight:700">✓ $75,005/mo profit</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARR Progress Bar -->
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-head">
+          <span class="panel-title">$1M ARR Progress</span>
+          <span class="panel-meta" id="arr-pct-label">0% complete</span>
+        </div>
+        <div class="arr-progress-wrap">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <span style="font-size:20px;font-weight:800;color:var(--accent);font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums" id="arr-progress-val">$0 ARR</span>
+            <span style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">Goal: $1,000,000</span>
+          </div>
+          <div class="arr-bar-track">
+            <div class="arr-bar-fill" id="arr-bar" style="width:0%"></div>
+          </div>
+          <div class="arr-labels">
+            <span>$0</span><span>$250K</span><span>$500K</span><span>$750K</span><span>$1M</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="panel" style="margin-bottom:0">
+          <div class="panel-head">
+            <span class="panel-title">Revenue Timeline</span>
+            <span class="panel-meta">$35.32 net per customer/mo</span>
+          </div>
+          <div class="timeline-wrap">
+            <div class="milestone">
+              <div class="ml-dot current">▶</div>
+              <div class="ml-body">
+                <div class="ml-label" style="color:var(--accent)">🚀 First paying customer</div>
+                <div class="ml-meta" style="color:var(--accent)">NOW → $35.32 profit</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot upcoming"></div>
+              <div class="ml-body">
+                <div class="ml-label">10 customers — $470 MRR</div>
+                <div class="ml-meta">$333/mo net · Month 1</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot upcoming"></div>
+              <div class="ml-body">
+                <div class="ml-label">50 customers — $2,350 MRR</div>
+                <div class="ml-meta">$1,663/mo net · Month 2</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot upcoming" style="border-color:var(--blue);color:var(--blue)"></div>
+              <div class="ml-body">
+                <div class="ml-label" style="color:var(--blue)">100 customers — $4,700 MRR</div>
+                <div class="ml-meta" style="color:var(--blue)">$3,494/mo net · Month 3</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot upcoming" style="border-color:var(--green);color:var(--green)"></div>
+              <div class="ml-body">
+                <div class="ml-label" style="color:var(--green)">215 customers — $10,105 MRR 🍜</div>
+                <div class="ml-meta" style="color:var(--green)">Ramen profitable · Month 4</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot upcoming" style="border-color:var(--accent2);color:var(--accent2)"></div>
+              <div class="ml-body">
+                <div class="ml-label" style="color:var(--accent2)">500 customers — $23,500 MRR</div>
+                <div class="ml-meta" style="color:var(--accent2)">$17,591/mo net · Month 6</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot upcoming"></div>
+              <div class="ml-body">
+                <div class="ml-label">1,000 customers — $47,000 MRR</div>
+                <div class="ml-meta" style="color:var(--orange)">$35,300/mo net · Month 9</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot upcoming" style="border-color:var(--orange);color:var(--orange)"></div>
+              <div class="ml-body">
+                <div class="ml-label" style="color:var(--orange);font-weight:700">2,128 customers — $1M ARR 🏆</div>
+                <div class="ml-meta" style="color:var(--orange);font-weight:700">$75K/mo net · Month 12</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:0">
+          <div class="panel-head">
+            <span class="panel-title">Launch Checklist</span>
+          </div>
+          <div class="timeline-wrap">
+            <div class="milestone">
+              <div class="ml-dot done">✓</div>
+              <div class="ml-body">
+                <div class="ml-label">Landing page live</div>
+                <div class="ml-meta" style="color:var(--green)">Done</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot done">✓</div>
+              <div class="ml-body">
+                <div class="ml-label">Google OAuth live</div>
+                <div class="ml-meta" style="color:var(--green)">Done</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot done">✓</div>
+              <div class="ml-body">
+                <div class="ml-label">Admin dashboard</div>
+                <div class="ml-meta" style="color:var(--green)">Done</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot done">✓</div>
+              <div class="ml-body">
+                <div class="ml-label">Morning brief worker</div>
+                <div class="ml-meta" style="color:var(--green)">Done</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot done">✓</div>
+              <div class="ml-body">
+                <div class="ml-label">Supabase schema</div>
+                <div class="ml-meta" style="color:var(--green)">Done</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot done">✓</div>
+              <div class="ml-body">
+                <div class="ml-label">Stripe webhook fixed</div>
+                <div class="ml-meta" style="color:var(--green)">Done</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot current">▶</div>
+              <div class="ml-body">
+                <div class="ml-label" style="color:var(--yellow)">Stripe live keys</div>
+                <div class="ml-meta" style="color:var(--yellow)">⏳ Need from Bart</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot upcoming"></div>
+              <div class="ml-body">
+                <div class="ml-label">End-to-end test (real payment)</div>
+                <div class="ml-meta">After live keys</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot upcoming"></div>
+              <div class="ml-body">
+                <div class="ml-label">HN launch post</div>
+                <div class="ml-meta">Tuesday 9am ET</div>
+              </div>
+            </div>
+            <div class="milestone">
+              <div class="ml-dot upcoming"></div>
+              <div class="ml-body">
+                <div class="ml-label">First paying customer 💰</div>
+                <div class="ml-meta">Target: this week</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unit Economics -->
+      <div class="panel" style="margin-top:4px">
+        <div class="panel-head">
+          <span class="panel-title">Unit Economics</span>
+          <span class="panel-meta">Per customer / month · $10/mo VPS</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th><th>Amount</th><th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;color:var(--text1)">Revenue</td>
+              <td style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:700">+$47.00</td>
+              <td style="font-size:11px;color:var(--text3)">Flat monthly subscription</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text1)">VPS (Vultr vc2-1c-2gb)</td>
+              <td style="font-family:'JetBrains Mono',monospace;color:var(--red);font-weight:600">-$10.00</td>
+              <td style="font-size:11px;color:var(--text3)">1vCPU / 2GB RAM — was $20, saved $10/customer</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text1)">Stripe fees</td>
+              <td style="font-family:'JetBrains Mono',monospace;color:var(--red);font-weight:600">-$1.66</td>
+              <td style="font-size:11px;color:var(--text3)">2.9% + $0.30 per transaction</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text1)">AI cost (BYOK)</td>
+              <td style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:600">$0.00</td>
+              <td style="font-size:11px;color:var(--text3)">Customer provides own Gemini key — free tier</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text1)">Trial AI (Gemini)</td>
+              <td style="font-family:'JetBrains Mono',monospace;color:var(--green);font-weight:600">$0.00</td>
+              <td style="font-size:11px;color:var(--text3)">Google free tier — $0 cost to us</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--text1)">Platform infra (shared)</td>
+              <td style="font-family:'JetBrains Mono',monospace;color:var(--red);font-weight:600">-$0.02</td>
+              <td style="font-size:11px;color:var(--text3)">$20/mo web VPS ÷ customers</td>
+            </tr>
+            <tr style="background:rgba(16,185,129,0.05)">
+              <td style="font-weight:800;font-size:14px;color:var(--text1)">Net margin</td>
+              <td style="font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--green);font-size:15px">$35.32</td>
+              <td style="font-size:12px;font-weight:700;color:var(--green)">75.1% gross margin 🔥</td>
+            </tr>
+            <tr style="background:rgba(249,115,22,0.04)">
+              <td style="font-weight:600;color:var(--orange)">At 1,000 customers</td>
+              <td style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--orange)">$35,320/mo</td>
+              <td style="font-size:11px;color:var(--orange)">$423,840/yr net — before any team costs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════ CUSTOMERS ═══════════ -->
+    <div class="view" id="view-customers">
+      <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:16px;font-weight:700;color:var(--text1)">Customers & Revenue</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;font-family:'JetBrains Mono',monospace">Real-time metrics from Stripe + Supabase</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="loadCustomersView()">↻ Refresh</button>
+      </div>
+
+      <!-- Revenue KPIs -->
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:20px" id="revenue-kpis">
+        <div class="kpi" style="border-left:3px solid var(--green)">
+          <div class="kpi-label">MRR</div>
+          <div class="kpi-val" style="color:var(--green)" id="cust-kpi-mrr">$0</div>
+          <div class="kpi-sub" id="kpi-mrr-change">—</div>
+        </div>
+        <div class="kpi" style="border-left:3px solid var(--accent)">
+          <div class="kpi-label">ARR</div>
+          <div class="kpi-val" style="color:var(--accent)" id="cust-kpi-arr">$0</div>
+          <div class="kpi-sub">MRR × 12</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Paying</div>
+          <div class="kpi-val" id="kpi-paying">0</div>
+          <div class="kpi-sub">active subs</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Trials</div>
+          <div class="kpi-val" id="kpi-trials">0</div>
+          <div class="kpi-sub">in progress</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">LTV</div>
+          <div class="kpi-val" id="kpi-ltv">$0</div>
+          <div class="kpi-sub">avg lifetime</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Churn</div>
+          <div class="kpi-val" id="kpi-churn">0%</div>
+          <div class="kpi-sub">monthly rate</div>
+        </div>
+      </div>
+
+      <!-- Secondary metrics -->
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px">
+        <div class="kpi">
+          <div class="kpi-label">Today Revenue</div>
+          <div class="kpi-val" id="kpi-today-rev">$0</div>
+          <div class="kpi-sub">new charges</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">This Month</div>
+          <div class="kpi-val" id="kpi-month-rev">$0</div>
+          <div class="kpi-sub">collected</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Failed Payments</div>
+          <div class="kpi-val" style="color:var(--red)" id="kpi-failed">0</div>
+          <div class="kpi-sub">last 30d</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Annual Plans</div>
+          <div class="kpi-val" id="kpi-annual">0</div>
+          <div class="kpi-sub">$397/yr</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Gross Margin</div>
+          <div class="kpi-val" id="kpi-margin">75%</div>
+          <div class="kpi-sub">after costs</div>
+        </div>
+      </div>
+
+      <!-- Unit Economics -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:12px">Unit Economics (per customer/mo)</div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;font-family:'JetBrains Mono',monospace;font-size:12px">
+          <div><span style="color:var(--text3)">Revenue:</span> <span style="color:var(--green)">$47.00</span></div>
+          <div><span style="color:var(--text3)">VPS:</span> <span style="color:var(--red)">-$10.00</span></div>
+          <div><span style="color:var(--text3)">Stripe:</span> <span style="color:var(--red)">-$1.66</span></div>
+          <div><span style="color:var(--text3)">AI:</span> <span style="color:var(--green)">$0.00</span></div>
+          <div><span style="color:var(--text3)">Infra:</span> <span style="color:var(--red)">-$0.05</span></div>
+          <div><span style="color:var(--text1);font-weight:700">Net: $35.29</span> <span style="color:var(--green)">(75.1%)</span></div>
+        </div>
+      </div>
+
+      <!-- Customer Table -->
+      <div class="panel" id="cust-panel">
+        <div class="panel-head">
+          <span class="panel-title">All Customers</span>
+          <span class="panel-meta" id="cust-page-info"></span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Plan</th>
+              <th>MRR</th>
+              <th>Lifetime</th>
+              <th>VPS</th>
+              <th>Connectors</th>
+              <th>Health</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="cust-tbody">
+            <tr><td colspan="9" style="text-align:center;color:var(--text3);padding:32px;font-family:'JetBrains Mono',monospace;font-size:12px">Loading…</td></tr>
+          </tbody>
+        </table>
+        <div id="cust-pager" class="pager" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════ LEADS ═══════════ -->
+    <div class="view" id="view-leads">
+      <div style="margin-bottom:16px">
+        <div style="font-size:16px;font-weight:700;color:var(--text1)">Leads</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px;font-family:'JetBrains Mono',monospace">Signed in via Google — haven't paid yet</div>
+      </div>
+      <div class="panel" id="leads-panel">
+        <div class="panel-head">
+          <span class="panel-title">All Leads</span>
+          <span class="panel-meta" id="leads-page-info"></span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Email</th><th>Joined</th><th>Action</th></tr>
+          </thead>
+          <tbody id="leads-tbody">
+            <tr><td colspan="4" style="text-align:center;color:var(--text3);padding:32px;font-family:'JetBrains Mono',monospace;font-size:12px">Loading…</td></tr>
+          </tbody>
+        </table>
+        <div id="leads-pager" class="pager" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════ SUPPORT ═══════════ -->
+    <div class="view" id="view-support">
+      <div style="margin-bottom:16px">
+        <div style="font-size:16px;font-weight:700;color:var(--text1)">Support Tickets</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px;font-family:'JetBrains Mono',monospace" id="support-bart-summary">Mr. Support auto-resolves Tier 1. Tier 2+ escalated to CEO.</div>
+      </div>
+      <div id="support-stats-banner" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+          <div style="font-size:20px;font-weight:700;color:var(--text1)" id="stat-open">—</div>
+          <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px">open</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+          <div style="font-size:20px;font-weight:700;color:var(--green)" id="stat-auto">—</div>
+          <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px">auto-resolved today</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+          <div style="font-size:20px;font-weight:700;color:var(--yellow)" id="stat-ceo">—</div>
+          <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px">handled by CEO</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+          <div style="font-size:20px;font-weight:700;color:var(--red)" id="stat-bart">—</div>
+          <div style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px">need your attention</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div id="tickets-list">
+          <div class="empty"><div class="empty-ico">⏳</div><div class="empty-txt">Loading…</div></div>
+        </div>
+        <div id="support-pager" class="pager" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════ VPS FLEET ═══════════ -->
+    <div class="view" id="view-vps">
+      <div style="margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:16px;font-weight:700;color:var(--text1)">VPS Fleet</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;font-family:'JetBrains Mono',monospace">All customer instances — Vultr Newark</div>
+        </div>
+        <button class="btn btn-primary" onclick="provisionNewVPS()" id="provision-new-btn">+ Provision New VPS</button>
+      </div>
+
+      <div class="stat-row-3" style="margin-bottom:16px">
+        <div class="kpi">
+          <div class="kpi-label">CEO VPS</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text1);font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">140.82.2.89</div>
+          <div class="kpi-sub">2vCPU · 4GB · $24/mo</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Web VPS</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text1);font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">64.176.219.52</div>
+          <div class="kpi-sub">1vCPU · 2GB · $10/mo</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Infra cost</div>
+          <div style="font-size:13px;font-weight:700;color:var(--text1);font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums" id="infra-cost">$34/mo</div>
+          <div class="kpi-sub">Before first customer</div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-head">
+          <div>
+            <span class="panel-title">🔥 Warm Pool</span>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">Ready for instant customer assignment</div>
+          </div>
+          <span class="panel-meta" id="pool-vps-meta">Loading…</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Label</th><th>IP</th><th>Status</th><th>Created</th></tr>
+          </thead>
+          <tbody id="pool-vps-tbody">
+            <tr><td colspan="4" style="text-align:center;color:var(--text3);padding:24px;font-family:'JetBrains Mono',monospace;font-size:12px">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Customer VPS Instances</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Customer</th><th>IP</th><th>Status</th><th>Region</th><th>Provisioned</th><th></th></tr>
+          </thead>
+          <tbody id="vps-tbody">
+            <tr><td colspan="6" style="text-align:center;color:var(--text3);padding:32px;font-family:'JetBrains Mono',monospace;font-size:12px">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════ SYSTEM ═══════════ -->
+    <div class="view" id="view-system">
+      <div style="margin-bottom:16px">
+        <div style="font-size:16px;font-weight:700;color:var(--text1)">System Health</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px;font-family:'JetBrains Mono',monospace">Infrastructure status and service checks</div>
+      </div>
+
+      <div class="health-grid" style="margin-bottom:16px">
+        <div class="health-item"><span class="health-dot ok" id="sh-platform-dot"></span><span class="health-label">Platform API</span><span class="health-val" id="sh-platform-val">Checking…</span></div>
+        <div class="health-item"><span class="health-dot ok" id="sh-openclaw-dot"></span><span class="health-label">OpenClaw gateway</span><span class="health-val" id="sh-openclaw-val">Checking…</span></div>
+        <div class="health-item"><span class="health-dot ok"></span><span class="health-label">Nginx</span><span class="health-val">Active</span></div>
+        <div class="health-item"><span class="health-dot ok"></span><span class="health-label">SSL cert</span><span class="health-val">Let's Encrypt</span></div>
+        <div class="health-item"><span class="health-dot ok" id="sh-supabase-dot"></span><span class="health-label">Supabase</span><span class="health-val" id="sh-supabase-val">Checking…</span></div>
+        <div class="health-item"><span class="health-dot ok" id="sh-resend-dot"></span><span class="health-label">Resend (email)</span><span class="health-val" id="sh-resend-val">Checking…</span></div>
+        <div class="health-item"><span class="health-dot ok" id="sh-stripe-dot"></span><span class="health-label">Stripe</span><span class="health-val" id="sh-stripe-val">Checking…</span></div>
+        <div class="health-item"><span class="health-dot ok"></span><span class="health-label">Google OAuth</span><span class="health-val">Live</span></div>
+        <div class="health-item"><span class="health-dot ok"></span><span class="health-label">Auto-deploy</span><span class="health-val">5min poll</span></div>
+      </div>
+
+      <div class="stat-row">
+        <div class="panel" style="margin-bottom:0">
+          <div class="panel-head">
+            <span class="panel-title">Cron Jobs</span>
+            <span class="panel-meta">CEO VPS</span>
+          </div>
+          <table>
+            <thead><tr><th>Job</th><th>Schedule</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--text1)">Auto-backup</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2)">Every 2 hours</td><td><span class="pill pill-active"><span class="pill-dot"></span>active</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text1)">Nightly consolidation</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2)">2:00 AM UTC</td><td><span class="pill pill-active"><span class="pill-dot"></span>active</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text1)">Security sweep</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2)">3:00 AM UTC</td><td><span class="pill pill-active"><span class="pill-dot"></span>active</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text1)">Morning brief</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2)">7:00 AM UTC</td><td><span class="pill pill-active"><span class="pill-dot"></span>active</span></td></tr>
+              <tr><td style="font-weight:600;color:var(--text1)">Heartbeat</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2)">Every 30 min</td><td><span class="pill pill-active"><span class="pill-dot"></span>active</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel" style="margin-bottom:0">
+          <div class="panel-head">
+            <span class="panel-title">Security Posture</span>
+          </div>
+          <table>
+            <thead><tr><th>Check</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td style="color:var(--text1)">Gateway binding</td><td style="color:var(--green);font-weight:600;font-family:'JetBrains Mono',monospace;font-size:12px">127.0.0.1 ✓</td></tr>
+              <tr><td style="color:var(--text1)">Config permissions</td><td style="color:var(--green);font-weight:600;font-family:'JetBrains Mono',monospace;font-size:12px">600 ✓</td></tr>
+              <tr><td style="color:var(--text1)">Docker sandbox</td><td style="color:var(--green);font-weight:600;font-family:'JetBrains Mono',monospace;font-size:12px">Enabled ✓</td></tr>
+              <tr><td style="color:var(--text1)">ClawHub</td><td style="color:var(--green);font-weight:600;font-family:'JetBrains Mono',monospace;font-size:12px">Disabled ✓</td></tr>
+              <tr><td style="color:var(--text1)">DM policy</td><td style="color:var(--green);font-weight:600;font-family:'JetBrains Mono',monospace;font-size:12px">pairing ✓</td></tr>
+              <tr><td style="color:var(--text1)">fail2ban</td><td style="color:var(--green);font-weight:600;font-family:'JetBrains Mono',monospace;font-size:12px">Active ✓</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ EMAIL ═══════════ -->
+    <div class="view" id="view-emails">
+      <div style="margin-bottom:16px">
+        <div style="font-size:16px;font-weight:700;color:var(--text1)">Email</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px;font-family:'JetBrains Mono',monospace">Transactional &amp; lifecycle via Resend</div>
+      </div>
+      <!-- KPI row: sent counts -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px">
+        <div class="kpi">
+          <div class="kpi-label">Sent today</div>
+          <div style="font-size:22px;font-weight:800;color:var(--green);font-variant-numeric:tabular-nums" id="email-total-sent">—</div>
+          <div class="kpi-sub" id="email-sent-today-sub">— all time</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Sent this week</div>
+          <div style="font-size:22px;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums" id="email-sent-week">—</div>
+          <div class="kpi-sub" id="email-sent-month-sub">— this month</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Delivery rate</div>
+          <div style="font-size:22px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums" id="email-delivery-rate">—</div>
+          <div class="kpi-sub">sent / (sent+failed)</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Pending / Failures</div>
+          <div style="font-size:22px;font-weight:800;color:var(--text1);font-variant-numeric:tabular-nums">
+            <span id="email-queue-depth">—</span><span style="color:var(--text3);font-size:14px"> / </span><span id="email-failed-count" style="color:var(--red)">—</span>
+          </div>
+          <div class="kpi-sub">in queue / all-time fails</div>
+        </div>
+      </div>
+      <!-- 7-day trend chart -->
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-head"><span class="panel-title">7-Day Send Volume</span><span class="panel-meta" id="email-trend-meta"></span></div>
+        <div style="padding:16px;height:120px">
+          <canvas id="email-trend-chart" style="width:100%;height:100%"></canvas>
+        </div>
+      </div>
+      <!-- Template breakdown -->
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-head"><span class="panel-title">By Template</span><span class="panel-meta" id="email-template-meta"></span></div>
+        <div id="email-template-list" style="padding:8px 0">
+          <div style="padding:12px 16px;color:var(--text3);font-size:12px;font-family:'JetBrains Mono',monospace">Loading…</div>
+        </div>
+      </div>
+      <!-- Recent activity -->
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-head"><span class="panel-title">Recent Activity</span><span class="panel-meta">last 15</span></div>
+        <div id="email-activity-list" style="padding:8px 0">
+          <div style="padding:12px 16px;color:var(--text3);font-size:12px;font-family:'JetBrains Mono',monospace">Loading…</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div style="padding:16px">
+          <p style="color:var(--text2);font-size:13px;margin-bottom:14px;line-height:1.6">Transactional email via Resend. SPF + DMARC configured on send.mrdelegate.ai</p>
+          <a href="https://resend.com/emails" target="_blank" class="btn btn-ghost" style="text-decoration:none">Open Resend →</a>
+        </div>
+      </div>
+    </div>
+
+<!-- ═══════════ ORG CHART ═══════════ -->
+    <div class="view" id="view-team">
+      <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:16px;font-weight:700;color:var(--text1)">Team</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;font-family:'JetBrains Mono',monospace">Zero-human company. All AI. Fully autonomous.</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="loadAgents()">↻ Refresh Agents</button>
+      </div>
+
+      <div class="org">
+        <!-- LEADERSHIP -->
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;text-align:center">Leadership</div>
+        <div class="org-tier">
+          <div class="org-node founder">
+            <div class="org-icon" style="background:rgba(99,102,241,0.12);border:2px solid rgba(99,102,241,0.4);border-radius:50%;font-size:18px;font-weight:800;color:var(--accent)">B</div>
+            <div class="org-name">Bart Strellz</div>
+            <div class="org-role">Chairman · Founder</div>
+            <div class="org-desc">Sets direction. Reviews in bulk. Unblocks.</div>
+            <div class="org-pills"><span class="pill pill-founder"><span class="pill-dot"></span>founder</span></div>
+          </div>
+          <div class="org-node ceo">
+            <div class="org-icon" style="background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);">🎩</div>
+            <div class="org-name">Mr. Delegate</div>
+            <div class="org-role">CEO &amp; COO</div>
+            <div class="org-desc">Runs the company 24/7. Strategy + operations. Orchestrates all workers.</div>
+            <div class="org-pills"><span class="pill pill-active"><span class="pill-dot"></span>online 24/7</span><span style="background:rgba(99,102,241,0.1);color:var(--accent);border:1px solid rgba(99,102,241,0.3);padding:2px 8px;border-radius:100px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-left:4px">Sonnet 4.6</span></div>
+          </div>
+        </div>
+
+        <div class="org-connector"><div class="org-line"></div></div>
+
+        <!-- WORKERS -->
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin:20px 0 12px;text-align:center">⚙️ Workers</div>
+        <div class="org-tier">
+          <div class="org-node">
+            <div class="org-icon" style="background:rgba(116,185,255,0.15);">🌐</div>
+            <div class="org-name">Web Worker</div>
+            <div class="org-role">Frontend Engineer</div>
+            <div class="org-desc">Homepage, blog, Astro pages, landing pages, public-facing UI.</div>
+            <div class="org-pills"><span class="pill pill-active"><span class="pill-dot"></span>active</span><span style="background:rgba(99,102,241,0.1);color:var(--accent);border:1px solid rgba(99,102,241,0.3);padding:2px 8px;border-radius:100px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-left:4px">Sonnet 4.6</span></div>
+          </div>
+          <div class="org-node">
+            <div class="org-icon" style="background:rgba(0,206,201,0.15);">⚙️</div>
+            <div class="org-name">Platform Worker</div>
+            <div class="org-role">Backend Engineer</div>
+            <div class="org-desc">Ops dashboard, customer dashboard, internal APIs, auth, Supabase.</div>
+            <div class="org-pills"><span class="pill pill-active"><span class="pill-dot"></span>active</span><span style="background:rgba(99,102,241,0.1);color:var(--accent);border:1px solid rgba(99,102,241,0.3);padding:2px 8px;border-radius:100px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-left:4px">Sonnet 4.6</span></div>
+          </div>
+          <div class="org-node">
+            <div class="org-icon" style="background:rgba(162,155,254,0.15);">🔗</div>
+            <div class="org-name">Integrations Worker</div>
+            <div class="org-role">Payments Engineer</div>
+            <div class="org-desc">Stripe, OAuth connectors, webhooks. CEO approval required.</div>
+            <div class="org-pills"><span class="pill" style="background:rgba(245,158,11,0.1);color:var(--yellow);border:1px solid rgba(245,158,11,0.3)">approval-gated</span><span style="background:rgba(99,102,241,0.1);color:var(--accent);border:1px solid rgba(99,102,241,0.3);padding:2px 8px;border-radius:100px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-left:4px">Sonnet 4.6</span></div>
+          </div>
+          <div class="org-node">
+            <div class="org-icon" style="background:rgba(253,121,168,0.15);">🛠️</div>
+            <div class="org-name">Ops Worker</div>
+            <div class="org-role">DevOps / SRE</div>
+            <div class="org-desc">Crons, monitoring scripts, log rotation, deployment health.</div>
+            <div class="org-pills"><span class="pill pill-active"><span class="pill-dot"></span>active</span><span style="background:rgba(99,102,241,0.1);color:var(--accent);border:1px solid rgba(99,102,241,0.3);padding:2px 8px;border-radius:100px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace;margin-left:4px">Sonnet 4.6</span></div>
+          </div>
+        </div>
+
+        <div class="org-connector"><div class="org-line"></div></div>
+
+        <!-- BRAINS -->
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin:20px 0 12px;text-align:center">🧠 Intelligence Brains</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+            <div style="font-size:12px;font-weight:700;color:var(--text1);margin-bottom:4px">CEO Brain</div>
+            <div style="font-size:11px;color:var(--text3)">Agent orchestration &amp; performance tracking</div>
+            <div style="margin-top:6px;font-size:10px;font-weight:600;color:var(--accent);font-family:'JetBrains Mono',monospace">Sonnet 4.6</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+            <div style="font-size:12px;font-weight:700;color:var(--text1);margin-bottom:4px">SEO Brain</div>
+            <div style="font-size:11px;color:var(--text3)">Keywords, competitor gaps, content pipeline</div>
+            <div style="margin-top:6px;font-size:10px;font-weight:600;color:var(--accent);font-family:'JetBrains Mono',monospace">Sonnet 4.6</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+            <div style="font-size:12px;font-weight:700;color:var(--text1);margin-bottom:4px">Analytics Brain</div>
+            <div style="font-size:11px;color:var(--text3)">Metrics, trends, conversion &amp; heatmap alerts</div>
+            <div style="margin-top:6px;font-size:10px;font-weight:600;color:var(--yellow);font-family:'JetBrains Mono',monospace">Haiku</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+            <div style="font-size:12px;font-weight:700;color:var(--text1);margin-bottom:4px">Cron Brain</div>
+            <div style="font-size:11px;color:var(--text3)">Cron health, timing optimization, stale detection</div>
+            <div style="margin-top:6px;font-size:10px;font-weight:600;color:var(--accent);font-family:'JetBrains Mono',monospace">Sonnet 4.6</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+            <div style="font-size:12px;font-weight:700;color:var(--text1);margin-bottom:4px">Checkout Brain</div>
+            <div style="font-size:11px;color:var(--text3)">Drop-off detection, checkout recovery</div>
+            <div style="margin-top:6px;font-size:10px;font-weight:600;color:var(--accent);font-family:'JetBrains Mono',monospace">Sonnet 4.6</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+            <div style="font-size:12px;font-weight:700;color:var(--text1);margin-bottom:4px">Email Brain</div>
+            <div style="font-size:11px;color:var(--text3)">Deliverability, open rates, send timing</div>
+            <div style="margin-top:6px;font-size:10px;font-weight:600;color:var(--accent);font-family:'JetBrains Mono',monospace">Sonnet 4.6</div>
+          </div>
+        </div>
+
+        <!-- COORDINATION NOTE -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-size:12px;color:var(--text2)">
+          <span style="font-weight:700;color:var(--text1)">Coordination:</span> Max 3 workers active in parallel. Exclusive file ownership (COORDINATION.md). Workers are autonomous — report to CEO only when blocked.
+        </div>
+      </div>
+
+      <!-- Live run log -->
+      <div style="margin-top:28px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Live Run Log</div>
+          <button class="btn btn-ghost btn-sm" onclick="loadAgents()">↻ Refresh</button>
+        </div>
+        <div class="panel">
+          <div id="agents-list">
+            <div style="padding:32px;text-align:center;color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:12px">Loading agents…</div>
+          </div>
+          <div id="agents-pager" class="pager" style="display:none"></div>
+        </div>
+      </div>
+
+    </div>
+    <!-- ═══════════ CHURN FEEDBACK ═══════════ -->
+    <div class="view" id="view-churn">
+      <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:4px">Churn Intelligence</div>
+          <div style="font-size:22px;font-weight:800;color:var(--text1)">Cancellation Feedback</div>
+        </div>
+        <button class="btn-refresh" onclick="loadChurn()">↻ Refresh</button>
+      </div>
+
+      <!-- KPI row -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px" id="churn-kpis">
+        <div class="kpi"><div class="kpi-label">Total Cancellations</div><div class="kpi-val" id="churn-total">—</div></div>
+        <div class="kpi"><div class="kpi-label">Last 7 Days</div><div class="kpi-val" id="churn-7d">—</div></div>
+        <div class="kpi"><div class="kpi-label">Last 30 Days</div><div class="kpi-val" id="churn-30d">—</div></div>
+        <div class="kpi"><div class="kpi-label">Survey Response Rate</div><div class="kpi-val" id="churn-rate">—</div></div>
+      </div>
+
+      <!-- Charts row -->
+      <div style="display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:20px">
+        <!-- Reason breakdown donut -->
+        <div class="chart-card">
+          <div class="chart-head">
+            <span class="panel-title">Reason Breakdown</span>
+          </div>
+          <div style="padding:16px;display:flex;align-items:center;justify-content:center;min-height:220px">
+            <canvas id="churn-donut" style="max-width:200px;max-height:200px"></canvas>
+          </div>
+          <div id="churn-legend" style="padding:0 16px 16px;display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+
+        <!-- Recent cancellations table -->
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Recent Cancellations</span>
+            <span class="panel-meta" id="churn-table-meta"></span>
+          </div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse">
+              <thead>
+                <tr>
+                  <th style="padding:10px 16px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);border-bottom:1px solid var(--border)">Customer</th>
+                  <th style="padding:10px 16px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);border-bottom:1px solid var(--border)">Reason</th>
+                  <th style="padding:10px 16px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);border-bottom:1px solid var(--border)">Days Active</th>
+                  <th style="padding:10px 16px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);border-bottom:1px solid var(--border)">Survey</th>
+                  <th style="padding:10px 16px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);border-bottom:1px solid var(--border)">Date</th>
+                </tr>
+              </thead>
+              <tbody id="churn-table-body">
+                <tr><td colspan="5" style="padding:32px;text-align:center;color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:12px">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="churn-pager" class="pager" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- Open-text feedback panel -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Open Feedback (Verbatim)</span>
+          <span class="panel-meta" id="churn-feedback-meta"></span>
+        </div>
+        <div id="churn-feedback-list" style="padding:16px;display:flex;flex-direction:column;gap:10px">
+          <div style="color:var(--text3);font-size:12px;font-family:'JetBrains Mono',monospace">No open feedback yet.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<script>
+// Check for token in URL parameter first
+const urlParams = new URLSearchParams(window.location.search);
+const urlToken = urlParams.get('token');
+if (urlToken) {
+  localStorage.setItem('md_admin_token', urlToken);
+  // Remove token from URL for security
+  window.history.replaceState({}, document.title, '/ops/dashboard');
+}
+
+const TOKEN = localStorage.getItem('md_admin_token');
+if (!TOKEN) window.location.href = '/ops';
+
+fetch('/api/admin/verify', { headers: { 'Authorization': 'Bearer ' + TOKEN } })
+  .then(r => { if (!r.ok) { localStorage.removeItem('md_admin_token'); window.location.href = '/ops?expired=1'; } });
+
+const viewTitles = { overview:'Overview', milestones:'Milestones', customers:'Customers', leads:'Leads', support:'Support Tickets', vps:'VPS Fleet', system:'System Health', emails:'Email', team:'Team', churn:'Churn Feedback' };
+
+function showView(name, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('view-' + name)?.classList.add('active');
+  if (el) {
+    el.classList.add('active');
+  } else {
+    document.querySelectorAll('nav a').forEach(a => {
+      const oc = a.getAttribute('onclick') || '';
+      if (oc.includes("'" + name + "'")) a.classList.add('active');
+    });
+  }
+  const titleEl = document.getElementById('topbar-title');
+  if (titleEl) titleEl.textContent = viewTitles[name] || name;
+  window.location.hash = name;
+  if (name === 'customers' || name === 'leads') loadCustomersView();
+  if (name === 'support') loadSupport();
+  if (name === 'vps') loadVPS();
+  if (name === 'team') loadAgents();
+  if (name === 'system') loadSystemHealth();
+  if (name === 'emails') loadEmails();
+  if (name === 'churn') loadChurn();
+}
+
+// Restore view from URL hash after page fully loads (needs TOKEN)
+setTimeout(() => {
+  const hash = window.location.hash.replace('#', '');
+  if (hash && document.getElementById('view-' + hash)) showView(hash);
+}, 100);
+
+function logout() { localStorage.removeItem('md_admin_token'); window.location.href = '/ops'; }
+
+function formatAgentRuntime(a) {
+  if (!a.startedAt) return '—';
+  const endMs = a.completedAt ? new Date(a.completedAt).getTime() : Date.now();
+  const ms = endMs - new Date(a.startedAt).getTime();
+  if (ms < 0) return '—';
+  const mins = Math.floor(ms / 60000);
+  if (mins < 60) return (mins > 0 ? mins : '<1') + 'm';
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return h + 'h ' + m + 'm';
+}
+
+function loadAgents() {
+  const el = document.getElementById('agents-list');
+  fetch('/api/admin/agents', { headers: { 'Authorization': 'Bearer ' + TOKEN } })
+    .then(r => r.json())
+    .then(data => {
+      const allAgents = Array.isArray(data.agents) ? data.agents : [];
+      const active = allAgents.filter(a => a.isActive);
+      const badge = document.getElementById('agents-badge');
+      if (active.length) { badge.textContent = active.length; badge.className = "badge-pill active"; badge.style.display = 'inline-flex'; }
+      else { badge.className = "badge-pill idle"; badge.style.display = 'none'; }
+
+      if (!allAgents.length) {
+        el.innerHTML = '<div style="padding:48px;text-align:center;color:var(--text3);font-size:13px">No agent history found.</div>';
+        return;
+      }
+
+      const statusCfg = {
+        running:   { color: '#10B981', bg: 'rgba(16,185,129,0.15)', label: '● Running' },
+        completed: { color: '#5A5A7A', bg: 'rgba(90,90,122,0.08)',  label: '✓ Done' },
+        timed_out: { color: '#F59E0B', bg: 'rgba(245,158,11,0.10)', label: '⏱ Timed Out' },
+        killed:    { color: '#EF4444', bg: 'rgba(239,68,68,0.10)',   label: '✗ Killed' },
+        failed:    { color: '#EF4444', bg: 'rgba(239,68,68,0.10)',   label: '✗ Failed' },
+        done:      { color: '#5A5A7A', bg: 'rgba(90,90,122,0.08)',  label: '✓ Done' },
+        unknown:   { color: '#9090AA', bg: 'rgba(144,144,170,0.08)', label: '● Running' }
+      };
+
+      // Sort: running first, then by start time
+      allAgents.sort((a,b) => {
+        if (a.status==='running' && b.status!=='running') return -1;
+        if (b.status==='running' && a.status!=='running') return 1;
+        return (b.startedAt||'') > (a.startedAt||'') ? 1 : -1;
+      });
+
+      // Build summary cards
+      let summaryHTML = '<div style="margin-bottom:16px;display:flex;gap:12px;flex-wrap:wrap">' +
+        '<div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:10px 16px;font-size:13px">' +
+          '<span style="color:var(--green);font-weight:700;font-size:20px">' + active.length + '</span>' +
+          '<span style="color:var(--text2);margin-left:8px">Running Now</span></div>' +
+        '<div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:10px 16px;font-size:13px">' +
+          '<span style="color:var(--accent);font-weight:700;font-size:20px">' + allAgents.length + '</span>' +
+          '<span style="color:var(--text2);margin-left:8px">Total This Session</span></div>' +
+        '<div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:10px 16px;font-size:13px">' +
+          '<span style="color:var(--yellow);font-weight:700;font-size:20px">' + allAgents.filter(a=>a.status==='timed_out').length + '</span>' +
+          '<span style="color:var(--text2);margin-left:8px">Timed Out</span></div>' +
+        '</div>';
+      el.innerHTML = summaryHTML;
+      initAgentsPager(allAgents, statusCfg);
+    })
+    .catch(err => {
+      el.innerHTML = '<div style="padding:48px;text-align:center;color:var(--text3);font-size:13px">Could not load agent data: ' + err.message + '</div>';
+    });
+}
+
+function killAgent(runId) {
+  if (!runId || !confirm('Kill agent ' + runId + '?')) return;
+  fetch('/api/admin/agents/' + runId + '/kill', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + TOKEN }
+  }).then(() => loadAgents()).catch(() => alert('Kill request failed'));
+}
+
+setInterval(() => {
+  if (document.getElementById('view-team')?.classList.contains('active')) loadAgents();
+}, 30000);
+
+// Sync agent count in sidebar badge + overview card every 5 minutes regardless of active tab
+setInterval(async () => {
+  try {
+    const r = await fetch('/api/admin/agents', { headers: { 'Authorization': 'Bearer ' + TOKEN } });
+    if (!r.ok) return;
+    const data = await r.json();
+    const active = Array.isArray(data.active) ? data.active : (Array.isArray(data.agents) ? data.agents.filter(a => a.isActive) : []);
+    const badge = document.getElementById('agents-badge');
+    if (badge) {
+      if (active.length > 0) { badge.textContent = active.length; badge.className = "badge-pill active"; badge.style.display = 'inline-flex'; }
+      else { badge.className = "badge-pill idle"; badge.style.display = 'none'; }
+    }
+    const cnt = document.getElementById('claude-agents');
+    if (cnt) cnt.textContent = active.length;
+    const countEl = document.getElementById('active-agent-count');
+    if (countEl) countEl.textContent = active.length;
+    const names = document.getElementById('active-agent-names');
+    if (names) names.textContent = active.length > 0 ? active.slice(0, 3).map(a => a.label || a.runId).join(', ') : 'No agents running';
+    if (document.getElementById('view-team')?.classList.contains('active')) loadAgents();
+  } catch (e) { /* silent */ }
+}, 300000);
+
+function fmt(iso) { if (!iso) return '—'; return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+function fmtFull(iso) { if (!iso) return '—'; return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'}); }
+function daysLeft(iso) { if (!iso) return null; return Math.ceil((new Date(iso)-Date.now())/86400000); }
+// XSS-safe text escaping — ALWAYS use this before putting data into HTML
+function esc(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function statusPill(s) {
+  const m = {active:'pill-active',trial:'pill-trial',lead:'pill-lead',cancelled:'pill-cancelled',payment_failed:'pill-cancelled',founder:'pill-founder'};
+  const labels = {payment_failed:'failed'};
+  return '<span class="pill ' + (m[s]||'pill-lead') + '"><span class="pill-dot"></span>' + (labels[s]||s) + '</span>';
+}
+function ticketPill(s) {
+  const m={open:'pill-open',auto_resolved:'pill-resolved',escalated:'pill-escalated',closed:'pill-resolved'};
+  return '<span class="pill ' + (m[s]||'pill-open') + '">' + s.replace('_',' ') + '</span>';
+}
+function tierPill(t) {
+  const c=['','var(--green)','var(--yellow)','var(--red)'];
+  return '<span style="font-size:10px;font-weight:700;color:' + (c[t]||'var(--text3)') + ';font-family:\'JetBrains Mono\',monospace">T' + t + '</span>';
+}
+
+// ── Charts ──
+let charts = {};
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = '#5A5A7A';
+
+function initCharts(m) {
+  const mrr=m.mrr||0, active=m.active||0, trial=m.trial||0, leads=m.leads||0;
+  // m.recentCustomers is passed for the signup chart
+
+  const mrrCtx = document.getElementById('mrr-chart')?.getContext('2d');
+  if (mrrCtx) {
+    charts.mrr?.destroy();
+    const nowLabel = new Date().toLocaleString('default',{month:'short',year:'numeric'});
+    charts.mrr = new Chart(mrrCtx, {
+      type:'bar',
+      data:{
+        labels:[nowLabel],
+        datasets:[{
+          label:'Current MRR',
+          data:[mrr],
+          backgroundColor:'rgba(99,102,241,0.75)',
+          borderColor:'#6366F1',
+          borderWidth:0,
+          borderRadius:8,
+        }]
+      },
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            backgroundColor:'rgba(17,17,24,0.95)',
+            borderColor:'rgba(99,102,241,0.3)',
+            borderWidth:1,
+            titleColor:'#9090AA',
+            bodyColor:'#F0F0FF',
+            callbacks:{label:c=>' $'+c.raw.toLocaleString()}
+          }
+        },
+        scales:{
+          x:{grid:{display:false},border:{display:false},ticks:{font:{size:10},color:'#5A5A7A'}},
+          y:{grid:{color:'rgba(255,255,255,0.04)'},border:{display:false},ticks:{font:{size:10},color:'#5A5A7A',callback:v=>'$'+v}}
+        }
+      }
+    });
+  }
+
+  const pieCtx = document.getElementById('pie-chart')?.getContext('2d');
+  if (pieCtx) {
+    charts.pie?.destroy();
+    const total=active+trial+leads;
+    charts.pie = new Chart(pieCtx, {
+      type:'doughnut',
+      data:{
+        labels:['Active','Trial','Leads'],
+        datasets:[{
+          data:total>0?[active,trial,leads]:[1,1,1],
+          backgroundColor:total>0?['#10B981','#F59E0B','#5A5A7A']:['#2A2A3A','#2A2A3A','#2A2A3A'],
+          borderWidth:0,
+          hoverOffset:6
+        }]
+      },
+      options:{
+        responsive:false,
+        cutout:'72%',
+        plugins:{
+          legend:{
+            position:'bottom',
+            labels:{font:{size:10},padding:10,boxWidth:8,boxHeight:8,color:'#9090AA'}
+          },
+          tooltip:{
+            backgroundColor:'rgba(17,17,24,0.95)',
+            borderColor:'rgba(42,42,58,0.8)',
+            borderWidth:1,
+            titleColor:'#9090AA',
+            bodyColor:'#F0F0FF',
+            callbacks:{label:c=>total>0?' '+c.label+': '+c.raw:' '+c.label+': 0'}
+          }
+        }
+      }
+    });
+  }
+
+  const sigCtx = document.getElementById('signup-chart')?.getContext('2d');
+  if (sigCtx) {
+    charts.signups?.destroy();
+    // Build real last-7-days labels from today backward
+    const dayLabels=[], dayMs=[];
+    for(let i=6;i>=0;i--){
+      const d=new Date(); d.setDate(d.getDate()-i);
+      dayLabels.push(d.toLocaleDateString('en-US',{weekday:'short'}));
+      dayMs.push(d.toDateString());
+    }
+    // Distribute new signups into days using recentCustomers from m
+    const sd=new Array(7).fill(0);
+    if (m.recentCustomers) {
+      m.recentCustomers.forEach(c=>{
+        if(!c.created_at) return;
+        const ds=new Date(c.created_at).toDateString();
+        const idx=dayMs.indexOf(ds);
+        if(idx>=0) sd[idx]++;
+      });
+    }
+    charts.signups = new Chart(sigCtx, {
+      type:'bar',
+      data:{
+        labels:dayLabels,
+        datasets:[
+          {label:'Signups',data:sd,backgroundColor:'rgba(99,102,241,0.75)',hoverBackgroundColor:'rgba(99,102,241,0.95)',borderRadius:6,borderSkipped:false}
+        ]
+      },
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            backgroundColor:'rgba(17,17,24,0.95)',
+            borderColor:'rgba(42,42,58,0.8)',
+            borderWidth:1,
+            titleColor:'#9090AA',
+            bodyColor:'#F0F0FF'
+          }
+        },
+        scales:{
+          x:{grid:{display:false},border:{display:false},ticks:{font:{size:10},color:'#5A5A7A'}},
+          y:{grid:{color:'rgba(255,255,255,0.04)'},border:{display:false},ticks:{font:{size:10},color:'#5A5A7A',stepSize:1},beginAtZero:true}
+        }
+      }
+    });
+  }
+}
+
+// ── Stat refresh animation helper ──
+// Call after setting textContent on any API-driven stat number
+function animateStat(el) {
+  if (!el) return;
+  el.classList.remove('ds-stat-updated');
+  // force reflow to restart animation
+  void el.offsetWidth;
+  el.classList.add('ds-stat-updated');
+}
+
+function setStatEl(id, value) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (el.textContent !== String(value)) {
+    el.textContent = value;
+    animateStat(el);
+  }
+}
+
+// ── Load all ──
+async function loadAll() {
+  document.getElementById('ts-now').textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  refreshStats(); // includes agent count + sidebar badge
+
+  // Show loading state on first load
+  const mrrEl = document.getElementById('kpi-mrr');
+  const arrEl = document.getElementById('kpi-arr');
+  const prevMRR = mrrEl?.textContent || '$0';
+  const prevARR = arrEl?.textContent || '$0';
+  if (mrrEl && (mrrEl.textContent === '$0' || mrrEl.textContent === 'Loading...')) mrrEl.textContent = 'Loading...';
+  if (arrEl && (arrEl.textContent === '$0' || arrEl.textContent === 'Loading...')) arrEl.textContent = 'Loading...';
+
+  let d, m;
+  try {
+    const r = await fetch('/api/admin/dashboard',{headers:{'Authorization':'Bearer '+TOKEN}});
+    if (!r.ok) {
+      // Restore previous values or show error
+      if (mrrEl) { 
+        mrrEl.textContent = (prevMRR === '$0' || prevMRR === 'Loading...') ? 'Error' : prevMRR; 
+        mrrEl.style.color = 'var(--red)'; 
+      }
+      if (arrEl) { 
+        arrEl.textContent = (prevARR === '$0' || prevARR === 'Loading...') ? 'Error' : prevARR; 
+        arrEl.style.color = 'var(--red)'; 
+      }
+      console.error('Dashboard API failed:', r.status, r.statusText);
+      if (r.status === 401) {
+        localStorage.removeItem('md_admin_token');
+        window.location.href = '/ops?expired=1';
+      }
+      return;
+    }
+    d = await r.json();
+    m = d.metrics;
+
+    // Reset colors in case they were set to red from previous error
+    if (mrrEl) mrrEl.style.color = 'var(--green)';
+    if (arrEl) arrEl.style.color = 'var(--accent)';
+  } catch (error) {
+    console.error('Dashboard load error:', error);
+    if (mrrEl) { mrrEl.textContent = 'Error'; mrrEl.style.color = 'var(--red)'; }
+    if (arrEl) { arrEl.textContent = 'Error'; arrEl.style.color = 'var(--red)'; }
+    return;
+  }
+
+  const mrr=m.mrr||0, arr=mrr*12;
+  setStatEl('kpi-mrr', '$'+mrr.toLocaleString());
+  setStatEl('kpi-arr', '$'+arr.toLocaleString());
+  setStatEl('kpi-active', m.active||0);
+  setStatEl('kpi-trial', m.trial||0);
+  setStatEl('kpi-leads', m.leads||0);
+  document.getElementById('kpi-mrr-trend').textContent = mrr>0?'↑ Growing':'Pre-launch';
+  document.getElementById('kpi-mrr-trend').className = 'kpi-trend '+(mrr>0?'up':'flat');
+  document.getElementById('cust-count').textContent = (m.totalCustomers||0)+' total';
+
+  // Row 2 KPIs
+  const el_nw = document.getElementById('kpi-new-week');
+  if (el_nw) el_nw.textContent = m.newSignupsThisWeek||0;
+  const el_nm = document.getElementById('kpi-new-month-sub');
+  if (el_nm) el_nm.textContent = (m.newSignupsThisMonth||0)+' this month';
+  const el_conv = document.getElementById('kpi-conversion');
+  if (el_conv) el_conv.textContent = (m.conversionRate||0)+'%';
+  const el_arpu = document.getElementById('kpi-arpu-sub');
+  if (el_arpu) el_arpu.textContent = '$'+(m.arpu||0)+' ARPU';
+  const el_cancel = document.getElementById('kpi-cancellations');
+  if (el_cancel) el_cancel.textContent = m.cancellationsThisMonth||0;
+  const el_failed = document.getElementById('kpi-failed-sub');
+  if (el_failed) el_failed.textContent = (m.failedPaymentsThisMonth||0)+' failed payments';
+  const el_total = document.getElementById('kpi-total');
+  if (el_total) el_total.textContent = m.totalCustomers||0;
+  const el_vps = document.getElementById('kpi-vps-sub');
+  if (el_vps) el_vps.textContent = (m.vpsProvisionedCount||0)+' VPS provisioned';
+
+  // Cancellations KPI color
+  const cancelEl = document.getElementById('kpi-cancellations');
+  if (cancelEl) cancelEl.style.color = (m.cancellationsThisMonth||0)>0?'var(--red)':'var(--green)';
+
+  // Update ARR progress bar
+  const arrPct = Math.min((arr/1000000)*100, 100);
+  const arrBar = document.getElementById('arr-bar');
+  const arrVal = document.getElementById('arr-progress-val');
+  const arrLbl = document.getElementById('arr-pct-label');
+  if (arrBar) arrBar.style.width = arrPct.toFixed(2)+'%';
+  if (arrVal) arrVal.textContent = '$'+arr.toLocaleString()+' ARR';
+  if (arrLbl) arrLbl.textContent = arrPct.toFixed(2)+'% complete';
+
+  document.getElementById('kpi-tickets').textContent = m.openTickets||0;
+  const badge = document.getElementById('open-badge');
+  if ((m.openTickets||0)>0){badge.textContent=m.openTickets;badge.style.display='inline';} else badge.style.display='none';
+
+  // Pass recentCustomers so the weekly signup chart can use real day-by-day data
+  const mWithCustomers = Object.assign({}, m, { recentCustomers: d.recentCustomers || [] });
+  initCharts(mWithCustomers);
+
+  const tbody = document.getElementById('recent-tbody');
+  const custs = d.recentCustomers||[];
+  if (!custs.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:32px;font-family:\'JetBrains Mono\',monospace;font-size:12px">No signups yet — launch incoming 🚀</td></tr>';
+  } else {
+    tbody.innerHTML = custs.slice(0,8).map(c => {
+      const dl=daysLeft(c.trial_ends_at);
+      const ts = c.status==='trial'&&dl!==null ? '<span style="color:'+(dl<1?'var(--red)':dl<2?'var(--yellow)':'var(--text2)')+';font-size:11px;font-family:\'JetBrains Mono\',monospace">'+(dl>0?dl+'d left':'Expired')+'</span>' : '—';
+      return '<tr><td style="font-weight:600;color:var(--text1)">' + esc(c.name||'—') + '</td><td>' + statusPill(c.status) + '</td><td>' + ts + '</td><td style="font-size:11px;color:var(--text3);font-family:\'JetBrains Mono\',monospace">' + fmt(c.created_at) + '</td></tr>';
+    }).join('');
+  }
+
+  await loadSupportPreview();
+  loadOverview(); // fire-and-forget, GA can be slow
+}
+
+async function loadOverview() {
+  try {
+    const r = await fetch('/api/admin/overview', { headers: { 'Authorization': 'Bearer ' + TOKEN } });
+    if (!r.ok) return;
+    const d = await r.json();
+    const ts = new Date(d.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+    // ── GA ──
+    const ga = d.ga || {};
+    if (!ga.error) {
+      const fmt = n => (n||0).toLocaleString();
+      document.getElementById('ga-users-today').textContent = fmt(ga.today?.users);
+      document.getElementById('ga-users-7d').textContent = fmt(ga.d7?.users);
+      document.getElementById('ga-users-30d').textContent = fmt(ga.d30?.users);
+      document.getElementById('ga-pageviews-30d').textContent = fmt(ga.d30?.pageviews);
+      document.getElementById('ga-updated').textContent = ts;
+
+      // Top pages
+      const pagesEl = document.getElementById('ga-top-pages');
+      if (ga.topPages?.length) {
+        const maxViews = Math.max(...ga.topPages.map(p => p.views), 1);
+        pagesEl.innerHTML = ga.topPages.map(p => {
+          const pct = Math.round((p.views / maxViews) * 100);
+          const label = p.page.length > 32 ? p.page.slice(0, 30) + '…' : p.page;
+          return `<div style="display:flex;align-items:center;gap:8px">
+            <div style="flex:1;overflow:hidden">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+                <span style="font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${label}</span>
+                <span style="font-size:11px;color:var(--orange);font-weight:700;margin-left:8px;white-space:nowrap">${p.views.toLocaleString()}</span>
+              </div>
+              <div style="height:3px;background:rgba(255,255,255,0.06);border-radius:2px">
+                <div style="height:3px;background:var(--orange);border-radius:2px;width:${pct}%"></div>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+      } else {
+        pagesEl.innerHTML = '<div style="color:var(--text3);font-size:11px;font-family:\'JetBrains Mono\',monospace">No data yet</div>';
+      }
+
+      // Sources
+      const srcEl = document.getElementById('ga-sources');
+      if (ga.sources?.length) {
+        const maxSessions = Math.max(...ga.sources.map(s => s.sessions), 1);
+        const srcColors = { 'Organic Search': 'var(--green)', 'Direct': 'var(--orange)', 'Referral': 'var(--blue)', 'Organic Social': 'var(--accent)', 'Email': 'var(--yellow)' };
+        srcEl.innerHTML = ga.sources.map(s => {
+          const pct = Math.round((s.sessions / maxSessions) * 100);
+          const color = srcColors[s.source] || 'var(--text2)';
+          return `<div style="display:flex;align-items:center;gap:8px">
+            <div style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0"></div>
+            <div style="flex:1;overflow:hidden">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+                <span style="font-size:11px;color:var(--text2)">${s.source}</span>
+                <span style="font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">${s.sessions.toLocaleString()} sessions</span>
+              </div>
+              <div style="height:3px;background:rgba(255,255,255,0.06);border-radius:2px">
+                <div style="height:3px;background:${color};border-radius:2px;width:${pct}%;opacity:0.7"></div>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+      } else {
+        srcEl.innerHTML = '<div style="color:var(--text3);font-size:11px;font-family:\'JetBrains Mono\',monospace">No data yet</div>';
+      }
+    } else {
+      document.getElementById('ga-updated').textContent = 'GA error';
+    }
+
+    // ── Revenue ──
+    const rev = d.revenue || {};
+    if (!rev.error) {
+      const $f = n => '$' + (n||0).toLocaleString();
+      document.getElementById('rev-mrr').textContent = $f(rev.mrr);
+      document.getElementById('rev-arr').textContent = $f(rev.arr);
+      document.getElementById('rev-paying').textContent = rev.paying || 0;
+      document.getElementById('rev-trials').textContent = rev.trials || 0;
+      const churnEl = document.getElementById('rev-churn');
+      churnEl.textContent = (rev.churnRate || 0) + '%';
+      churnEl.style.color = (rev.churnRate || 0) > 5 ? 'var(--red)' : (rev.churnRate || 0) > 0 ? 'var(--yellow)' : 'var(--green)';
+      document.getElementById('rev-today').textContent = $f(rev.todayRev);
+      document.getElementById('rev-month').textContent = $f(rev.monthRev);
+      document.getElementById('rev-ltv').textContent = $f(rev.ltv);
+      document.getElementById('rev-updated').textContent = ts;
+    } else {
+      document.getElementById('rev-updated').textContent = 'Stripe error';
+    }
+
+    // ── Funnel ──
+    const fn = d.funnel || {};
+    const rv = d.revenue || {};
+    const visitors30d = ga.d30?.users || 0;
+    const signups = fn.signups || 0;
+    const trials = fn.trials || 0;
+    const paid = fn.paid || 0;
+    const mrr = rv.mrr || 0;
+
+    document.getElementById('funnel-visitors').textContent = visitors30d.toLocaleString();
+    document.getElementById('funnel-signups').textContent = signups.toLocaleString();
+    document.getElementById('funnel-trials').textContent = trials.toLocaleString();
+    document.getElementById('funnel-paid').textContent = paid.toLocaleString();
+    document.getElementById('funnel-mrr').textContent = '$' + mrr.toLocaleString();
+    document.getElementById('funnel-updated').textContent = ts;
+
+    const pct = (num, den) => den > 0 ? (num / den * 100).toFixed(1) + '%' : '—';
+    document.getElementById('funnel-signup-rate').textContent = pct(signups, visitors30d) + ' of visitors';
+    document.getElementById('funnel-trial-rate').textContent = pct(trials, signups) + ' of signups';
+    document.getElementById('funnel-paid-rate').textContent = pct(paid, trials) + ' of trials';
+
+  } catch (e) {
+    console.warn('[overview]', e.message);
+  }
+}
+
+async function loadSupportPreview() {
+  const [ticketsRes, statsRes] = await Promise.all([
+    fetch('/api/admin/support/tickets',{headers:{'Authorization':'Bearer '+TOKEN}}),
+    fetch('/api/admin/support/stats-full',{headers:{'Authorization':'Bearer '+TOKEN}}),
+  ]);
+  const el = document.getElementById('support-preview');
+
+  if (statsRes.ok) {
+    const s = await statsRes.json();
+    const needsBart = s.needsBart || 0;
+    const headText = needsBart > 0
+      ? needsBart + ' need' + (needsBart===1?'s':'') + ' your attention'
+      : 'Queue clear';
+    document.getElementById('ticket-count-head').textContent = headText;
+    const summaryEl = document.getElementById('support-bart-summary');
+    if (summaryEl) summaryEl.textContent = s.bartSummary || 'Mr. Support handles all Tier 1 automatically.';
+  }
+
+  if (!ticketsRes.ok) { el.innerHTML='<div class="empty"><div class="empty-ico">✅</div><div class="empty-txt">Queue clear</div></div>'; return; }
+  const d = await ticketsRes.json();
+  const actionable = (d.tickets||[]).filter(t=>t.status==='open'||t.status==='escalated');
+  if (!actionable.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-ico">✅</div><div class="empty-txt">Queue clear — Mr. Support handled everything</div></div>';
+  } else {
+    el.innerHTML = actionable.slice(0,3).map(t =>
+      '<div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px">' +
+      '<div style="overflow:hidden">' +
+        '<div style="font-size:13px;font-weight:600;color:var(--text1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(t.subject) + '</div>' +
+        '<div style="font-size:10px;color:var(--text3);font-family:\'JetBrains Mono\',monospace;margin-top:1px">' + esc(t.customer_email||'—') + ' · ' + fmt(t.created_at) + '</div>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0">' + ticketPill(t.status) + (t.tier != null ? ' ' + tierPill(t.tier) : '') + '</div>' +
+      '</div>'
+    ).join('') + (actionable.length>3?'<div style="padding:10px 16px"><button class="btn btn-ghost btn-sm" onclick="showView(\'support\',null)" style="width:100%">View all ' + actionable.length + ' →</button></div>':'');
+  }
+}
+
+// Load revenue metrics and customers view
+async function loadCustomersView() {
+  // Load revenue metrics from Stripe
+  try {
+    const r = await fetch('/api/admin/revenue-metrics', { headers: { 'Authorization': 'Bearer ' + TOKEN } });
+    if (r.ok) {
+      const m = await r.json();
+      const set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+      set('cust-kpi-mrr', '$' + (m.mrr || 0).toLocaleString());
+      set('cust-kpi-arr', '$' + (m.arr || 0).toLocaleString());
+      set('kpi-paying', m.paying || 0);
+      set('kpi-trials', m.trials || 0);
+      set('kpi-ltv', '$' + (m.ltv || 0).toLocaleString());
+      set('kpi-churn', (m.churnRate || 0) + '%');
+      set('kpi-today-rev', '$' + (m.todayRev || 0).toLocaleString());
+      set('kpi-month-rev', '$' + (m.monthRev || 0).toLocaleString());
+      set('kpi-failed', m.failedPayments || 0);
+      set('kpi-annual', m.annualPlans || 0);
+    }
+  } catch (e) { console.error('Revenue metrics:', e); }
+  loadCustomers();
+}
+
+async function loadCustomers() {
+  const custTbody = document.getElementById('cust-tbody');
+  const leadsTbody = document.getElementById('leads-tbody');
+  if (custTbody) custTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:32px">Loading…</td></tr>';
+  if (leadsTbody) leadsTbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:32px">Loading…</td></tr>';
+
+  const r = await fetch('/api/admin/customers',{headers:{'Authorization':'Bearer '+TOKEN}});
+  if (!r.ok) {
+    if (custTbody) custTbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--red);padding:32px">Failed to load customers</td></tr>';
+    return;
+  }
+  const {customers=[]} = await r.json();
+  const paying = customers.filter(c=>c.status==='active'||c.status==='trial'||c.status==='founder'||c.status==='cancelled'||c.status==='payment_failed');
+  const leads = customers.filter(c=>c.status==='lead');
+  initCustPager(paying, leads);
+}
+
+async function loadSupport() {
+  const [r, statsR] = await Promise.all([
+    fetch('/api/admin/support/tickets',{headers:{'Authorization':'Bearer '+TOKEN}}),
+    fetch('/api/admin/support/stats-full',{headers:{'Authorization':'Bearer '+TOKEN}}),
+  ]);
+  const el = document.getElementById('tickets-list');
+  if (!r.ok) { el.innerHTML='<div class="empty"><div class="empty-ico">✅</div><div class="empty-txt">Queue clear</div></div>'; return; }
+
+  if (statsR.ok) {
+    const s = await statsR.json();
+    const setTxt = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+    setTxt('stat-open',  s.open ?? '—');
+    setTxt('stat-auto',  s.autoResolvedToday ?? '—');
+    setTxt('stat-ceo',   s.ceoHandled ?? '—');
+    setTxt('stat-bart',  s.needsBart ?? '—');
+    const summaryEl = document.getElementById('support-bart-summary');
+    if (summaryEl && s.bartSummary) summaryEl.textContent = s.bartSummary;
+    const needsBart = s.needsBart || 0;
+    document.getElementById('ticket-count-head').textContent = needsBart > 0
+      ? needsBart + ' need' + (needsBart===1?'s':'') + ' your attention'
+      : (s.weekTotal || 0) + ' this week';
+  }
+
+  const {tickets=[],total=0} = await r.json();
+
+  function statusBadge(s) {
+    const map = {open:'background:rgba(251,146,60,0.15);color:#fb923c;border:1px solid rgba(251,146,60,0.3)',in_progress:'background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3)',resolved:'background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)',auto_resolved:'background:rgba(16,185,129,0.1);color:#6ee7b7;border:1px solid rgba(16,185,129,0.2)',escalated:'background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3)'};
+    const style = map[s] || 'background:rgba(148,163,184,0.15);color:#94a3b8;border:1px solid rgba(148,163,184,0.3)';
+    return '<span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;font-family:\'JetBrains Mono\',monospace;'+style+'">'+s+'</span>';
+  }
+
+  initSupportPager(tickets, statusBadge);
+}
+
+async function loadVPS() {
+  try {
+    // Fetch VPS list from ops API
+    const vpsR = await fetch('/ops/api/vps/list', {headers:{'Authorization':'Bearer '+TOKEN}});
+    const vpsData = vpsR.ok ? await vpsR.json() : { instances: [] };
+    const instances = vpsData.instances || [];
+    
+    // Render customer VPS table
+    document.getElementById('vps-tbody').innerHTML = instances.length ? instances.map(v =>
+      '<tr>' +
+        '<td style="font-weight:600;color:var(--text1)">' + esc(v.customer) + '</td>' +
+        '<td style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text2)">' + esc(v.ip) + '</td>' +
+        '<td>' + statusPill(v.status) + '</td>' +
+        '<td style="font-size:11px;color:var(--text2);font-family:\'JetBrains Mono\',monospace">' + esc(v.region) + '</td>' +
+        '<td style="font-size:11px;color:var(--text3);font-family:\'JetBrains Mono\',monospace">' + esc(v.uptime) + '</td>' +
+        '<td style="text-align:right;white-space:nowrap">' +
+          (v.ip !== '—' ? '<button class="btn btn-sm btn-ghost" onclick="viewVpsLogs(\''+esc(v.id)+'\',\''+esc(v.customer)+'\')">View Logs</button>' : '') +
+        '</td>' +
+      '</tr>'
+    ).join('') : '<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:32px;font-family:\'JetBrains Mono\',monospace;font-size:12px">No VPS instances yet — provision one to get started</td></tr>';
+    
+    const custVps = instances.length;
+    document.getElementById('infra-cost').textContent = '$'+(34+custVps*10)+'/mo';
+  } catch (e) {
+    console.error('[loadVPS] Error:', e);
+    document.getElementById('vps-tbody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--red);padding:32px">Error loading VPS data</td></tr>';
+  }
+
+  // Pool VPS panel
+  try {
+    const pr = await fetch('/api/admin/vps-pool', {headers:{'Authorization':'Bearer '+TOKEN}});
+    if (pr.ok) {
+      const pd = await pr.json();
+      const poolInstances = pd.poolInstances || [];
+      const meta = document.getElementById('pool-vps-meta');
+      if (meta) meta.textContent = poolInstances.length + ' instance' + (poolInstances.length===1?'':'s');
+      const tbody = document.getElementById('pool-vps-tbody');
+      if (tbody) {
+        if (poolInstances.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:24px;font-family:\'JetBrains Mono\',monospace;font-size:12px">No md-pool-* instances found</td></tr>';
+        } else {
+          tbody.innerHTML = poolInstances.map(v => {
+            const running = v.power_status === 'running';
+            const statusDot = running
+              ? '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px"></span><span style="color:var(--green);font-size:11px;font-weight:600">running</span>'
+              : '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--yellow);margin-right:6px"></span><span style="color:var(--yellow);font-size:11px;font-weight:600">' + esc(v.power_status||v.status||'unknown') + '</span>';
+            const created = v.created ? new Date(v.created).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+            return '<tr>' +
+              '<td style="font-weight:600;color:var(--text1);font-family:\'JetBrains Mono\',monospace;font-size:12px">' + esc(v.label) + '</td>' +
+              '<td style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text2)">' + (v.ip||'—') + '</td>' +
+              '<td style="white-space:nowrap">' + statusDot + '</td>' +
+              '<td style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text3)">' + created + '</td>' +
+            '</tr>';
+          }).join('');
+        }
+      }
+    }
+  } catch(e) { /* silent */ }
+
+  // Pool VPS panel
+  try {
+    const pr = await fetch('/api/admin/vps-pool', {headers:{'Authorization':'Bearer '+TOKEN}});
+    if (pr.ok) {
+      const pd = await pr.json();
+      const instances = pd.poolInstances || [];
+      const meta = document.getElementById('pool-vps-meta');
+      if (meta) meta.textContent = instances.length + ' instance' + (instances.length===1?'':'s');
+      const tbody = document.getElementById('pool-vps-tbody');
+      if (tbody) {
+        if (instances.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:24px;font-family:\'JetBrains Mono\',monospace;font-size:12px">No md-pool-* instances found</td></tr>';
+        } else {
+          tbody.innerHTML = instances.map(v => {
+            const running = v.power_status === 'running';
+            const statusDot = running
+              ? '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px"></span><span style="color:var(--green);font-size:11px;font-weight:600">running</span>'
+              : '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--yellow);margin-right:6px"></span><span style="color:var(--yellow);font-size:11px;font-weight:600">' + esc(v.power_status||v.status||'unknown') + '</span>';
+            const created = v.created ? new Date(v.created).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+            return '<tr>' +
+              '<td style="font-weight:600;color:var(--text1);font-family:\'JetBrains Mono\',monospace;font-size:12px">' + esc(v.label) + '</td>' +
+              '<td style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text2)">' + (v.ip||'—') + '</td>' +
+              '<td style="white-space:nowrap">' + statusDot + '</td>' +
+              '<td style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text3)">' + created + '</td>' +
+            '</tr>';
+          }).join('');
+        }
+      }
+    }
+  } catch(e) { /* silent */ }
+}
+
+async function provisionNewVPS() {
+  const btn = document.getElementById('provision-new-btn');
+  if (!btn) return;
+  
+  const originalText = btn.textContent;
+  btn.textContent = '⏳ Provisioning…';
+  btn.disabled = true;
+  
+  try {
+    const r = await fetch('/ops/api/vps/provision', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + TOKEN,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({})
+    });
+    
+    const data = await r.json();
+    
+    if (r.ok) {
+      btn.textContent = '✓ Provisioned';
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.disabled = false;
+        loadVPS(); // Refresh the VPS grid
+      }, 2000);
+    } else {
+      alert('Provision failed: ' + (data.error || 'Unknown error'));
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  } catch (e) {
+    alert('Provision error: ' + e.message);
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
+async function viewVpsLogs(id, name) {
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;display:flex;align-items:center;justify-content:center;';
+  modal.innerHTML = '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;width:min(760px,95vw);max-height:80vh;display:flex;flex-direction:column;">' +
+    '<div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">' +
+      '<div style="font-weight:700;color:var(--text1)">Logs — '+esc(name)+'</div>' +
+      '<button class="btn btn-sm btn-ghost" onclick="this.closest(\'div[style*=fixed]\').remove()">✕ Close</button>' +
+    '</div>' +
+    '<pre id="vps-log-content" style="padding:16px 20px;overflow:auto;font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--text2);white-space:pre-wrap;flex:1">Fetching logs…</pre>' +
+  '</div>';
+  document.body.appendChild(modal);
+  try {
+    const r = await fetch('/api/admin/customers/'+id+'/logs', {headers:{'Authorization':'Bearer '+TOKEN}});
+    const data = await r.json();
+    const pre = modal.querySelector('#vps-log-content');
+    if (r.ok) { pre.textContent = data.logs || '(no output)'; }
+    else { pre.textContent = 'Error: ' + (data.error || r.status); pre.style.color = 'var(--red)'; }
+  } catch(e) {
+    modal.querySelector('#vps-log-content').textContent = 'Error: ' + e.message;
+  }
+}
+
+async function loadSystemHealth() {
+  try {
+    const r = await fetch('/api/admin/system-health', {headers:{'Authorization':'Bearer '+TOKEN}});
+    if (!r.ok) return;
+    const h = await r.json();
+    const setHealth = (key, dotId, valId) => {
+      const item = h[key];
+      if (!item) return;
+      const dot = document.getElementById(dotId);
+      const val = document.getElementById(valId);
+      if (dot) { dot.className = 'health-dot ' + (item.status === 'ok' ? 'ok' : 'warn'); }
+      if (val) val.textContent = item.val;
+    };
+    setHealth('platform', 'sh-platform-dot', 'sh-platform-val');
+    setHealth('openclaw', 'sh-openclaw-dot', 'sh-openclaw-val');
+    setHealth('supabase', 'sh-supabase-dot', 'sh-supabase-val');
+    setHealth('resend',   'sh-resend-dot',   'sh-resend-val');
+    setHealth('stripe',   'sh-stripe-dot',   'sh-stripe-val');
+  } catch {}
+}
+
+let emailTrendChartInst = null;
+async function loadEmails() {
+  try {
+    const r = await fetch('/api/admin/emails', {headers:{'Authorization':'Bearer '+TOKEN}});
+    if (!r.ok) return;
+    const d = await r.json();
+
+    const totalEl = document.getElementById('email-total-sent');
+    const depthEl = document.getElementById('email-queue-depth');
+    const failedEl = document.getElementById('email-failed-count');
+    const todaySubEl = document.getElementById('email-sent-today-sub');
+    const weekEl = document.getElementById('email-sent-week');
+    const monthSubEl = document.getElementById('email-sent-month-sub');
+    const rateEl = document.getElementById('email-delivery-rate');
+    // Today as main, all-time as sub
+    if (totalEl) totalEl.textContent = (d.sentToday||0).toLocaleString();
+    if (todaySubEl) todaySubEl.textContent = (d.totalSent||0).toLocaleString() + ' all time';
+    if (weekEl) weekEl.textContent = (d.sentThisWeek||0).toLocaleString();
+    if (monthSubEl) monthSubEl.textContent = (d.sentThisMonth||0).toLocaleString() + ' this month';
+    if (depthEl) depthEl.textContent = (d.pending||0).toLocaleString();
+    if (failedEl) failedEl.textContent = (d.totalFailures||0).toLocaleString();
+    if (rateEl) rateEl.textContent = d.deliveryRate != null ? d.deliveryRate + '%' : '—';
+
+    // 7-day trend chart
+    const trendCanvas = document.getElementById('email-trend-chart');
+    const days = d.last7Days || [];
+    if (trendCanvas && days.length && typeof Chart !== 'undefined') {
+      const labels = days.map(x => { const dt = new Date(x.date); return dt.toLocaleDateString('en-US',{month:'short',day:'numeric'}); });
+      const values = days.map(x => x.count);
+      const total7d = values.reduce((a,b) => a+b, 0);
+      const metaEl = document.getElementById('email-trend-meta');
+      if (metaEl) metaEl.textContent = total7d.toLocaleString() + ' in 7 days';
+      if (emailTrendChartInst) { emailTrendChartInst.destroy(); emailTrendChartInst = null; }
+      emailTrendChartInst = new Chart(trendCanvas, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: 'rgba(99,102,241,0.6)',
+            borderColor: 'rgba(99,102,241,0.9)',
+            borderWidth: 1,
+            borderRadius: 3,
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#9090AA', font: { size: 10 } } },
+            y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#9090AA', font: { size: 10 }, stepSize: 1 }, beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    // Template breakdown
+    const tmplMeta = document.getElementById('email-template-meta');
+    const tmplList = document.getElementById('email-template-list');
+    const breakdown = d.templateBreakdown || {};
+    const tmplEntries = Object.entries(breakdown).sort((a,b)=>b[1]-a[1]);
+    if (tmplMeta) tmplMeta.textContent = tmplEntries.length + ' template types';
+    if (tmplList) {
+      if (!tmplEntries.length) {
+        tmplList.innerHTML = '<div style="padding:12px 16px;color:var(--text3);font-size:12px;font-family:\'JetBrains Mono\',monospace">No data yet</div>';
+      } else {
+        const total = tmplEntries.reduce((s,[,v])=>s+v,0);
+        tmplList.innerHTML = tmplEntries.map(([tmpl, count]) => {
+          const pct = total > 0 ? Math.round(count/total*100) : 0;
+          return '<div style="padding:8px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">' +
+            '<div style="font-size:12px;font-weight:600;color:var(--text1);min-width:110px;font-family:\'JetBrains Mono\',monospace">' + esc(tmpl) + '</div>' +
+            '<div style="flex:1;background:var(--border);border-radius:2px;height:6px;overflow:hidden">' +
+              '<div style="height:100%;width:'+pct+'%;background:var(--accent);border-radius:2px"></div>' +
+            '</div>' +
+            '<div style="font-size:12px;font-weight:700;color:var(--text2);min-width:40px;text-align:right;font-variant-numeric:tabular-nums">' + count.toLocaleString() + '</div>' +
+          '</div>';
+        }).join('');
+      }
+    }
+
+    // Recent activity
+    const actList = document.getElementById('email-activity-list');
+    const activity = d.recentActivity || [];
+    if (actList) {
+      if (!activity.length) {
+        actList.innerHTML = '<div style="padding:12px 16px;color:var(--text3);font-size:12px;font-family:\'JetBrains Mono\',monospace">No recent activity</div>';
+      } else {
+        const statusColor = {sent:'var(--green)',failed:'var(--red)',pending:'var(--yellow)',scheduled:'var(--blue)'};
+        actList.innerHTML = activity.map(e =>
+          '<div style="padding:9px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:8px">' +
+            '<div style="display:flex;align-items:center;gap:10px;min-width:0">' +
+              '<span style="font-size:10px;font-weight:700;color:'+(statusColor[e.status]||'var(--text3)')+';text-transform:uppercase;font-family:\'JetBrains Mono\',monospace;flex-shrink:0">' + esc(e.status||'—') + '</span>' +
+              '<span style="font-size:11px;font-weight:600;color:var(--accent);flex-shrink:0;font-family:\'JetBrains Mono\',monospace">' + esc(e.template||'—') + '</span>' +
+              '<span style="font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(e.to_email||'—') + '</span>' +
+            '</div>' +
+            '<div style="font-size:10px;color:var(--text3);white-space:nowrap;flex-shrink:0">' + fmt(e.sent_at||e.created_at||'') + '</div>' +
+          '</div>'
+        ).join('');
+      }
+    }
+  } catch {}
+}
+
+async function provisionCustomer(id, name) {
+  const btn = document.getElementById('prov-btn-'+id);
+  if (btn) { btn.disabled = true; btn.textContent = 'Provisioning…'; }
+  try {
+    const r = await fetch('/api/admin/customers/'+id+'/provision', {method:'POST', headers:{'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json'}});
+    if (r.ok) {
+      if (btn) { btn.textContent = 'Provisioning… ~8 min'; btn.style.background = 'rgba(245,158,11,0.15)'; btn.style.color = 'var(--yellow)'; btn.style.borderColor = 'rgba(245,158,11,0.3)'; }
+      // Auto-refresh the customer row after 10 min to pick up new IP and active status
+      setTimeout(() => loadCustomers(), 10 * 60 * 1000);
+    } else {
+      const err = await r.json().catch(()=>({}));
+      alert('Provision failed: '+(err.error||r.status));
+      if (btn) { btn.disabled = false; btn.textContent = 'Provision'; }
+    }
+  } catch(e) {
+    alert('Provision error: '+e.message);
+    if (btn) { btn.disabled = false; btn.textContent = 'Provision'; }
+  }
+}
+
+async function cancelCustomer(id, name) {
+  if (!confirm('Cancel '+name+"'s subscription?\n\nThis will cancel the subscription. The VPS will keep running. Continue?")) return;
+  try {
+    // First attempt — may get a warning about active VPS
+    let r = await fetch('/api/admin/customers/'+id+'/cancel', {method:'POST', headers:{'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json'}});
+    if (r.status === 409) {
+      const err = await r.json().catch(()=>({}));
+      if (err.warning) {
+        if (!confirm('VPS will continue billing after cancellation.\n\n'+err.message+'\n\nCancel anyway?')) return;
+        r = await fetch('/api/admin/customers/'+id+'/cancel?confirm=true', {method:'POST', headers:{'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json'}});
+      } else {
+        alert('Cancel failed: '+(err.error||r.status));
+        return;
+      }
+    }
+    if (r.ok) {
+      const row = document.getElementById('cust-row-'+id);
+      if (row) row.remove();
+    } else {
+      const err = await r.json().catch(()=>({}));
+      alert('Cancel failed: '+(err.error||r.status));
+    }
+  } catch(e) { alert('Cancel error: '+e.message); }
+}
+
+const _resendCooldowns = {};
+async function resendWelcome(id, name) {
+  const btn = event.target;
+  btn.disabled = true; btn.textContent = 'Sending…';
+  try {
+    const r = await fetch(`/api/admin/customers/${id}/resend-welcome`, {method:'POST', headers:{'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json'}});
+    if (r.ok) {
+      btn.textContent = 'Sent ✓';
+      // Start 10-minute cooldown countdown
+      const cooldownEnd = Date.now() + 10 * 60 * 1000;
+      _resendCooldowns[id] = cooldownEnd;
+      const tick = () => {
+        const remaining = Math.ceil((cooldownEnd - Date.now()) / 1000);
+        if (remaining <= 0) { btn.disabled = false; btn.textContent = '✉ Resend'; delete _resendCooldowns[id]; return; }
+        btn.textContent = 'Wait '+remaining+'s';
+        setTimeout(tick, 1000);
+      };
+      setTimeout(tick, 1000);
+    } else {
+      const err = await r.json().catch(()=>({}));
+      alert('Resend failed: '+(err.error||r.status));
+      btn.disabled=false; btn.textContent='✉ Resend';
+    }
+  } catch(e) {
+    alert('Resend error: '+e.message);
+    btn.disabled=false; btn.textContent='✉ Resend';
+  }
+}
+
+async function resolveTicket(id) {
+  await fetch('/api/admin/support/tickets/'+id+'/resolve',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+TOKEN}});
+  loadSupport();
+}
+
+async function replyTicket(id, email) {
+  const replyText = prompt('Reply to '+email+':');
+  if (!replyText?.trim()) return;
+  const r = await fetch('/api/admin/support/tickets/'+id+'/reply',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+TOKEN},body:JSON.stringify({replyText})});
+  if (r.ok) { loadSupport(); } else { const e=await r.json().catch(()=>({})); alert('Reply failed: '+(e.error||r.status)); }
+}
+
+async function refreshStats() {
+  try {
+    const r = await fetch('/api/admin/stats', {headers:{'Authorization':'Bearer '+TOKEN}});
+    if (!r.ok) return;
+    const d = await r.json();
+    const m = d.metrics || d;
+    const mrr=m.mrr||0, arr=mrr*12;
+    if (document.getElementById('kpi-mrr')) document.getElementById('kpi-mrr').textContent = '$'+mrr.toLocaleString();
+    if (document.getElementById('kpi-arr')) document.getElementById('kpi-arr').textContent = '$'+arr.toLocaleString();
+    if (document.getElementById('kpi-active')) document.getElementById('kpi-active').textContent = m.active||0;
+    if (document.getElementById('kpi-trial')) document.getElementById('kpi-trial').textContent = m.trial||0;
+    if (document.getElementById('kpi-leads')) document.getElementById('kpi-leads').textContent = m.leads||0;
+    if (document.getElementById('kpi-mrr-trend')) { document.getElementById('kpi-mrr-trend').textContent = mrr>0?'↑ Growing':'Pre-launch'; document.getElementById('kpi-mrr-trend').className = 'kpi-trend '+(mrr>0?'up':'flat'); }
+    if (document.getElementById('cust-count')) document.getElementById('cust-count').textContent = (m.totalCustomers||0)+' total';
+    const arrPct = Math.min((arr/1000000)*100,100);
+    const arrBar = document.getElementById('arr-bar');
+    const arrVal = document.getElementById('arr-progress-val');
+    const arrLbl = document.getElementById('arr-pct-label');
+    if (arrBar) arrBar.style.width = arrPct.toFixed(2)+'%';
+    if (arrVal) arrVal.textContent = '$'+arr.toLocaleString()+' ARR';
+    if (arrLbl) arrLbl.textContent = arrPct.toFixed(2)+'% complete';
+    // Row 2 KPIs
+    const set = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+    set('kpi-new-week', m.newSignupsThisWeek||0);
+    set('kpi-new-month-sub', (m.newSignupsThisMonth||0)+' this month');
+    set('kpi-conversion', (m.conversionRate||0)+'%');
+    set('kpi-arpu-sub', '$'+(m.arpu||0)+' ARPU');
+    set('kpi-cancellations', m.cancellationsThisMonth||0);
+    set('kpi-failed-sub', (m.failedPaymentsThisMonth||0)+' failed payments');
+    set('kpi-total', m.totalCustomers||0);
+    set('kpi-vps-sub', (m.vpsProvisionedCount||0)+' VPS provisioned');
+    const ce = document.getElementById('kpi-cancellations');
+    if (ce) ce.style.color = (m.cancellationsThisMonth||0)>0?'var(--red)':'var(--green)';
+  } catch(e) { /* silent */ }
+
+  // VPS Pool status
+  try {
+    const pr = await fetch('/api/admin/vps-pool', {headers:{'Authorization':'Bearer '+TOKEN}});
+    if (pr.ok) {
+      const pd = await pr.json();
+      const countEl = document.getElementById('pool-count');
+      const statusEl = document.getElementById('pool-status');
+      const ipEl = document.getElementById('pool-ip');
+      if (countEl) { countEl.textContent = pd.warmCount; countEl.style.color = pd.warmCount > 0 ? 'var(--green)' : 'var(--red)'; }
+      if (statusEl) statusEl.textContent = `Next signup: ${pd.nextCustomerWait}`;
+      if (ipEl && pd.warmVps?.length > 0) { ipEl.textContent = pd.warmVps[0].ip; }
+      else if (ipEl) ipEl.textContent = '';
+    }
+  } catch(e) { /* silent */ }
+
+  // Load AI usage from agents endpoint
+  try {
+    const ar = await fetch('/api/admin/agents', {headers:{'Authorization':'Bearer '+TOKEN}});
+    if (ar.ok) {
+      const ad = await ar.json();
+      const active = ad.active || [];
+      const total = ad.total || 0;
+      // Active agents card (overview)
+      const el = document.getElementById('active-agent-count');
+      if (el) el.textContent = active.length;
+      const names = document.getElementById('active-agent-names');
+      if (names) names.textContent = active.length > 0 ? active.slice(0,3).map(a=>a.label||a.runId).join(', ') : 'No agents running';
+      // Sidebar badge — always sync with overview
+      const badge = document.getElementById('agents-badge');
+      if (badge) {
+        if (active.length > 0) { badge.textContent = active.length; badge.className = "badge-pill active"; badge.style.display = 'inline-flex'; }
+        else { badge.className = "badge-pill idle"; badge.style.display = 'none'; }
+      }
+      // Topbar live agent chip
+      const agentChip = document.getElementById('topbar-agent-chip');
+      const agentChipCount = document.getElementById('topbar-agent-count');
+      if (agentChip && agentChipCount) {
+        agentChipCount.textContent = active.length;
+        agentChip.style.display = active.length > 0 ? 'inline-flex' : 'none';
+      }
+      // claude-agents card also gets count
+      const cnt2 = document.getElementById('claude-agents');
+      if (cnt2) cnt2.textContent = active.length;
+      // Claude usage bar — estimate based on active processes (Pro plan = ~5 concurrent)
+      const pct = Math.min(Math.round((active.length / 5) * 100), 100);
+      const bar = document.getElementById('claude-bar');
+      const lbl = document.getElementById('claude-bar-label');
+      const cnt = document.getElementById('claude-agents');
+      if (lbl) {
+        // Show OAuth token expiry from credentials
+        try {
+          const credR = await fetch('/api/admin/claude-status', {headers:{'Authorization':'Bearer '+TOKEN}});
+          if (credR.ok) {
+            const credD = await credR.json();
+            if (credD.expiresAt) {
+              const exp = new Date(credD.expiresAt);
+              const daysLeft = Math.ceil((exp - Date.now()) / 86400000);
+              if (daysLeft <= 0) {
+                lbl.textContent = 'Token expired — re-auth needed';
+                lbl.style.color = 'var(--red)';
+              } else if (daysLeft <= 1) {
+                lbl.textContent = 'Auto-renews (expires ~6h)';
+                lbl.style.color = 'var(--text3)';
+              } else {
+                lbl.textContent = `Valid ${daysLeft} day${daysLeft===1?'':'s'}`;
+                lbl.style.color = daysLeft < 7 ? 'var(--yellow)' : 'var(--text3)';
+              }
+            } else {
+              lbl.textContent = 'OAuth active · Max plan';
+            }
+          }
+        } catch(e) { lbl.textContent = 'OAuth active · Max plan'; }
+      }
+      if (cnt) cnt.textContent = active.length;
+    }
+  } catch(e) { /* silent */ }
+}
+
+// ── THEME TOGGLE ──
+// Default is now LIGHT. Dark mode = :root.dark class.
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('ops-theme', isDark ? 'dark' : 'light');
+  updateChartTheme(!isDark);
+}
+
+function updateChartTheme(isLight) {
+  const gridColor = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)';
+  const tickColor = isLight ? '#8A8A8A' : '#5A5A7A';
+  Object.values(Chart.instances || {}).forEach(chart => {
+    if (chart.options.scales) {
+      Object.values(chart.options.scales).forEach(scale => {
+        if (scale.grid) scale.grid.color = gridColor;
+        if (scale.ticks) scale.ticks.color = tickColor;
+      });
+    }
+    chart.update('none');
+  });
+}
+
+// Apply saved theme — default light, dark only if explicitly saved
+(function() {
+  const saved = localStorage.getItem('ops-theme') || 'light';
+  if (saved === 'dark') document.documentElement.classList.add('dark');
+  // Clear old 'light' class if it was set (migration from old toggle)
+  document.documentElement.classList.remove('light');
+})();
+
+document.getElementById('burger')?.addEventListener('click',()=>{document.getElementById('sidebar').classList.toggle('open');});
+loadAll();
+setInterval(loadAll,60000);
+setInterval(refreshStats,30000);
+setInterval(async () => {
+  try {
+    const pr = await fetch('/api/admin/vps-pool', {headers:{'Authorization':'Bearer '+TOKEN}});
+    if (!pr.ok) return;
+    const pd = await pr.json();
+    const countEl = document.getElementById('pool-count');
+    const statusEl = document.getElementById('pool-status');
+    const ipEl = document.getElementById('pool-ip');
+    if (countEl) { countEl.textContent = pd.warmCount; countEl.style.color = pd.warmCount > 0 ? 'var(--green)' : 'var(--red)'; }
+    if (statusEl) statusEl.textContent = `Next signup: ${pd.nextCustomerWait}`;
+    if (ipEl) ipEl.textContent = pd.warmVps?.length > 0 ? pd.warmVps[0].ip : '';
+  } catch(e) { /* silent */ }
+}, 30000);
+
+// ─── Churn Feedback ────────────────────────────────────────────
+let churnDonutChart = null;
+
+const REASON_LABELS = {
+  too_expensive:   'Too expensive',
+  didnt_work:      "Didn't work as expected",
+  not_using:       'Not using it enough',
+  competitor:      'Switching to competitor',
+  missing_feature: 'Feature missing',
+  other:           'Other',
+  unknown:         'Unknown',
+};
+
+const REASON_COLORS = {
+  too_expensive:   '#F59E0B',
+  didnt_work:      '#EF4444',
+  not_using:       '#6366F1',
+  competitor:      '#8B5CF6',
+  missing_feature: '#3B82F6',
+  other:           '#9090AA',
+  unknown:         '#5A5A7A',
+};
+
+function loadChurn() {
+  fetch('/api/admin/cancellations?limit=100', { headers: { 'Authorization': 'Bearer ' + TOKEN } })
+    .then(r => r.json())
+    .then(data => {
+      // KPIs
+      document.getElementById('churn-total').textContent = data.total ?? '—';
+      document.getElementById('churn-7d').textContent    = data.last7d ?? '—';
+      document.getElementById('churn-30d').textContent   = data.last30d ?? '—';
+      document.getElementById('churn-rate').textContent  = data.surveyRate != null ? data.surveyRate + '%' : '—';
+
+      // Badge on nav if recent cancellations
+      const badge = document.getElementById('churn-badge');
+      if (badge && data.last7d > 0) {
+        badge.textContent = data.last7d;
+        badge.style.display = 'inline-flex';
+      }
+
+      // Donut chart
+      const breakdown = data.breakdown || {};
+      const labels  = Object.keys(breakdown).map(k => REASON_LABELS[k] || k);
+      const values  = Object.values(breakdown);
+      const colors  = Object.keys(breakdown).map(k => REASON_COLORS[k] || '#9090AA');
+      const ctx = document.getElementById('churn-donut')?.getContext('2d');
+      if (ctx) {
+        if (churnDonutChart) churnDonutChart.destroy();
+        if (values.length > 0) {
+          churnDonutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 0 }] },
+            options: {
+              cutout: '68%',
+              plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => ` ${c.label}: ${c.raw}` } } },
+            },
+          });
+        }
+        // Legend
+        const legend = document.getElementById('churn-legend');
+        if (legend) {
+          legend.innerHTML = Object.entries(breakdown).map(([k, v]) =>
+            `<div style="display:flex;align-items:center;gap:8px;font-size:12px">
+              <span style="width:10px;height:10px;border-radius:50%;background:${REASON_COLORS[k]||'#9090AA'};flex-shrink:0"></span>
+              <span style="color:var(--text2)">${REASON_LABELS[k]||k}</span>
+              <span style="margin-left:auto;color:var(--text3);font-family:'JetBrains Mono',monospace">${v}</span>
+            </div>`
+          ).join('');
+        }
+      }
+
+      // Table
+      const cancellations = data.cancellations || [];
+      initChurnPager(cancellations);
+
+      // Open feedback list
+      const feedbackList = document.getElementById('churn-feedback-list');
+      const feedbackMeta = document.getElementById('churn-feedback-meta');
+      const withText = cancellations.filter(c => c.reason_text);
+      if (feedbackMeta) feedbackMeta.textContent = `${withText.length} responses`;
+      if (feedbackList) {
+        if (!withText.length) {
+          feedbackList.innerHTML = '<div style="color:var(--text3);font-size:12px;font-family:\'JetBrains Mono\',monospace">No open-text feedback yet.</div>';
+        } else {
+          feedbackList.innerHTML = withText.slice(0, 20).map(c => {
+            const date = c.cancel_date ? new Date(c.cancel_date).toLocaleDateString() : '';
+            const reason = c.reason_category ? ` <span style="color:var(--text3);font-size:10px">[${REASON_LABELS[c.reason_category]||c.reason_category}]</span>` : '';
+            return `<div style="border:1px solid var(--border);border-radius:8px;padding:12px 14px">
+              <div style="font-size:12px;color:var(--text1);line-height:1.5;margin-bottom:6px">"${c.reason_text}"</div>
+              <div style="font-size:11px;color:var(--text3)">${c.email||''}${reason} · ${date}</div>
+            </div>`;
+          }).join('');
+        }
+      }
+    })
+    .catch(err => {
+      console.error('[churn] Load error:', err);
+    });
+}
+
+// ── PAGINATION STATE ──
+const PG = {};
+const PAGE_SIZE = 10;
+
+function buildPagerHTML(pagerId, page, totalPages, total, perPage) {
+  const start = page * perPage + 1;
+  const end = Math.min((page + 1) * perPage, total);
+  const maxBtns = 5;
+  let sp = Math.max(0, page - 2);
+  let ep = Math.min(totalPages - 1, sp + maxBtns - 1);
+  sp = Math.max(0, ep - maxBtns + 1);
+  let nums = '';
+  if (sp > 0) nums += '<button class="pager-btn" onclick="pgGo(\''+pagerId+'\',0)">1</button><span class="pager-btn" style="cursor:default;border:none">…</span>';
+  for (let i = sp; i <= ep; i++) {
+    nums += '<button class="pager-btn'+(i===page?' active':'')+'" onclick="pgGo(\''+pagerId+'\','+i+')">'+(i+1)+'</button>';
+  }
+  if (ep < totalPages - 1) nums += '<span class="pager-btn" style="cursor:default;border:none">…</span><button class="pager-btn" onclick="pgGo(\''+pagerId+'\','+( totalPages-1)+'\')">'+totalPages+'</button>';
+  return '<span class="pager-info">Showing '+start+'–'+end+' of '+total+'</span>' +
+    '<div class="pager-btns"><button class="pager-btn" onclick="pgGo(\''+pagerId+'\','+(page-1)+')" '+(page===0?'disabled':'')+'>← Prev</button>'+nums+'<button class="pager-btn" onclick="pgGo(\''+pagerId+'\','+(page+1)+')" '+(page>=totalPages-1?'disabled':'')+'>Next →</button></div>';
+}
+
+function showPager(pagerId, page, total, perPage) {
+  const el = document.getElementById(pagerId);
+  if (!el) return;
+  if (total <= perPage) { el.style.display = 'none'; return; }
+  el.style.display = 'flex';
+  el.innerHTML = buildPagerHTML(pagerId, page, Math.ceil(total/perPage), total, perPage);
+}
+
+function pgGo(pagerId, page) {
+  if (!PG[pagerId]) return;
+  PG[pagerId].page = Math.max(0, Math.min(page, Math.ceil(PG[pagerId].data.length / PAGE_SIZE) - 1));
+  PG[pagerId].render();
+}
+
+// ── CUSTOMERS WITH PAGINATION ──
+function initCustPager(paying, leads) {
+  // Customers
+  PG['cust-pager'] = {
+    data: paying, page: 0,
+    render: function() {
+      const p = PG['cust-pager'];
+      const items = p.data.slice(p.page * PAGE_SIZE, (p.page + 1) * PAGE_SIZE);
+      const infoEl = document.getElementById('cust-page-info');
+      if (infoEl) infoEl.textContent = p.data.length + ' customer' + (p.data.length !== 1 ? 's' : '');
+      document.getElementById('cust-tbody').innerHTML = items.length ? items.map(c => {
+        const dl=daysLeft(c.trial_ends_at);
+        const ts=c.status==='trial'&&dl!==null?'<span style="color:'+(dl<1?'var(--red)':dl<2?'var(--yellow)':'var(--text2)')+';font-size:11px;font-family:\'JetBrains Mono\',monospace">'+(dl>0?dl+'d':'Expired')+'</span>':fmtFull(c.created_at);
+        const safeId = esc(c.id ? String(c.id) : '');
+        const safeName = esc(c.name||c.email||'customer');
+        const gConn = c.google_connected ? '<span style="color:var(--green);font-size:10px;font-weight:700">✓G</span>' : '<span style="color:var(--text3);font-size:10px">✗G</span>';
+        const cConn = c.calendly_connected ? '<span style="color:var(--green);font-size:10px;font-weight:700;margin-left:4px">✓Cal</span>' : '<span style="color:var(--text3);font-size:10px;margin-left:4px">✗Cal</span>';
+        const tConn = c.telegram_chat_id ? '<span style="color:var(--blue);font-size:10px;font-weight:700;margin-left:4px">✓TG</span>' : '<span style="color:var(--text3);font-size:10px;margin-left:4px">✗TG</span>';
+        const connectors = gConn+cConn+tConn;
+        const onboarded = c.onboarding_complete ? '<span style="color:var(--green);font-size:10px;font-weight:700">✓ Done</span>' : '<span style="color:var(--yellow);font-size:10px">⏳ Pending</span>';
+        return '<tr id="cust-row-'+safeId+'">' +
+          '<td style="font-weight:600;color:var(--text1)">' + esc(c.name||'—') + '</td>' +
+          '<td style="font-size:11px;font-family:\'JetBrains Mono\',monospace;color:var(--text2)">' + esc(c.email) + '</td>' +
+          '<td>' + statusPill(c.status) + '</td>' +
+          '<td style="font-size:11px;font-family:\'JetBrains Mono\',monospace;color:' + (c.vps_ip?'var(--text2)':'var(--text3)') + '">' + esc(c.vps_ip||'—') + '</td>' +
+          '<td>' + connectors + '</td>' +
+          '<td>' + onboarded + '</td>' +
+          '<td>' + ts + '</td>' +
+          '<td style="white-space:nowrap">' +
+            (()=>{ const vpsBlocked = c.vps_status==='active'||c.vps_status==='provisioning'; return '<button id="prov-btn-'+safeId+'" class="btn btn-sm" style="background:rgba(245,158,11,0.15);color:var(--yellow);border:1px solid rgba(245,158,11,0.3);margin-right:4px" onclick="provisionCustomer(\''+safeId+'\',\''+safeName+'\')" '+(vpsBlocked?'disabled title="VPS already active or provisioning"':'')+'>'+( c.vps_status==='provisioning'?'Provisioning…':'Provision')+'</button>'; })() +
+            '<button class="btn btn-sm" style="background:rgba(239,68,68,0.08);color:var(--red);border:1px solid rgba(239,68,68,0.3);margin-right:4px" onclick="cancelCustomer(\''+safeId+'\',\''+safeName+'\')">Cancel</button>' +
+            (()=>{ const cd = _resendCooldowns && _resendCooldowns[c.id]; const remaining = cd ? Math.ceil((cd - Date.now())/1000) : 0; return '<button id="resend-btn-'+safeId+'" class="btn btn-sm btn-ghost" onclick="resendWelcome(\''+safeId+'\',\''+safeName+'\')" '+(remaining>0?'disabled':'')+'>'+( remaining>0?'Wait '+remaining+'s':'✉ Resend')+'</button>'; })() +
+          '</td>' +
+        '</tr>';
+      }).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:32px;font-family:\'JetBrains Mono\',monospace;font-size:12px">No customers yet</td></tr>';
+      showPager('cust-pager', p.page, p.data.length, PAGE_SIZE);
+    }
+  };
+  PG['cust-pager'].render();
+
+  // Leads
+  PG['leads-pager'] = {
+    data: leads, page: 0,
+    render: function() {
+      const p = PG['leads-pager'];
+      const items = p.data.slice(p.page * PAGE_SIZE, (p.page + 1) * PAGE_SIZE);
+      const infoEl = document.getElementById('leads-page-info');
+      if (infoEl) infoEl.textContent = p.data.length + ' lead' + (p.data.length !== 1 ? 's' : '');
+      document.getElementById('leads-tbody').innerHTML = items.length ? items.map(c =>
+        '<tr>' +
+          '<td style="font-weight:600;color:var(--text1)">' + esc(c.name||'—') + '</td>' +
+          '<td style="font-size:11px;font-family:\'JetBrains Mono\',monospace;color:var(--text2)">' + esc(c.email) + '</td>' +
+          '<td style="font-size:11px;color:var(--text3);font-family:\'JetBrains Mono\',monospace">' + fmtFull(c.created_at) + '</td>' +
+          '<td><a href="mailto:'+esc(c.email)+'" class="btn btn-ghost btn-sm" style="text-decoration:none">Email →</a></td>' +
+        '</tr>'
+      ).join('') : '<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:32px;font-family:\'JetBrains Mono\',monospace;font-size:12px">No leads yet</td></tr>';
+      showPager('leads-pager', p.page, p.data.length, PAGE_SIZE);
+    }
+  };
+  PG['leads-pager'].render();
+}
+
+// ── SUPPORT WITH PAGINATION ──
+function initSupportPager(tickets, statusBadge) {
+  PG['support-pager'] = {
+    data: tickets, page: 0,
+    statusBadge: statusBadge,
+    render: function() {
+      const p = PG['support-pager'];
+      const sb = p.statusBadge;
+      const items = p.data.slice(p.page * PAGE_SIZE, (p.page + 1) * PAGE_SIZE);
+      const el = document.getElementById('tickets-list');
+      if (!el) return;
+      if (!p.data.length) {
+        el.innerHTML = '<div class="empty"><div class="empty-ico">🎫</div><div class="empty-txt">No tickets — queue is clean</div></div>';
+        showPager('support-pager', 0, 0, PAGE_SIZE);
+        return;
+      }
+      el.innerHTML = '<table style="width:100%;border-collapse:collapse;font-size:13px">' +
+        '<thead><tr style="border-bottom:1px solid var(--border);color:var(--text3);font-size:11px;font-family:\'JetBrains Mono\',monospace">' +
+          '<th style="text-align:left;padding:8px 12px;font-weight:500">Customer</th>' +
+          '<th style="text-align:left;padding:8px 12px;font-weight:500">Subject</th>' +
+          '<th style="text-align:left;padding:8px 12px;font-weight:500">Status</th>' +
+          '<th style="text-align:left;padding:8px 12px;font-weight:500">Created</th>' +
+          '<th style="text-align:right;padding:8px 12px;font-weight:500">Actions</th>' +
+        '</tr></thead><tbody>' +
+        items.map(t =>
+          '<tr style="border-bottom:1px solid var(--border)">' +
+            '<td style="padding:10px 12px;color:var(--text2);font-family:\'JetBrains Mono\',monospace;font-size:11px">' + esc(t.customer_name||t.customer_email||'—') + (t.customer_email&&t.customer_name?'<br><span style="color:var(--text3);font-size:10px">'+esc(t.customer_email)+'</span>':'') + '</td>' +
+            '<td style="padding:10px 12px;font-weight:600;color:var(--text1);max-width:260px">' + esc(t.subject) + '<div style="font-size:11px;color:var(--text3);margin-top:2px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px">' + esc((t.message||'').substring(0,80)) + '</div></td>' +
+            '<td style="padding:10px 12px">' + sb(t.status) + '</td>' +
+            '<td style="padding:10px 12px;color:var(--text3);font-family:\'JetBrains Mono\',monospace;font-size:11px;white-space:nowrap">' + fmt(t.created_at) + '</td>' +
+            '<td style="padding:10px 12px;text-align:right;white-space:nowrap">' +
+              (t.status!=='resolved'&&t.status!=='auto_resolved'?'<button class="btn btn-sm" style="margin-right:4px" onclick="replyTicket(\''+esc(t.id)+'\',\''+esc(t.customer_email||'')+'\')">Reply</button>':'') +
+              (t.status!=='resolved'&&t.status!=='auto_resolved'?'<button class="btn btn-sm btn-ghost" onclick="resolveTicket(\''+esc(t.id)+'\')">✓ Resolve</button>':'') +
+            '</td>' +
+          '</tr>'
+        ).join('') +
+        '</tbody></table>';
+      showPager('support-pager', p.page, p.data.length, PAGE_SIZE);
+    }
+  };
+  PG['support-pager'].render();
+}
+
+// ── AGENTS WITH PAGINATION ──
+function initAgentsPager(allAgents, statusCfg) {
+  PG['agents-pager'] = {
+    data: allAgents, page: 0,
+    statusCfg: statusCfg,
+    render: function() {
+      const p = PG['agents-pager'];
+      const items = p.data.slice(p.page * PAGE_SIZE, (p.page + 1) * PAGE_SIZE);
+      const el = document.getElementById('agents-list');
+      if (!el) return;
+      const summary = el.innerHTML.replace(/<table[\s\S]*$/, '');
+      let rows = '';
+      items.forEach((a, i) => {
+        const cfg = p.statusCfg[a.status] || p.statusCfg.unknown;
+        const label = a.label || (a.runId || '').slice(0,12) || 'agent';
+        const started = a.startedAt ? new Date(a.startedAt).toLocaleTimeString() : '—';
+        const runtime = formatAgentRuntime(a);
+        const rowBg = i % 2 === 0 ? 'rgba(99,102,241,0.02)' : 'transparent';
+        const killBtn = a.isActive
+          ? '<button onclick="killAgent(\'' + a.runId + '\')" style="background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:4px 12px;cursor:pointer;font-size:11px;font-weight:600">Kill</button>'
+          : '<span style="color:var(--text3);font-size:11px">—</span>';
+        rows +=
+          '<tr style="border-bottom:1px solid var(--border);background:' + rowBg + '">' +
+          '<td style="padding:10px 12px">' +
+            '<div style="font-weight:600;color:var(--text1);font-family:JetBrains Mono,monospace;font-size:12px">' + label + '</div>' +
+            '<div style="font-size:11px;color:var(--text3);margin-top:2px">' + started + '</div>' +
+          '</td>' +
+          '<td style="padding:10px 12px;max-width:260px">' +
+            '<div style="font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (a.taskSummary ? a.taskSummary.slice(0, 80) : '—') + '</div>' +
+          '</td>' +
+          '<td style="padding:10px 12px">' +
+            '<span style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--accent);background:rgba(99,102,241,0.1);padding:2px 8px;border-radius:4px">' + (a.model || '—') + '</span>' +
+          '</td>' +
+          '<td style="padding:10px 12px;font-family:JetBrains Mono,monospace;font-size:12px;color:var(--text2)">' + runtime + '</td>' +
+          '<td style="padding:10px 12px">' +
+            '<span style="background:' + cfg.bg + ';color:' + cfg.color + ';padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600">' + cfg.label + '</span>' +
+          '</td>' +
+          '<td style="padding:10px 12px">' + killBtn + '</td>' +
+          '</tr>';
+      });
+      el.innerHTML = summary +
+        '<table style="width:100%;border-collapse:collapse;font-size:13px">' +
+        '<thead><tr style="border-bottom:1px solid var(--border)">' +
+        '<th style="text-align:left;padding:8px 12px;color:var(--text3);font-weight:600;font-size:11px;letter-spacing:1px;text-transform:uppercase">Agent</th>' +
+        '<th style="text-align:left;padding:8px 12px;color:var(--text3);font-weight:600;font-size:11px;letter-spacing:1px;text-transform:uppercase">Task</th>' +
+        '<th style="text-align:left;padding:8px 12px;color:var(--text3);font-weight:600;font-size:11px;letter-spacing:1px;text-transform:uppercase">Model</th>' +
+        '<th style="text-align:left;padding:8px 12px;color:var(--text3);font-weight:600;font-size:11px;letter-spacing:1px;text-transform:uppercase">Runtime</th>' +
+        '<th style="text-align:left;padding:8px 12px;color:var(--text3);font-weight:600;font-size:11px;letter-spacing:1px;text-transform:uppercase">Status</th>' +
+        '<th style="text-align:left;padding:8px 12px;color:var(--text3);font-weight:600;font-size:11px;letter-spacing:1px;text-transform:uppercase">Action</th>' +
+        '</tr></thead><tbody>' + rows + '</tbody></table>';
+      showPager('agents-pager', p.page, p.data.length, PAGE_SIZE);
+    }
+  };
+  PG['agents-pager'].render();
+}
+
+// ── CHURN CANCELLATIONS WITH PAGINATION ──
+function initChurnPager(cancellations) {
+  PG['churn-pager'] = {
+    data: cancellations, page: 0,
+    render: function() {
+      const p = PG['churn-pager'];
+      const items = p.data.slice(p.page * PAGE_SIZE, (p.page + 1) * PAGE_SIZE);
+      const tbody = document.getElementById('churn-table-body');
+      const meta = document.getElementById('churn-table-meta');
+      if (meta) meta.textContent = p.data.length + ' records';
+      if (!tbody) return;
+      if (!p.data.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="padding:32px;text-align:center;color:var(--text3);font-family:\'JetBrains Mono\',monospace;font-size:12px">No cancellations yet</td></tr>';
+        showPager('churn-pager', 0, 0, PAGE_SIZE);
+        return;
+      }
+      tbody.innerHTML = items.map(c => {
+        const reason = c.reason_category
+          ? '<span style="background:rgba(99,102,241,0.12);color:var(--accent2);padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600">' + (REASON_LABELS[c.reason_category]||c.reason_category) + '</span>'
+          : '<span style="color:var(--text3);font-size:11px">—</span>';
+        const survey = c.survey_completed
+          ? '<span style="color:var(--green);font-size:11px">✓ Done</span>'
+          : '<span style="color:var(--text3);font-size:11px">Pending</span>';
+        const date = c.cancel_date ? new Date(c.cancel_date).toLocaleDateString('en-US', { month:'short', day:'numeric' }) : '—';
+        return '<tr>' +
+          '<td style="padding:10px 16px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text1)">' + esc(c.email||'—') + '</td>' +
+          '<td style="padding:10px 16px;border-bottom:1px solid var(--border)">' + reason + '</td>' +
+          '<td style="padding:10px 16px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);font-family:\'JetBrains Mono\',monospace">' + (c.days_active != null ? c.days_active + 'd' : '—') + '</td>' +
+          '<td style="padding:10px 16px;border-bottom:1px solid var(--border)">' + survey + '</td>' +
+          '<td style="padding:10px 16px;border-bottom:1px solid var(--border);font-size:11px;color:var(--text3)">' + date + '</td>' +
+        '</tr>';
+      }).join('');
+      showPager('churn-pager', p.page, p.data.length, PAGE_SIZE);
+    }
+  };
+  PG['churn-pager'].render();
+}
+</script>
+</body>
+</html>
+
+<!-- Real Stats Injection (added 2026-03-23) -->
+<script>
+// Fetch real stats and update display
+(async function loadRealStats() {
+  try {
+    const res = await fetch('/api/public-stats');
+    if (res.ok) {
+      const stats = await res.json();
+      // Update MRR display
+      const mrrEl = document.querySelector('#kpi-mrr');
+      if (mrrEl) mrrEl.textContent = '$' + stats.mrr;
+      // Update customer count
+      const custEl = document.querySelector('#kpi-customers');
+      if (custEl) custEl.textContent = stats.totalCustomers;
+      console.log('Real stats loaded:', stats);
+    }
+  } catch (e) {
+    console.log('Could not load real stats:', e);
+  }
+})();
+</script>

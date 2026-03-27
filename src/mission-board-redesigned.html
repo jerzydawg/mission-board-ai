@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Board — MrDelegate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FEF9F0;
+  --surface: #FFFEFA;
+  --surface-alt: #FEF6EE;
+  --border: #E8DCC8;
+  --text: #2A2319;
+  --text-mid: #6B5E4F;
+  --text-light: #9B8F7E;
+  --accent: #E8690B;
+  --accent-dark: #C1520A;
+  --status-idle: #9B9B9B;
+  --status-working: #0B7E86;
+  --status-done: #4A7C59;
+  --status-error: #C1234F;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+.container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+
+/* Header */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.header-logo { height: 28px; opacity: 0.9; }
+
+.header-title {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.header-time {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--status-working);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* Stats Bar */
+.stats-bar {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  padding: 0.5rem 1rem;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: var(--text-mid);
+  font-weight: 500;
+  transition: all 120ms ease-out;
+}
+
+.stat-item:hover { background: var(--surface); border-color: var(--accent); }
+
+.stat-num { font-weight: 700; color: var(--text); margin-right: 0.25rem; }
+
+.stat-item.p0 { border-color: var(--status-error); background: rgba(193, 35, 79, 0.05); }
+.stat-item.p0 .stat-num { color: var(--status-error); }
+
+/* Metrics */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.metric {
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: all 120ms ease-out;
+}
+
+.metric:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+.metric-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 0.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-sub { font-size: 0.875rem; color: var(--text-light); }
+
+/* Task Sections */
+#tasks { padding: 2rem 0; }
+
+.task-section { margin-bottom: 3rem; }
+
+.section-header { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 1.5rem; }
+
+.section-title {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.section-count { font-size: 0.875rem; color: var(--text-light); font-weight: 500; }
+
+.task-list { display: grid; gap: 0.875rem; }
+
+.task-card {
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: 6px;
+  transition: all 120ms ease-out;
+  cursor: pointer;
+}
+
+.task-card:hover { border-color: var(--accent); transform: translateY(-1px); background: var(--surface-alt); }
+
+.task-card.p0 { border-left-color: var(--status-error); }
+.task-card.p1 { border-left-color: var(--accent); }
+.task-card.p2 { border-left-color: var(--text-light); }
+
+.task-card.running { border-left-color: var(--status-working); background: rgba(11, 126, 134, 0.02); }
+.task-card.completed { opacity: 0.7; }
+
+.task-head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+
+.task-title { font-weight: 600; font-size: 1rem; color: var(--text); flex: 1; }
+
+.badge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.badge.running { background: rgba(11, 126, 134, 0.15); color: var(--status-working); }
+.badge.pending { background: rgba(155, 155, 155, 0.15); color: var(--status-idle); }
+.badge.completed { background: rgba(74, 124, 89, 0.15); color: var(--status-done); }
+
+.task-meta { display: flex; align-items: center; gap: 1rem; font-size: 0.875rem; color: var(--text-light); }
+
+.task-time { font-variant-numeric: tabular-nums; }
+
+.empty { padding: 2rem; text-align: center; color: var(--text-light); font-size: 0.875rem; }
+
+@media (max-width: 1024px) {
+  .container { padding: 0 1.5rem; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .header-inner { flex-direction: column; align-items: flex-start; }
+  .header-title { font-size: 1.25rem; }
+  .metrics-grid { grid-template-columns: 1fr; }
+  .stats-bar { gap: 0.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <div class="header-inner">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <img src="/logo-premium.svg" alt="MR • DELEGATE" class="header-logo">
+        <div class="header-title">Mission Board</div>
+      </div>
+      <div class="header-time">
+        <span class="live-dot"></span>
+        <span id="current-time">—</span>
+      </div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-item"><span class="stat-num" id="s-total">—</span> Total</div>
+      <div class="stat-item"><span class="stat-num" id="s-pending">—</span> Pending</div>
+      <div class="stat-item"><span class="stat-num" id="s-running">—</span> Working</div>
+      <div class="stat-item"><span class="stat-num" id="s-completed">—</span> Done</div>
+      <div class="stat-item p0"><span class="stat-num" id="s-p0">—</span> P0</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="metrics-grid">
+    <div class="metric">
+      <div class="metric-label">Completed Today</div>
+      <div class="metric-value" id="m-today">—</div>
+      <div class="metric-sub" id="m-today-sub">loading…</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Avg Completion Time</div>
+      <div class="metric-value" id="m-avgtime">—</div>
+      <div class="metric-sub">today's tasks</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Agent Utilization</div>
+      <div class="metric-value" id="m-util">—</div>
+      <div class="metric-sub" id="m-util-sub">working / total</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">P0 Backlog Age</div>
+      <div class="metric-value" id="m-p0age">—</div>
+      <div class="metric-sub">oldest pending</div>
+    </div>
+  </div>
+
+  <div id="tasks">
+    <!-- Task sections will be rendered here by JavaScript -->
+  </div>
+</div>
+
+<script>
+const API_BASE = '/ops/mission-board/api';
+let allTasks = [];
+
+async function loadData() {
+  try {
+    const tasksRes = await fetch(`${API_BASE}/tasks`);
+    const tasksData = await tasksRes.json();
+    allTasks = tasksData.tasks || [];
+    
+    const agentsRes = await fetch(`${API_BASE}/agents`);
+    const agentsData = agentsRes.json();
+
+    renderDashboard();
+    updateTime();
+    setInterval(updateTime, 1000);
+  } catch (e) {
+    console.error('Load error:', e);
+  }
+}
+
+function updateTime() {
+  const now = new Date();
+  document.getElementById('current-time').textContent = now.toLocaleTimeString();
+}
+
+function renderDashboard() {
+  const pending = allTasks.filter(t => t.status === 'pending');
+  const running = allTasks.filter(t => t.status === 'running' || t.status === 'is-running');
+  const completed = allTasks.filter(t => t.status === 'completed');
+  const p0 = allTasks.filter(t => t.priority === 'P0');
+
+  document.getElementById('s-total').textContent = allTasks.length;
+  document.getElementById('s-pending').textContent = pending.length;
+  document.getElementById('s-running').textContent = running.length;
+  document.getElementById('s-completed').textContent = completed.length;
+  document.getElementById('s-p0').textContent = p0.length;
+
+  document.getElementById('m-today').textContent = completed.filter(t => isToday(new Date(t.completedAt))).length;
+
+  const tasksDiv = document.getElementById('tasks');
+  tasksDiv.innerHTML = '';
+
+  const sections = [
+    { title: 'Working Now', tasks: running, class: 'running' },
+    { title: 'Pending', tasks: pending, class: 'pending' },
+    { title: 'Completed', tasks: completed, class: 'completed' }
+  ];
+
+  sections.forEach(section => {
+    if (section.tasks.length === 0) return;
+
+    const sectionEl = document.createElement('div');
+    sectionEl.className = 'task-section';
+    sectionEl.innerHTML = `
+      <div class="section-header">
+        <div class="section-title">${section.title}</div>
+        <div class="section-count">${section.tasks.length}</div>
+      </div>
+      <div class="task-list">
+        ${section.tasks.map(t => `
+          <div class="task-card ${t.priority.toLowerCase()} ${section.class}">
+            <div class="task-head">
+              <div class="task-title">${t.title || t.description}</div>
+              <span class="badge ${section.class}">${section.class}</span>
+            </div>
+            <div class="task-meta">
+              <span>${t.agentId || 'unassigned'}</span>
+              <span class="task-time">${formatTime(new Date(t.createdAt || t.startedAt))}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    tasksDiv.appendChild(sectionEl);
+  });
+}
+
+function isToday(date) {
+  const today = new Date();
+  return date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear();
+}
+
+function formatTime(date) {
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+loadData();
+setInterval(loadData, 5000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "_comment": "Trial email sequence customer list. Add customers here when they sign up. sentEmails tracks which day emails have been sent to avoid duplicates.",
+  "_schema": {
+    "email": "string (required) — customer email address",
+    "firstName": "string — used for personalization, defaults to 'there'",
+    "trialStartDate": "ISO date string (required) — when their trial began",
+    "plan": "string — Starter | Pro | Business | Enterprise",
+    "upgradePrice": "number — monthly price in USD for their plan",
+    "sentEmails": "array<number> — which day emails have been sent (1, 3, 7, 10, 14)"
+  },
+  "sequence": {
+    "days": [1, 3, 7, 10, 14],
+    "descriptions": {
+      "1": "Welcome — agent is ready, setup guide",
+      "3": "Feature highlight — heartbeats & scheduling",
+      "7": "Check-in — how's it going, use case examples",
+      "10": "Urgency — 4 days left, what they'll lose",
+      "14": "Final push — trial ends today, last chance"
+    }
+  },
+  "customers": [
+    {
+      "_example": true,
+      "email": "example@customer.com",
+      "firstName": "Alex",
+      "trialStartDate": "2026-03-24T00:00:00Z",
+      "plan": "Starter",
+      "upgradePrice": 29,
+      "sentEmails": []
+    }
+  ]
+}

@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-04Q2L4V3X5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-04Q2L4V3X5");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start Your Free Trial — MrDelegate</title>
+<meta name="description" content="Start your 3-day free trial of MrDelegate. OpenClaw hosting platform that saves you 2+ hours every morning. $0 today.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/design-system.css">
+<style>
+  :root {
+    --bg: oklch(98% 0.005 60);
+    --bg-warm: oklch(97% 0.007 60);
+    --bg-deep: oklch(96% 0.009 60);
+    --surface: oklch(100% 0 0);
+    --surface-warm: oklch(99% 0.004 60);
+    --border: oklch(90% 0.005 260);
+    --border-light: oklch(93% 0.004 260);
+    --border-hover: oklch(84% 0.008 260);
+    --t1: oklch(15% 0.01 260);
+    --t2: oklch(35% 0.015 260);
+    --t3: oklch(52% 0.02 260);
+    --t4: oklch(68% 0.01 260);
+    --muted: oklch(68% 0.01 260);
+    --accent: oklch(55% 0.18 250);
+    --accent-hover: oklch(52% 0.20 250);
+    --accent-dim: oklch(55% 0.18 250 / 0.08);
+    --accent-glow: oklch(55% 0.18 250 / 0.15);
+    --green: oklch(55% 0.15 145);
+    --green-dim: oklch(55% 0.15 145 / 0.08);
+    --red: oklch(55% 0.18 25);
+    --red-dim: oklch(55% 0.18 25 / 0.06);
+    --radius: 12px;
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-family: var(--font-body);
+    color: var(--t1);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px;
+  }
+
+  /* ── Logo ── */
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 28px 0 0;
+    text-decoration: none;
+  }
+  .logo svg { width: 32px; height: 32px; flex-shrink: 0; }
+  .logo-mr {
+    font-family: var(--font-body);
+    font-weight: 900;
+    font-size: 17px;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .logo-dot { display: none; }
+  .logo-delegate {
+    font-family: var(--font-body);
+    font-weight: 900;
+    font-size: 17px;
+    letter-spacing: 0.14em;
+    color: var(--t1);
+    text-transform: uppercase;
+  }
+
+  /* ── Container ── */
+  .container {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 32px 0 48px;
+  }
+
+  /* ── Progress ── */
+  .progress-wrapper {
+    margin-bottom: 36px;
+  }
+  .progress-steps {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 16px;
+  }
+  .progress-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    transition: color 0.3s;
+  }
+  .progress-step.active {
+    color: var(--accent);
+  }
+  .progress-step.done {
+    color: var(--green);
+  }
+  .step-number {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--bg-deep);
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+  .progress-step.active .step-number {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(247,103,7,0.3);
+  }
+  .progress-step.done .step-number {
+    background: var(--green);
+    color: #fff;
+  }
+  .step-label {
+    letter-spacing: 0.02em;
+  }
+  @media (max-width: 420px) {
+    .progress-steps { gap: 12px; }
+    .step-label { display: none; }
+  }
+
+  .progress-bar {
+    display: flex;
+    gap: 6px;
+  }
+  .prog-seg {
+    flex: 1;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--border-light);
+    transition: background 0.4s ease;
+  }
+  .prog-seg.done { background: var(--green); }
+  .prog-seg.active {
+    background: linear-gradient(90deg, var(--accent) 0%, rgba(247,103,7,0.35) 100%);
+  }
+
+  /* ── Steps ── */
+  .step { display: none; animation: fadeIn 0.35s ease; }
+  .step.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Step Header ── */
+  h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--t1);
+    text-align: center;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .sub {
+    font-size: 14px;
+    color: var(--t3);
+    text-align: center;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  /* ── Google Sign-In Button ── */
+  .btn-google {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 24px;
+    background: #ffffff;
+    color: #1A1A1A;
+    border: 1.5px solid #ECE2D8;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-body);
+    text-decoration: none;
+    transition: all 0.15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+  }
+  .btn-google:hover {
+    border-color: #DFD0BF;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+  }
+  .btn-google:active { transform: scale(0.98); }
+  .btn-google svg { flex-shrink: 0; }
+
+  /* ── Signed-in badge ── */
+  .signed-in-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--green-dim);
+    border: 1.5px solid rgba(14,180,114,0.2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+  }
+  .signed-in-badge-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .signed-in-badge-text {
+    flex: 1;
+  }
+  .signed-in-badge-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+  .signed-in-badge-email {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--t1);
+  }
+
+  /* ── Form Fields ── */
+  .field { margin-bottom: 20px; }
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--t2);
+    margin-bottom: 6px;
+  }
+  input[type=text], input[type=email] {
+    width: 100%;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    color: var(--t1);
+    padding: 13px 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: var(--font-body);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+  input::placeholder { color: var(--muted); }
+  .hint {
+    font-size: 12px;
+    color: var(--t4);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-light);
+  }
+
+  /* ── AI Provider Cards ── */
+  .ai-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 380px) {
+    .ai-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .billing-options { grid-template-columns: 1fr; margin: 0 0 20px; }
+    h1 { font-size: 22px; }
+    .summary-card { border-radius: 10px; }
+  }
+  .ai-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(75,68,49,0.06);
+  }
+  .ai-card:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-warm);
+  }
+  .ai-card.selected {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+    box-shadow: 0 0 0 3px var(--accent-dim), 0 1px 3px rgba(75,68,49,0.06);
+  }
+  .ai-card-check {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .ai-card.selected .ai-card-check {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .ai-card-check svg { opacity: 0; transition: opacity 0.2s; }
+  .ai-card.selected .ai-card-check svg { opacity: 1; }
+  .ai-icon { font-size: 28px; margin-bottom: 10px; }
+  .ai-name {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: -0.2px;
+    color: var(--t1);
+  }
+  .ai-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    padding: 2px 8px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .badge-free { background: var(--green-dim); color: var(--green); }
+  .badge-best { background: var(--accent-dim); color: var(--accent); }
+  .ai-desc {
+    font-size: 13px;
+    color: var(--t3);
+    line-height: 1.5;
+  }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    width: 100%;
+    padding: 14px 24px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.15s;
+    box-shadow:
+      
+      0 1px 2px rgba(217,72,15,0.4),
+      0 4px 12px rgba(217,72,15,0.2),
+      inset 0 1px rgba(255,255,255,0.25);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.12);
+    letter-spacing: -0.2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow:
+      
+      0 2px 4px rgba(217,72,15,0.4),
+      0 8px 20px rgba(217,72,15,0.25),
+      inset 0 1px rgba(255,255,255,0.25);
+  }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .btn-back {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--t3);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.15s;
+    margin-top: 10px;
+  }
+  .btn-back:hover {
+    border-color: var(--border-hover);
+    background: var(--surface-warm);
+    color: var(--t2);
+  }
+
+  /* ── Trust Row ── */
+  .trust-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--t4);
+    font-weight: 500;
+  }
+
+  /* ── Summary Card ── */
+  .summary-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(75,68,49,0.06);
+  }
+  .summary-header {
+    background: linear-gradient(180deg, var(--bg-warm) 0%, var(--bg-deep) 100%);
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .summary-header-title {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .summary-body { padding: 20px; }
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+  }
+  .summary-item + .summary-item {
+    border-top: 1px solid var(--border-light);
+  }
+  .summary-item-label {
+    font-size: 14px;
+    color: var(--t3);
+  }
+  .summary-item-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--t1);
+  }
+  .billing-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 0 20px 20px;
+  }
+  .billing-option {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 14px 12px;
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: left;
+  }
+  .billing-option.active {
+    border-color: var(--accent);
+    background: rgba(247,103,7,0.05);
+    box-shadow: 0 6px 18px rgba(247,103,7,0.12);
+  }
+  .billing-option:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-1px);
+  }
+  .billing-option-plan {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--t1);
+    margin-bottom: 4px;
+  }
+  .billing-option-price {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--t1);
+    letter-spacing: -0.02em;
+  }
+  .billing-option-meta {
+    font-size: 12px;
+    color: var(--t4);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .billing-option-badge {
+    display: inline-flex;
+    margin-top: 8px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(14,180,114,0.10);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .annual-deal {
+    margin: 0 0 20px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    border: 1px solid #FFD8B0;
+    background: linear-gradient(135deg, rgba(247,103,7,0.08) 0%, rgba(255,255,255,0.95) 100%);
+  }
+  .annual-deal-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #C2410C;
+    margin-bottom: 6px;
+  }
+  .annual-deal-copy {
+    font-size: 13px;
+    color: var(--t2);
+    line-height: 1.6;
+  }
+  .annual-deal-copy strong {
+    color: var(--t1);
+  }
+
+  /* ── Price Section ── */
+  .price-highlight {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--green-dim);
+    border-top: 1px solid rgba(14,180,114,0.12);
+  }
+  .price-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--t2);
+  }
+  .price-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--green);
+  }
+  .price-after {
+    font-size: 12px;
+    color: var(--t4);
+    font-weight: 400;
+  }
+
+  /* ── What You Get ── */
+  .features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--t2);
+    line-height: 1.5;
+  }
+  .feature-check {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--green-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .feature-check svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* ── Trial Banner ── */
+  .trial-banner {
+    background: linear-gradient(135deg, rgba(247,103,7,0.06) 0%, rgba(14,180,114,0.06) 100%);
+    border: 1px solid rgba(247,103,7,0.12);
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .trial-banner-text {
+    font-size: 13px;
+    color: var(--t3);
+    line-height: 1.5;
+  }
+  .trial-banner-text strong {
+    color: var(--t1);
+    font-weight: 700;
+  }
+
+  /* ── Post-Button Text ── */
+  .post-btn-text {
+    text-align: center;
+    font-size: 12px;
+    color: var(--t4);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  /* ── Trial Info ── */
+  .trial-info {
+    background: linear-gradient(135deg, rgba(14,180,114,0.07) 0%, rgba(247,103,7,0.05) 100%);
+    border: 1.5px solid rgba(14,180,114,0.2);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .trial-info-headline {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+  .trial-info-items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .trial-info-item {
+    font-size: 13px;
+    color: var(--t2);
+    line-height: 1.5;
+  }
+  .trial-info-price {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--t4);
+  }
+  .trial-info-price strong {
+    color: var(--t2);
+    font-weight: 700;
+  }
+
+  /* ── Features Grid ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 380px) {
+    .features-grid { grid-template-columns: 1fr; }
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 14px 12px;
+    text-align: left;
+  }
+  .feature-card-icon {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  .feature-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--t1);
+    margin-bottom: 3px;
+  }
+  .feature-card-desc {
+    font-size: 12px;
+    color: var(--t3);
+    line-height: 1.5;
+  }
+
+  /* ── How It Works ── */
+  .how-it-works {
+    background: var(--surface-warm);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+  }
+  .how-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .how-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .how-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .how-step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .how-step-text {
+    font-size: 13px;
+    color: var(--t2);
+    line-height: 1.5;
+  }
+  .how-step-text strong {
+    color: var(--t1);
+    font-weight: 600;
+  }
+
+  /* ── Trust Signals ── */
+  .trust-signals {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .trust-signal {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--t3);
+  }
+  .trust-signal-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+  }
+
+  /* ── Live Badge ── */
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(247,103,7,0.15);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── Error ── */
+  .error-msg {
+    background: var(--red-dim);
+    border: 1.5px solid rgba(220,38,38,0.15);
+    color: var(--red);
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  /* ── Footer ── */
+  .page-footer {
+    text-align: center;
+    padding: 24px 0 32px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .page-footer a {
+    color: var(--t4);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .page-footer a:hover { color: var(--t2); }
+</style>
+</head>
+<body>
+
+  <!-- Logo -->
+  <a href="/" class="logo">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50,10 L90,50 L50,90 L10,50 Z" fill="none" stroke="oklch(55% 0.18 250)" stroke-width="5"/>
+      <circle cx="50" cy="10" r="8" fill="oklch(55% 0.18 250)"/>
+      <circle cx="90" cy="50" r="8" fill="oklch(55% 0.18 250)"/>
+      <circle cx="50" cy="90" r="8" fill="oklch(55% 0.18 250)"/>
+      <circle cx="10" cy="50" r="8" fill="oklch(55% 0.18 250)"/>
+      <circle cx="50" cy="50" r="10" fill="#FFF8F0" stroke="oklch(55% 0.18 250)" stroke-width="3"/>
+    </svg>
+    <span class="logo-mr">MR</span>
+    <span class="logo-dot"></span>
+    <span class="logo-delegate">DELEGATE</span>
+  </a>
+
+  <div class="container">
+
+    <!-- Progress (4 steps) -->
+    <div class="progress-wrapper">
+      <div class="progress-steps">
+        <div class="progress-step active" id="pstep-1">
+          <div class="step-number" id="pnum-1">1</div>
+          <span class="step-label">Sign in</span>
+        </div>
+        <div class="progress-step" id="pstep-2">
+          <div class="step-number" id="pnum-2">2</div>
+          <span class="step-label">Telegram</span>
+        </div>
+        <div class="progress-step" id="pstep-3">
+          <div class="step-number" id="pnum-3">3</div>
+          <span class="step-label">Your AI</span>
+        </div>
+        <div class="progress-step" id="pstep-4">
+          <div class="step-number" id="pnum-4">4</div>
+          <span class="step-label">Start trial</span>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="prog-seg active" id="seg-1"></div>
+        <div class="prog-seg" id="seg-2"></div>
+        <div class="prog-seg" id="seg-3"></div>
+        <div class="prog-seg" id="seg-4"></div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div id="error-msg" class="error-msg"></div>
+
+    <!-- ═══ STEP 1: Google Sign-In ═══ -->
+    <div class="step active" id="step-1">
+      <h1>Get 2 hours back every morning</h1>
+      <p class="sub">Stop drowning in email. MrDelegate triages your inbox, protects your calendar, and briefs you on what actually matters — before your first meeting.</p>
+
+      <!-- Social Proof -->
+      <div style="text-align:center;margin-bottom:20px;font-size:13px;color:var(--t3);font-weight:600;">
+        ★★★★★ &nbsp; Join 150+ executives who've reclaimed their mornings
+      </div>
+
+      <!-- CTA First -->
+      <a href="/api/oauth/google/login-start" class="btn-google" id="google-signin-btn-top" style="margin-bottom:10px;">
+        <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          <path fill="none" d="M0 0h48v48H0z"/>
+        </svg>
+        Start Free Trial — 3 Days, $0 Today
+      </a>
+      <p style="font-size:12px;color:var(--t4);text-align:center;margin-bottom:24px;">Setup takes 2 minutes · No credit card required</p>
+
+      <!-- Trial Info -->
+      <div class="trial-info">
+        <div class="trial-info-headline">3-Day Free Trial — No charge today</div>
+        <div class="trial-info-items">
+          <div class="trial-info-item">Full access to your OpenClaw platform</div>
+          <div class="trial-info-item">Cancel anytime, no questions asked</div>
+        </div>
+        <div class="trial-info-price"><strong>$47/month</strong> after trial &nbsp;·&nbsp; or <strong>$397/year</strong> — save $167</div>
+      </div>
+
+      <!-- Value Props -->
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-card-icon">📧</div>
+          <div class="feature-card-title">Inbox Triage</div>
+          <div class="feature-card-desc">AI reads, prioritizes, and drafts replies — you just approve</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-icon">📅</div>
+          <div class="feature-card-title">Calendar Protection</div>
+          <div class="feature-card-desc">No more back-to-back chaos. Your focus time stays yours.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-icon">☀️</div>
+          <div class="feature-card-title">Morning Brief</div>
+          <div class="feature-card-desc">Daily digest of what matters, waiting in your Telegram</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-icon">🧠</div>
+          <div class="feature-card-title">Self-Learning</div>
+          <div class="feature-card-desc">Learns your priorities. Gets smarter every week.</div>
+        </div>
+      </div>
+
+      <!-- Telegram Callout -->
+      <div style="background:linear-gradient(135deg,#E8F4FD 0%,#D6EBF9 100%);border:1.5px solid #2AABEE;border-radius:14px;padding:20px;margin-bottom:20px;text-align:left;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <svg width="36" height="36" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="tg-grad" x1="120" y1="0" x2="120" y2="240" gradientUnits="userSpaceOnUse"><stop stop-color="#2AABEE"/><stop offset="1" stop-color="#229ED9"/></linearGradient></defs>
+            <circle cx="120" cy="120" r="120" fill="url(#tg-grad)"/>
+            <path d="M54 117.5c36.3-15.8 60.5-26.2 72.6-31.3 34.6-14.4 41.8-16.9 46.5-17 1 0 3.4.3 4.9 1.4 1.3.9 1.6 2.2 1.8 3.1.2.9.4 2.8.2 4.4-1.8 18.9-9.6 64.8-13.6 86-1.7 8.9-5 11.9-8.2 12.2-7 .6-12.3-4.6-19-9-10.6-6.9-16.5-11.2-26.8-17.9-11.9-7.8-4.2-12.1 2.6-19.1 1.8-1.8 32.5-29.8 33.1-32.3.1-.3.1-.6-.2-.9-.4-.2-.9-.1-1.3 0-.5.2-8.8 5.6-24.8 16.4-2.3 1.6-4.4 2.4-6.3 2.3-2.1 0-6-.1-8.9-1.7-3.6-2-6.5-3-6.5-3-8-2.5-16-5.3-14-10.7z" fill="white"/>
+          </svg>
+          <div>
+            <div style="font-size:16px;font-weight:800;color:#1A1A1A;line-height:1.2;">Chat with your AI via Telegram</div>
+            <div style="font-size:12px;color:#229ED9;font-weight:600;margin-top:2px;">Your primary interface — no new apps to learn</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:14px;">
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#2D2D2D;line-height:1.5;">
+            <span style="font-size:15px;flex-shrink:0;">💬</span>
+            <span>Your OpenClaw instance lives in Telegram — just open a chat and start talking</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#2D2D2D;line-height:1.5;">
+            <span style="font-size:15px;flex-shrink:0;">🎤</span>
+            <span>Send voice notes, get instant responses — no typing required</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#2D2D2D;line-height:1.5;">
+            <span style="font-size:15px;flex-shrink:0;">🌍</span>
+            <span>Available 24/7, wherever you are — on your phone or desktop</span>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#1A6D99;font-weight:600;font-style:italic;">"Talk to your AI like you'd text a friend."</div>
+      </div>
+
+      <!-- How It Works -->
+      <div class="how-it-works">
+        <div class="how-title">How it works</div>
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-step-num">1</div>
+            <div class="how-step-text"><strong>Connect</strong> your email &amp; calendar</div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-num">2</div>
+            <div class="how-step-text"><strong>AI learns</strong> your patterns (24–48 hours)</div>
+          </div>
+          <div class="how-step">
+            <div class="how-step-num">3</div>
+            <div class="how-step-text"><strong>Wake up</strong> to a managed inbox</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust Signals -->
+      <div class="trust-signals">
+        <div class="trust-signal"><div class="trust-signal-dot"></div>Your data stays private — never sold or shared</div>
+        <div class="trust-signal"><div class="trust-signal-dot"></div>Works with Gmail, Outlook, Google Calendar</div>
+        <div class="trust-signal"><div class="trust-signal-dot"></div>Loved by founders, CEOs, and busy executives</div>
+      </div>
+
+      <a href="/api/oauth/google/login-start" class="btn-google" id="google-signin-btn">
+        <!-- Google G logo -->
+        <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          <path fill="none" d="M0 0h48v48H0z"/>
+        </svg>
+        Start Free Trial Today — 3 Days, $0
+      </a>
+
+      <p style="font-size:12px;color:var(--t4);text-align:center;margin:10px 0 0;">
+        We only request your name and email — nothing else.
+      </p>
+
+      <div class="trust-row" style="margin-top:16px;">
+        <div class="trust-item">🔒 Secure</div>
+        <div class="trust-item">⚡ 2-minute setup</div>
+        <div class="trust-item">$0 today</div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 2: Telegram ═══ -->
+    <div class="step" id="step-2">
+      <h1>One more thing</h1>
+      <p class="sub">Where should your agent reach you? Open Telegram &rarr; Settings &rarr; Username. Create one if you don't have it yet.</p>
+
+      <!-- Signed-in badge (populated by JS) -->
+      <div class="signed-in-badge" id="signed-in-badge" style="display:none;">
+        <div class="signed-in-badge-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 5l-6 6-3-3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="signed-in-badge-text">
+          <div class="signed-in-badge-label">Signed in with Google</div>
+          <div class="signed-in-badge-email" id="badge-email"></div>
+        </div>
+      </div>
+
+      <!-- Hidden fields for pre-filled data -->
+      <input type="hidden" id="name">
+      <input type="hidden" id="email">
+
+      <div class="field">
+        <label class="field-label" for="channel-handle">Your Telegram username</label>
+        <input type="text" id="channel-handle" placeholder="@yourusername">
+        <p class="hint">We'll use this username to find you on Telegram when your agent is live</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="customer-timezone">Your timezone</label>
+        <select id="customer-timezone" onchange="updateBriefHint()" style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:15px;font-family:var(--font-body);color:var(--t1);background:var(--surface);outline:none;cursor:pointer;">
+          <option value="America/New_York">Eastern — New York, Miami, Toronto</option>
+          <option value="America/Chicago">Central — Chicago, Dallas, Houston</option>
+          <option value="America/Denver">Mountain — Denver, Phoenix, Salt Lake City</option>
+          <option value="America/Los_Angeles">Pacific — Los Angeles, San Francisco, Seattle</option>
+          <option value="America/Anchorage">Alaska</option>
+          <option value="Pacific/Honolulu">Hawaii</option>
+          <option value="Europe/London">London (GMT/BST)</option>
+          <option value="Europe/Paris">Paris, Berlin, Amsterdam (CET)</option>
+          <option value="Europe/Helsinki">Helsinki, Athens (EET)</option>
+          <option value="Asia/Dubai">Dubai (GST)</option>
+          <option value="Asia/Kolkata">India (IST)</option>
+          <option value="Asia/Singapore">Singapore, Hong Kong</option>
+          <option value="Asia/Tokyo">Tokyo (JST)</option>
+          <option value="Australia/Sydney">Sydney (AEST)</option>
+          <option value="Pacific/Auckland">Auckland (NZST)</option>
+        </select>
+        <div id="tz-detected-msg" style="display:none;margin-top:8px;padding:9px 12px;background:var(--green-dim);border:1px solid rgba(14,180,114,0.2);border-radius:8px;font-size:12px;color:#1A6647;">
+          <span id="tz-detected-text"></span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="brief-time">Morning brief time</label>
+        <select id="brief-time" onchange="updateBriefHint()" style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:15px;font-family:var(--font-body);color:var(--t1);background:var(--surface);outline:none;cursor:pointer;">
+          <option value="05:00">5:00 AM</option>
+          <option value="05:30">5:30 AM</option>
+          <option value="06:00">6:00 AM</option>
+          <option value="06:30">6:30 AM</option>
+          <option value="07:00" selected>7:00 AM</option>
+          <option value="07:30">7:30 AM</option>
+          <option value="08:00">8:00 AM</option>
+          <option value="08:30">8:30 AM</option>
+          <option value="09:00">9:00 AM</option>
+          <option value="09:30">9:30 AM</option>
+          <option value="10:00">10:00 AM</option>
+        </select>
+        <p class="hint" id="brief-hint">Your morning brief arrives at 7:00 AM in your timezone</p>
+      </div>
+
+      <button class="btn-primary" onclick="goStep3()">
+        Continue
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <button class="btn-back" onclick="goStep(1)">&larr; Back</button>
+    </div>
+
+    <!-- ═══ STEP 3: Your AI ═══ -->
+    <div class="step" id="step-3">
+      <h1>Connect your free AI key</h1>
+      <p class="sub">MrDelegate uses your free Gemini key. We'll show you exactly how to get it &mdash; takes 60 seconds.</p>
+
+      <div style="background:#F6FBF4;border:1.5px solid #22C55E;border-radius:14px;padding:24px;margin-bottom:24px;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+          <div style="font-size:32px;">✨</div>
+          <div>
+            <div style="font-weight:700;font-size:16px;color:#111;">Google Gemini Flash 2.0</div>
+            <div style="font-size:13px;color:#22C55E;font-weight:600;margin-top:2px;">Free forever · No credit card · 1,500 requests/day</div>
+          </div>
+        </div>
+        <div style="font-size:14px;color:#444;line-height:1.6;">Your agent uses ~50–100 requests/day. You'll never hit the limit.</div>
+        <div style="margin-top:16px;">
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#111;color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;">
+            Get My Free Gemini Key →
+          </a>
+          <div style="font-size:12px;color:#888;margin-top:8px;">Takes about 60 seconds. Sign in with Google, click "Create API Key", then paste it after checkout.</div>
+        </div>
+      </div>
+
+      <p class="hint" style="text-align:center;margin-bottom:24px;">We'll walk you through pasting your key right after checkout.</p>
+
+      <button class="btn-primary" onclick="goStep4()">
+        Continue
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn-back" onclick="goStep(2)">&larr; Back</button>
+    </div>
+
+    <!-- ═══ STEP 4: Start Trial ═══ -->
+    <div class="step" id="step-4">
+      <div style="text-align:center;">
+        <div class="live-badge">
+          <span class="live-dot"></span>
+          Your agent goes live in 60 seconds
+        </div>
+      </div>
+
+      <h1>You're all set</h1>
+      <p class="sub">Your agent goes live the moment you start your trial.</p>
+
+      <!-- Trial Banner -->
+      <div class="trial-banner">
+        <p class="trial-banner-text">
+          &#9203; You won't be charged until <strong id="trial-end-date"></strong>
+        </p>
+      </div>
+
+      <!-- Summary Card -->
+      <div class="summary-card">
+        <div class="summary-header">
+          <div class="summary-header-title">Your plan</div>
+        </div>
+        <div class="summary-body">
+          <div class="summary-item">
+            <span class="summary-item-label">Plan</span>
+            <span class="summary-item-value">MrDelegate Pro</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-item-label">Account</span>
+            <span class="summary-item-value" id="sum-email">—</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-item-label">AI provider</span>
+            <span class="summary-item-value" id="sum-ai">Gemini Flash 2.0 (Free forever)</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-item-label">Telegram</span>
+            <span class="summary-item-value" id="sum-handle">—</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-item-label">Morning brief</span>
+            <span class="summary-item-value" id="sum-brief">7:00 AM</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-item-label">Billing</span>
+            <span class="summary-item-value" id="sum-price">$0 today, then $47/mo after your 3-day trial</span>
+          </div>
+        </div>
+        <div class="billing-options">
+          <button type="button" class="billing-option" id="billing-monthly" onclick="setBillingPlan('monthly')">
+            <div class="billing-option-plan">Monthly</div>
+            <div class="billing-option-price">$47/mo</div>
+            <div class="billing-option-meta">$564/year if you stay monthly</div>
+          </button>
+          <button type="button" class="billing-option" id="billing-annual" onclick="setBillingPlan('annual')">
+            <div class="billing-option-plan">Annual</div>
+            <div class="billing-option-price">$397/yr</div>
+            <div class="billing-option-meta">$0 today, then billed once after trial</div>
+            <div class="billing-option-badge">Save $167 · ~30% off</div>
+          </button>
+        </div>
+        <div class="price-highlight">
+          <span class="price-label">Due today</span>
+          <div>
+            <span class="price-value">$0</span>
+            <span class="price-after" id="sum-due-copy"> &middot; then $47/mo after your 3-day trial</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="annual-deal" id="annual-deal">
+        <div class="annual-deal-title">Annual is the better deal</div>
+        <div class="annual-deal-copy">Monthly adds up to <strong>$564/year</strong>. Annual is <strong>$397/year</strong> after the same 3-day trial, so you keep <strong>$167</strong> in your pocket.</div>
+      </div>
+
+      <!-- What you get -->
+      <div class="features-list">
+        <div class="feature-item">
+          <div class="feature-check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#0EB472" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span>Dedicated OpenClaw instance on your own private server</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#0EB472" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span>Morning brief delivered at 7am — inbox + calendar + priorities</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#0EB472" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span>1,000+ integrations — Gmail, Calendar, Slack, Notion, and more</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check">
+            <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#0EB472" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span>Gets smarter every night — learns your priorities automatically</span>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="checkout-btn" onclick="startCheckout()" style="font-size:16px;padding:16px 24px;">
+        Start my free trial
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <p class="post-btn-text">
+        $0 charged today &middot; 3-day trial &middot; Cancel anytime before day 3
+      </p>
+
+      <div class="trust-row" style="margin-top:14px;">
+        <div class="trust-item">🔒 Secure checkout</div>
+        <div class="trust-item">Powered by Stripe</div>
+        <div class="trust-item">Cancel anytime</div>
+      </div>
+
+      <button class="btn-back" onclick="goStep(3)">&larr; Back</button>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    &copy; 2026 MrDelegate &middot;
+    <a href="/privacy">Privacy</a> &middot;
+    <a href="/terms">Terms</a>
+  </div>
+
+<script>
+var ai = 'gemini';
+var signupEmail = '';
+var signupName = '';
+
+// Preserve plan param through Google OAuth flow
+(function() {
+  var plan = new URLSearchParams(window.location.search).get('plan');
+  if (plan === 'annual') {
+    var btn = document.getElementById('google-signin-btn');
+    if (btn) btn.href = '/api/oauth/google/login-start?plan=annual';
+  }
+})();
+
+function showError(msg) {
+  var el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(function() { el.style.display = 'none'; }, 4500);
+}
+
+function getSelectedPlan() {
+  return new URLSearchParams(window.location.search).get('plan') === 'annual' ? 'annual' : 'monthly';
+}
+
+function setBillingPlan(plan) {
+  var url = new URL(window.location.href);
+  if (plan === 'annual') url.searchParams.set('plan', 'annual');
+  else url.searchParams.delete('plan');
+  window.history.replaceState({}, '', url.toString());
+  renderBillingCopy();
+}
+
+function renderBillingCopy() {
+  var isAnnual = getSelectedPlan() === 'annual';
+  var monthlyBtn = document.getElementById('billing-monthly');
+  var annualBtn = document.getElementById('billing-annual');
+  var priceEl = document.getElementById('sum-price');
+  var dueCopyEl = document.getElementById('sum-due-copy');
+  var annualDeal = document.getElementById('annual-deal');
+  var checkoutBtn = document.getElementById('checkout-btn');
+
+  if (monthlyBtn) monthlyBtn.classList.toggle('active', !isAnnual);
+  if (annualBtn) annualBtn.classList.toggle('active', isAnnual);
+  if (priceEl) priceEl.textContent = isAnnual
+    ? '$0 today, then $397/yr after your 3-day trial'
+    : '$0 today, then $47/mo after your 3-day trial';
+  if (dueCopyEl) dueCopyEl.textContent = isAnnual
+    ? ' · then $397/yr after your 3-day trial'
+    : ' · then $47/mo after your 3-day trial';
+  if (annualDeal) annualDeal.style.opacity = isAnnual ? '1' : '0.92';
+  if (checkoutBtn) checkoutBtn.innerHTML = isAnnual
+    ? 'Start my free trial and save $167 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    : 'Start my free trial <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+
+function updateProgress(step) {
+  var total = 4;
+  for (var i = 1; i <= total; i++) {
+    var pstep = document.getElementById('pstep-' + i);
+    var pnum = document.getElementById('pnum-' + i);
+    pstep.classList.remove('active', 'done');
+    if (i < step) {
+      pstep.classList.add('done');
+      pnum.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    } else if (i === step) {
+      pstep.classList.add('active');
+      pnum.textContent = i;
+    } else {
+      pnum.textContent = i;
+    }
+  }
+
+  for (var j = 1; j <= total; j++) {
+    var seg = document.getElementById('seg-' + j);
+    seg.classList.remove('done', 'active');
+    if (j < step) seg.classList.add('done');
+    if (j === step) seg.classList.add('active');
+  }
+}
+
+function goStep(n) {
+  var steps = document.querySelectorAll('.step');
+  for (var i = 0; i < steps.length; i++) {
+    steps[i].classList.remove('active');
+  }
+  document.getElementById('step-' + n).classList.add('active');
+  updateProgress(n);
+  window.scrollTo(0, 0);
+}
+
+function selectAI(el) {
+  var cards = document.querySelectorAll('.ai-card');
+  for (var i = 0; i < cards.length; i++) {
+    cards[i].classList.remove('selected');
+  }
+  el.classList.add('selected');
+  ai = el.getAttribute('data-ai');
+}
+
+function goStep3() {
+  var handle = document.getElementById('channel-handle').value.trim();
+  if (!handle) return showError('Please enter your Telegram username');
+  goStep(3);
+}
+
+function formatBriefTime(val) {
+  var parts = val.split(':');
+  var h = parseInt(parts[0]);
+  var m = parts[1] || '00';
+  var ampm = h >= 12 ? 'PM' : 'AM';
+  var h12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+  return h12 + ':' + m + ' ' + ampm;
+}
+
+function updateBriefHint() {
+  var tzSel = document.getElementById('customer-timezone');
+  var timeSel = document.getElementById('brief-time');
+  var hint = document.getElementById('brief-hint');
+  if (!tzSel || !timeSel || !hint) return;
+  var tzLabel = tzSel.options[tzSel.selectedIndex].text.split(' — ')[0];
+  hint.textContent = 'Your morning brief arrives at ' + formatBriefTime(timeSel.value) + ' ' + tzLabel + ' time';
+}
+
+function goStep4() {
+  document.getElementById('sum-ai').textContent = 'Gemini Flash 2.0 (Free forever)';
+  document.getElementById('sum-handle').textContent = document.getElementById('channel-handle').value.trim();
+  document.getElementById('sum-email').textContent = signupEmail || '—';
+  var briefVal = document.getElementById('brief-time').value || '07:00';
+  var tzSel = document.getElementById('customer-timezone');
+  var tzShort = tzSel ? tzSel.options[tzSel.selectedIndex].text.split(' — ')[0] : '';
+  document.getElementById('sum-brief').textContent = formatBriefTime(briefVal) + (tzShort ? ' · ' + tzShort : '');
+
+  var d = new Date();
+  d.setDate(d.getDate() + 3);
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('trial-end-date').textContent = months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+
+  renderBillingCopy();
+  goStep(4);
+}
+
+function startCheckout() {
+  var btn = document.getElementById('checkout-btn');
+  btn.disabled = true;
+  btn.innerHTML = 'Setting up your agent\u2026';
+
+  var payload = {
+    name: signupName || signupEmail,
+    email: signupEmail,
+    channel: 'telegram',
+    channelHandle: document.getElementById('channel-handle').value.trim(),
+    timezone: document.getElementById('customer-timezone').value || Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York',
+    briefTime: document.getElementById('brief-time').value || '07:00',
+    aiProvider: ai,
+    plan: getSelectedPlan()
+  };
+
+  fetch('/api/stripe/checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      showError(data.error || 'Something went wrong. Please try again.');
+      btn.disabled = false;
+      renderBillingCopy();
+    }
+  })
+  .catch(function() {
+    showError('Connection error. Please check your internet and try again.');
+    btn.disabled = false;
+    renderBillingCopy();
+  });
+}
+
+// ── On page load: check for signup session cookie ──
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('authed') === '1') {
+    // Fetch pre-filled session from server
+    fetch('/api/oauth/google/signup-session')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.ok && data.email) {
+          signupEmail = data.email;
+          signupName = data.name || '';
+
+          // Pre-fill hidden fields
+          document.getElementById('email').value = signupEmail;
+          document.getElementById('name').value = signupName;
+
+          // Show signed-in badge
+          var badge = document.getElementById('signed-in-badge');
+          document.getElementById('badge-email').textContent = signupEmail;
+          badge.style.display = 'flex';
+
+          // Skip to step 2
+          goStep(2);
+        }
+      })
+      .catch(function() {
+        // Silently fall through — user stays on step 1
+      });
+  }
+  // Auto-detect and pre-select timezone
+  try {
+    var detectedTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    var tzSel = document.getElementById('customer-timezone');
+    if (tzSel && detectedTz) {
+      var matched = false;
+      for (var i = 0; i < tzSel.options.length; i++) {
+        if (tzSel.options[i].value === detectedTz) { tzSel.selectedIndex = i; matched = true; break; }
+      }
+      var detectedMsg = document.getElementById('tz-detected-msg');
+      var detectedText = document.getElementById('tz-detected-text');
+      if (detectedMsg && detectedText) {
+        var tzLabel = matched
+          ? tzSel.options[tzSel.selectedIndex].text
+          : detectedTz;
+        detectedText.textContent = 'Detected: ' + tzLabel + '. Change above if wrong.';
+        detectedMsg.style.display = 'block';
+      }
+    }
+    updateBriefHint();
+  } catch(e) {}
+
+  renderBillingCopy();
+})();
+</script>
+</body>
+</html>

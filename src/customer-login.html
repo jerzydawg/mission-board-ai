@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — MrDelegate</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void:#FAFAF9;--surface:#ffffff;--panel:#f5f4f2;--border:#e8e6e1;
+    --signal:#5B4DE0;--signal-dim:rgba(91,77,224,0.08);--signal-glow:rgba(91,77,224,0.2);
+    --emerald:#16a34a;--emerald-dim:rgba(22,163,74,0.08);
+    --amber:#f59e0b;--red:#dc2626;--white:#0F0E0C;--muted:#6b7280;--fg:#374151;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--void);color:var(--white);font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;display:grid;place-items:center;padding:20px;}
+  /* Noise texture overlay */
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+  .card{width:100%;max-width:420px;position:relative;z-index:1;}
+  .logo{display:flex;align-items:center;gap:10px;margin-bottom:44px;justify-content:center;}
+  .logo-mark{width:40px;height:40px;flex-shrink:0;}
+  .logo-mark svg{width:40px;height:40px;}
+  .logo-text{font-size:19px;font-weight:900;letter-spacing:-0.5px;}
+  .logo-text .mr{color:#F76707;}
+  h1{font-size:28px;font-weight:800;text-align:center;margin-bottom:8px;letter-spacing:-0.5px;}
+  .sub{color:var(--muted);text-align:center;font-size:14px;margin-bottom:32px;line-height:1.6;}
+  label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px;font-family:'JetBrains Mono',monospace;}
+  input{width:100%;background:var(--panel);border:1.5px solid var(--border);color:var(--white);padding:14px 16px;border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:all 0.2s;margin-bottom:16px;}
+  input:focus{border-color:var(--signal);box-shadow:0 0 0 3px var(--signal-dim);}
+  input::placeholder{color:var(--muted);}
+  .google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;background:#fff;color:#3c4043;border:1.5px solid #dadce0;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.2s;text-decoration:none;margin-bottom:4px;}
+  .google-btn:hover{background:#f8f9fa;box-shadow:0 2px 8px rgba(0,0,0,0.12);}
+  .divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:rgba(255,255,255,0.3);font-size:12px;}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.1);}
+  .btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--signal),#9b87f7);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;box-shadow:0 4px 24px var(--signal-glow);letter-spacing:0.2px;}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--signal-glow);}
+  .btn:active{transform:translateY(0);}
+  .btn:disabled{opacity:0.45;cursor:not-allowed;transform:none;}
+  .error{background:rgba(255,77,109,0.1);border:1.5px solid rgba(255,77,109,0.3);color:var(--red);padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:16px;display:none;}
+  .success-state{display:none;text-align:center;}
+  .success-icon{font-size:60px;margin-bottom:20px;display:block;}
+  .success-title{font-size:24px;font-weight:800;margin-bottom:10px;letter-spacing:-0.5px;}
+  .success-sub{color:var(--muted);font-size:14px;line-height:1.7;}
+  .footer{text-align:center;margin-top:24px;font-size:13px;color:var(--muted);}
+  .footer a{color:var(--signal);text-decoration:none;font-weight:600;}
+  .footer a:hover{text-decoration:underline;}
+  /* Glow blobs */
+  .blob{position:fixed;border-radius:50%;filter:blur(80px);opacity:0.08;pointer-events:none;z-index:0;}
+  .blob-1{width:400px;height:400px;background:var(--signal);top:-100px;right:-100px;}
+  .blob-2{width:300px;height:300px;background:var(--emerald);bottom:-80px;left:-80px;}
+</style>
+</head>
+<body>
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="card">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50,10 L90,50 L50,90 L10,50 Z" fill="none" stroke="#E86A33" stroke-width="5"/>
+        <circle cx="50" cy="10" r="8" fill="#E86A33"/>
+        <circle cx="90" cy="50" r="8" fill="#E86A33"/>
+        <circle cx="50" cy="90" r="8" fill="#E86A33"/>
+        <circle cx="10" cy="50" r="8" fill="#E86A33"/>
+        <circle cx="50" cy="50" r="10" fill="#FFF8F0" stroke="#E86A33" stroke-width="3"/>
+      </svg>
+    </div>
+    <div class="logo-text"><span class="mr">MR</span>DELEGATE</div>
+  </div>
+
+  <div id="login-form">
+    <h1>Welcome back</h1>
+    <p class="sub">Sign in to your dashboard.</p>
+    <div id="error" class="error"></div>
+
+    <!-- Google sign-in (primary) -->
+    <a href="/api/customer/auth/google" class="google-btn">
+      <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58z"/></svg>
+      Continue with Google
+    </a>
+
+    <div class="divider"><span>or</span></div>
+
+    <label>Email address</label>
+    <input type="email" id="email" placeholder="you@company.com" autocomplete="email" onkeydown="if(event.key==='Enter')sendMagicLink()">
+    <button class="btn" id="submit-btn" onclick="sendMagicLink()">Send magic link →</button>
+  </div>
+
+  <div class="success-state" id="success-state">
+    <span class="success-icon">📬</span>
+    <div class="success-title">Check your inbox</div>
+    <p class="success-sub">We sent a sign-in link to<br><strong id="sent-email" style="color:var(--white)"></strong>.<br><br>Click it to open your dashboard.<br><span style="font-size:12px">Link expires in 15 minutes.</span></p>
+  </div>
+
+  <div class="footer">
+    Not a customer? <a href="/pricing">Start your free trial →</a>
+  </div>
+</div>
+<script>
+const params=new URLSearchParams(window.location.search);
+const token=params.get('token');
+if(token){
+  fetch('/api/customer/auth/magic-verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})})
+    .then(r=>r.json()).then(d=>{
+      if(d.token&&d.customerId){
+        localStorage.setItem('md_customer_token',d.token);
+        localStorage.setItem('md_customer_id',d.customerId);
+        window.location.href='/app';
+      }else{
+        document.getElementById('error').textContent='Link expired or invalid. Request a new one.';
+        document.getElementById('error').style.display='block';
+      }
+    }).catch(()=>{
+      document.getElementById('error').textContent='Something went wrong. Try again.';
+      document.getElementById('error').style.display='block';
+    });
+}
+async function sendMagicLink(){
+  const email=document.getElementById('email').value.trim();
+  if(!email||!email.includes('@')){
+    document.getElementById('error').textContent='Please enter a valid email.';
+    document.getElementById('error').style.display='block';return;
+  }
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;btn.textContent='Sending...';
+  try{
+    const res=await fetch('/api/customer/auth/magic-link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+    const data=await res.json();
+    if(data.ok){
+      document.getElementById('sent-email').textContent=email;
+      document.getElementById('login-form').style.display='none';
+      document.getElementById('success-state').style.display='block';
+    }else{
+      document.getElementById('error').textContent=data.error||'No account found. Start a free trial first.';
+      document.getElementById('error').style.display='block';
+      btn.disabled=false;btn.textContent='Send magic link →';
+    }
+  }catch(e){
+    document.getElementById('error').textContent='Connection error. Try again.';
+    document.getElementById('error').style.display='block';
+    btn.disabled=false;btn.textContent='Send magic link →';
+  }
+}
+</script>
+</body>
+</html>

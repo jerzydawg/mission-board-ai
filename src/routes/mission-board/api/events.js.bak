@@ -1,0 +1,183 @@
+/**
+ * Mission Board Live Updates - SSE Event Stream
+ */
+
+import fs from 'fs';
+
+const connections = new Set();
+const eventBuffer = [];
+const MAX_BUFFER_SIZE = 50;
+const TASKS_FILE = '/var/lib/mrdelegate/mission-tasks.json';
+const RUNS_FILE = '/var/lib/mrdelegate/runs.json';
+let tasksWatcher = null;
+let runsWatcher = null;
+let lastTasksContent = null;
+let lastRunsContent = null;
+
+export default async function handler(req) {
+  const url = new URL(req.url);
+  const filters = {
+    agent: url.searchParams.get('agent'),
+    priority: url.searchParams.get('priority'),
+    type: url.searchParams.get('type'),
+  };
+  const lastEventId = parseInt(url.searchParams.get('lastEventId') || '0', 10);
+
+  const stream = new ReadableStream({
+    start(controller) {
+      const connection = {
+        id: Math.random().toString(36).slice(2, 11),
+        controller,
+        filters,
+        lastEventId,
+      };
+
+      connections.add(connection);
+      startWatchers();
+
+      sendEvent(connection, {
+        type: 'connected',
+        data: {
+          connectionId: connection.id,
+          timestamp: Date.now(),
+          bufferSize: eventBuffer.length,
+        },
+      });
+
+      if (connection.lastEventId > 0) {
+        const missedEvents = eventBuffer.filter((event) => event.id > connection.lastEventId);
+        missedEvents.forEach((event) => sendEvent(connection, event));
+      }
+
+      const heartbeatInterval = setInterval(() => {
+        sendEvent(connection, {
+          type: 'heartbeat',
+          data: { timestamp: Date.now() },
+        });
+      }, 30000);
+
+      const abort = () => {
+        clearInterval(heartbeatInterval);
+        connections.delete(connection);
+        try { controller.close(); } catch {}
+        if (connections.size === 0) stopWatchers();
+      };
+
+      if (req.raw?.signal) {
+        req.raw.signal.addEventListener('abort', abort, { once: true });
+      }
+    }
+  });
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+      'X-Accel-Buffering': 'no',
+    }
+  });
+}
+
+function sendEvent(connection, event) {
+  if (connection.filters.agent && event.data?.agentId !== connection.filters.agent) return;
+  if (connection.filters.priority && event.data?.priority !== connection.filters.priority) return;
+  if (connection.filters.type && event.type !== connection.filters.type) return;
+
+  const id = event.id || Date.now();
+  const data = JSON.stringify(event.data || {});
+  const payload = `id: ${id}\nevent: ${event.type}\ndata: ${data}\n\n`;
+  try {
+    connection.controller.enqueue(new TextEncoder().encode(payload));
+  } catch {}
+}
+
+function broadcast(event) {
+  const eventWithId = { ...event, id: Date.now() };
+  eventBuffer.push(eventWithId);
+  if (eventBuffer.length > MAX_BUFFER_SIZE) eventBuffer.shift();
+  connections.forEach((connection) => sendEvent(connection, eventWithId));
+}
+
+function startWatchers() {
+  if (tasksWatcher || runsWatcher) return;
+  if (fs.existsSync(TASKS_FILE)) {
+    lastTasksContent = fs.readFileSync(TASKS_FILE, 'utf-8');
+    tasksWatcher = fs.watch(TASKS_FILE, (eventType) => { if (eventType === 'change') handleTasksChange(); });
+  }
+  if (fs.existsSync(RUNS_FILE)) {
+    lastRunsContent = fs.readFileSync(RUNS_FILE, 'utf-8');
+    runsWatcher = fs.watch(RUNS_FILE, (eventType) => { if (eventType === 'change') handleRunsChange(); });
+  }
+}
+
+function stopWatchers() {
+  if (tasksWatcher) { tasksWatcher.close(); tasksWatcher = null; }
+  if (runsWatcher) { runsWatcher.close(); runsWatcher = null; }
+}
+
+function handleTasksChange() {
+  try {
+    const newContent = fs.readFileSync(TASKS_FILE, 'utf-8');
+    if (newContent === lastTasksContent) return;
+    const oldPayload = JSON.parse(lastTasksContent || '{"tasks":[],"completions":[]}');
+    const newPayload = JSON.parse(newContent);
+    const oldTasks = Array.isArray(oldPayload) ? oldPayload : (oldPayload.tasks || []);
+    const newTasks = Array.isArray(newPayload) ? newPayload : (newPayload.tasks || []);
+    lastTasksContent = newContent;
+
+    newTasks.forEach((newTask) => {
+      const oldTask = oldTasks.find((t) => t.id === newTask.id);
+      if (!oldTask) {
+        broadcast({ type: 'task_assigned', data: { taskId: newTask.id, agentId: newTask.agentId, title: newTask.title, priority: newTask.priority, timestamp: Date.now(), actor: resolveActor(newTask.assignedBy) } });
+      } else if (JSON.stringify(oldTask.progress || []) !== JSON.stringify(newTask.progress || [])) {
+        const latest = (newTask.progress || [])[newTask.progress.length - 1];
+        if (latest) broadcast({ type: 'task_progress', data: { taskId: newTask.id, agentId: newTask.agentId, title: newTask.title, priority: newTask.priority, progress: latest, timestamp: Date.now(), actor: resolveActor(newTask.agentId) } });
+      } else if (oldTask.status !== newTask.status) {
+        if (newTask.status === 'completed') {
+          broadcast({ type: 'task_completed', data: { taskId: newTask.id, agentId: newTask.agentId, title: newTask.title, priority: newTask.priority, duration: (newTask.completedAt && newTask.startedAt) ? (Date.parse(newTask.completedAt) - Date.parse(newTask.startedAt)) : 0, timestamp: Date.now(), actor: resolveActor(newTask.agentId) } });
+        } else if (newTask.status === 'failed') {
+          broadcast({ type: 'task_failed', data: { taskId: newTask.id, agentId: newTask.agentId, title: newTask.title, error: newTask.lastError, timestamp: Date.now(), actor: resolveActor(newTask.agentId) } });
+        }
+      } else if (oldTask.priority !== newTask.priority) {
+        broadcast({ type: 'task_priority_changed', data: { taskId: newTask.id, agentId: newTask.agentId, title: newTask.title, oldPriority: oldTask.priority, newPriority: newTask.priority, timestamp: Date.now(), actor: resolveActor('ceo') } });
+      }
+    });
+  } catch (err) {
+    console.error('[SSE] Error handling tasks change:', err);
+  }
+}
+
+function handleRunsChange() {
+  try {
+    const newContent = fs.readFileSync(RUNS_FILE, 'utf-8');
+    if (newContent === lastRunsContent) return;
+    const oldPayload = JSON.parse(lastRunsContent || '{"active":[],"recent":[]}');
+    const newPayload = JSON.parse(newContent);
+    const oldRuns = Array.isArray(oldPayload) ? oldPayload : ([...(oldPayload.active || []), ...(oldPayload.recent || [])]);
+    const newRuns = Array.isArray(newPayload) ? newPayload : ([...(newPayload.active || []), ...(newPayload.recent || [])]);
+    lastRunsContent = newContent;
+
+    newRuns.forEach((newRun) => {
+      const oldRun = oldRuns.find((r) => (r.id || r.runId) === (newRun.id || newRun.runId));
+      if (!oldRun && (newRun.status === 'running' || !newRun.endedAt)) {
+        broadcast({ type: 'agent_run_started', data: { runId: newRun.id || newRun.runId, agentId: newRun.agentId, taskId: newRun.taskId, timestamp: Date.now(), actor: resolveActor(newRun.agentId) } });
+      } else if (oldRun && (oldRun.status === 'running' || !oldRun.endedAt) && (newRun.status === 'completed' || newRun.status === 'ok')) {
+        broadcast({ type: 'agent_run_completed', data: { runId: newRun.id || newRun.runId, agentId: newRun.agentId, taskId: newRun.taskId, duration: (newRun.endedAt && newRun.startedAt) ? (Date.parse(newRun.endedAt) - Date.parse(newRun.startedAt)) : 0, timestamp: Date.now(), actor: resolveActor(newRun.agentId) } });
+      } else if (oldRun && (oldRun.status === 'running' || !oldRun.endedAt) && (newRun.status === 'failed' || newRun.status === 'error')) {
+        broadcast({ type: 'agent_run_failed', data: { runId: newRun.id || newRun.runId, agentId: newRun.agentId, taskId: newRun.taskId, error: newRun.error, timestamp: Date.now(), actor: resolveActor(newRun.agentId) } });
+      }
+    });
+  } catch (err) {
+    console.error('[SSE] Error handling runs change:', err);
+  }
+}
+
+function resolveActor(actorId) {
+  const actors = {
+    'ceo': 'CEO', 'mr-web': 'Mr. Web', 'mr-seo': 'Mr. SEO', 'mr-copy': 'Mr. Copy', 'mr-design': 'Mr. Design', 'mr-leadgen': 'Mr. LeadGen', 'mr-email': 'Mr. Email', 'mr-support': 'Mr. Support', 'mr-analytics': 'Mr. Analytics', 'mr-infra': 'Mr. Infra', 'mr-qa': 'Mr. QA', 'miamicarlos': 'MiamiCarlos', 'system': 'System',
+  };
+  return actors[actorId] || actorId;
+}
+
+export { broadcast };

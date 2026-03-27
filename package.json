@@ -1,0 +1,25 @@
+{
+  "name": "platform",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hono/node-server": "^1.19.11",
+    "@supabase/supabase-js": "^2.99.2",
+    "bcryptjs": "^3.0.3",
+    "google-auth-library": "^10.6.2",
+    "hono": "^4.12.8",
+    "imapflow": "^1.2.16",
+    "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^8.0.3",
+    "resend": "^6.9.4",
+    "stripe": "^20.4.1"
+  }
+}

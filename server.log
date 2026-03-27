@@ -1,0 +1,14 @@
+file:///root/mrdelegate/platform/node_modules/@supabase/supabase-js/dist/index.mjs:151
+	if (!trimmedUrl.match(/^https?:\/\//i)) throw new Error("Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.");
+	                                              ^
+
+Error: Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.
+    at validateSupabaseUrl (file:///root/mrdelegate/platform/node_modules/@supabase/supabase-js/dist/index.mjs:151:48)
+    at new SupabaseClient (file:///root/mrdelegate/platform/node_modules/@supabase/supabase-js/dist/index.mjs:366:19)
+    at createClient (file:///root/mrdelegate/platform/node_modules/@supabase/supabase-js/dist/index.mjs:559:9)
+    at file:///root/mrdelegate/platform/src/services/supabase.js:3:18
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.22.1

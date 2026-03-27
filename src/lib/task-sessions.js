@@ -1,0 +1,549 @@
+/**
+ * Task Sessions - Supabase-backed persistent task management
+ * All functions are async - uses Supabase REST API via fetch
+ */
+
+import { randomUUID } from 'crypto';
+
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://mwsvekxgkjlmbglargmg.supabase.co';
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13c3Zla3hna2psbWJnbGFyZ21nIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MzkxOTE3MiwiZXhwIjoyMDg5NDk1MTcyfQ._2NymYGbZDJYmyyyjrZ0niD7VaqCULhjZho1aeU3EtQ';
+
+const BASE = `${SUPABASE_URL}/rest/v1`;
+const HEADERS = {
+  'apikey': SUPABASE_KEY,
+  'Authorization': `Bearer ${SUPABASE_KEY}`,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+// ─── COLUMN MAPPING ────────────────────────────────────────────────────────────
+
+/** Convert DB row (snake_case) → JS object (camelCase) */
+function rowToTask(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    agentId: row.agent_id,
+    taskKey: row.task_key,
+    title: row.title,
+    description: row.description,
+    priority: row.priority,
+    goalStream: row.goal_stream,
+    assignedTo: row.assigned_to,
+    status: row.status,
+    lockedBy: row.locked_by,
+    lockedAt: row.locked_at,
+    tokenCost: row.token_cost,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    startedAt: row.started_at,
+    completedAt: row.completed_at,
+    lastRunId: null, // not in DB, kept for compat
+    lastError: row.last_error,
+    estimatedCompletionMin: row.estimated_completion_min,
+    dependencies: [],
+    tags: row.tags || [],
+    metadata: row.metadata || {},
+    progress: row.progress || [],
+    executionHistory: row.execution_history || []
+  };
+}
+
+/** Convert JS updates (camelCase) → DB columns (snake_case) */
+function taskToRow(obj) {
+  const row = {};
+  if (obj.agentId       !== undefined) row.agent_id                = obj.agentId;
+  if (obj.taskKey       !== undefined) row.task_key                = obj.taskKey;
+  if (obj.title         !== undefined) row.title                   = obj.title;
+  if (obj.description   !== undefined) row.description             = obj.description;
+  if (obj.priority      !== undefined) row.priority                = obj.priority;
+  if (obj.goalStream    !== undefined) row.goal_stream             = obj.goalStream;
+  if (obj.assignedTo    !== undefined) row.assigned_to             = obj.assignedTo;
+  if (obj.status        !== undefined) row.status                  = obj.status;
+  if (obj.lockedBy      !== undefined) row.locked_by               = obj.lockedBy;
+  if (obj.lockedAt      !== undefined) row.locked_at               = obj.lockedAt;
+  if (obj.tokenCost     !== undefined) row.token_cost              = obj.tokenCost;
+  if (obj.startedAt     !== undefined) row.started_at              = obj.startedAt;
+  if (obj.completedAt   !== undefined) row.completed_at            = obj.completedAt;
+  if (obj.lastError     !== undefined) row.last_error              = obj.lastError;
+  if (obj.estimatedCompletionMin !== undefined) row.estimated_completion_min = obj.estimatedCompletionMin;
+  if (obj.tags          !== undefined) row.tags                    = obj.tags;
+  if (obj.metadata      !== undefined) row.metadata                = obj.metadata;
+  if (obj.progress      !== undefined) row.progress                = obj.progress;
+  if (obj.executionHistory !== undefined) row.execution_history    = obj.executionHistory;
+  row.updated_at = new Date().toISOString();
+  return row;
+}
+
+// ─── SUPABASE HELPERS ─────────────────────────────────────────────────────────
+
+async function sbGet(path) {
+  const res = await fetch(`${BASE}${path}`, { headers: HEADERS });
+  const body = await res.json();
+  if (!res.ok) throw new Error(`Supabase GET error ${res.status}: ${JSON.stringify(body)}`);
+  return body;
+}
+
+async function sbPost(path, data) {
+  const res = await fetch(`${BASE}${path}`, {
+    method: 'POST',
+    headers: HEADERS,
+    body: JSON.stringify(data)
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(`Supabase POST error ${res.status}: ${JSON.stringify(body)}`);
+  return Array.isArray(body) ? body[0] : body;
+}
+
+async function sbPatch(path, data) {
+  const res = await fetch(`${BASE}${path}`, {
+    method: 'PATCH',
+    headers: HEADERS,
+    body: JSON.stringify(data)
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(`Supabase PATCH error ${res.status}: ${JSON.stringify(body)}`);
+  return Array.isArray(body) ? body[0] : body;
+}
+
+async function sbDelete(path) {
+  const res = await fetch(`${BASE}${path}`, {
+    method: 'DELETE',
+    headers: { ...HEADERS, 'Prefer': 'return=representation' }
+  });
+  const body = await res.json();
+  if (!res.ok) throw new Error(`Supabase DELETE error ${res.status}: ${JSON.stringify(body)}`);
+  return Array.isArray(body) ? body[0] : body;
+}
+
+// ─── AUDIT LOG ─────────────────────────────────────────────────────────────────
+
+
+// Send Telegram alert for P0/P1 task events
+async function notifyTelegram(type, task) {
+  try {
+    if (task.priority !== 'P0' && task.priority !== 'P1') return;
+    const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '8690588961:AAF-yepjhUEQBYnrgxsefdGPqfB29p26LeY';
+    const CHAT_ID = '262207319';
+    let msg = '';
+    if (type === 'task_completed') msg = `✅ P${task.priority?.slice(1)} DONE: ${task.title}\nAgent: ${task.agentId}`;
+    if (type === 'task_failed') msg = `❌ P${task.priority?.slice(1)} FAILED: ${task.title}\nAgent: ${task.agentId}`;
+    if (!msg) return;
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({chat_id: CHAT_ID, text: msg})
+    });
+  } catch(e) {}
+}
+
+// Broadcast SSE event to all connected clients
+function broadcastTaskEvent(type, task) {
+  try {
+    const conns = globalThis.sseConnections;
+    if (!conns || conns.size === 0) return;
+    conns.forEach((conn, id) => {
+      try { conn.send(type, { task: { id: task.id, title: task.title, agentId: task.agentId, status: task.status, priority: task.priority } }); }
+      catch(e) { conns.delete(id); }
+    });
+  } catch(e) {}
+  notifyTelegram(type, task);
+}
+
+export async function appendAuditLog(entry) {
+  try {
+    await sbPost('/mission_audit_log', {
+      task_id: entry.taskId || null,
+      task_key: entry.taskKey || null,
+      agent_id: entry.agentId || null,
+      action: entry.action,
+      changes: entry.changes || {},
+      blocker: entry.blocker || null,
+      token_cost: entry.tokenCost || null,
+      duration_min: entry.durationMin || null,
+      timestamp: new Date().toISOString()
+    });
+  } catch (err) {
+    console.error('Audit log write failed:', err.message);
+  }
+}
+
+export async function getAuditLog(limit = 100) {
+  try {
+    const rows = await sbGet(`/mission_audit_log?order=timestamp.desc&limit=${limit}`);
+    return rows.map(r => ({
+      id: r.id,
+      taskId: r.task_id,
+      taskKey: r.task_key,
+      agentId: r.agent_id,
+      action: r.action,
+      changes: r.changes,
+      blocker: r.blocker,
+      tokenCost: r.token_cost,
+      durationMin: r.duration_min,
+      timestamp: r.timestamp
+    }));
+  } catch (err) {
+    console.error('getAuditLog failed:', err.message);
+    return [];
+  }
+}
+
+// ─── COMPAT: loadTasks (for optimize endpoint) ────────────────────────────────
+
+export async function loadTasks() {
+  try {
+    const active = await sbGet('/mission_tasks?status=neq.completed&order=created_at.desc&limit=500');
+    const completed = await sbGet('/mission_tasks?status=eq.completed&order=completed_at.desc&limit=200');
+    return {
+      tasks: active.map(rowToTask),
+      completions: completed.map(rowToTask)
+    };
+  } catch (err) {
+    console.error('loadTasks failed:', err.message);
+    return { tasks: [], completions: [] };
+  }
+}
+
+// ─── TASK CRUD ────────────────────────────────────────────────────────────────
+
+export async function createTask({
+  agentId,
+  taskKey,
+  title,
+  description,
+  priority = 'P2',
+  goalStream = null,
+  estimatedCompletionMin = null,
+  dependencies = [],
+  tags = [],
+  metadata = {}
+}) {
+  // Check for duplicate
+  const existing = await sbGet(`/mission_tasks?agent_id=eq.${encodeURIComponent(agentId)}&task_key=eq.${encodeURIComponent(taskKey)}&status=neq.completed&limit=1`);
+  if (existing.length > 0) {
+    throw new Error(`Task with key "${taskKey}" already exists for agent "${agentId}"`);
+  }
+
+  const now = new Date().toISOString();
+  const row = await sbPost('/mission_tasks', {
+    id: randomUUID(),
+    agent_id: agentId,
+    task_key: taskKey || randomUUID().slice(0, 8),
+    title: title || taskKey || 'Untitled',
+    description: description || '',
+    priority,
+    goal_stream: goalStream || null,
+    status: 'pending',
+    locked_by: null,
+    locked_at: null,
+    token_cost: null,
+    created_at: now,
+    updated_at: now,
+    started_at: null,
+    completed_at: null,
+    last_error: null,
+    estimated_completion_min: estimatedCompletionMin,
+    tags: tags || [],
+    metadata: metadata || {},
+    progress: [],
+    execution_history: []
+  });
+
+  const task = rowToTask(row);
+
+  await appendAuditLog({
+    action: 'created',
+    taskId: task.id,
+    taskKey,
+    agentId,
+    changes: { title: task.title, priority, goalStream }
+  });
+
+  broadcastTaskEvent('task_assigned', task);
+  return task;
+}
+
+export async function getTask(taskId) {
+  try {
+    const rows = await sbGet(`/mission_tasks?id=eq.${taskId}&limit=1`);
+    return rows.length > 0 ? rowToTask(rows[0]) : null;
+  } catch (err) {
+    console.error('getTask failed:', err.message);
+    return null;
+  }
+}
+
+export async function getTaskByKey(agentId, taskKey) {
+  try {
+    const rows = await sbGet(`/mission_tasks?agent_id=eq.${encodeURIComponent(agentId)}&task_key=eq.${encodeURIComponent(taskKey)}&limit=1`);
+    return rows.length > 0 ? rowToTask(rows[0]) : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function listTasks({
+  status = null,
+  agentId = null,
+  priority = null,
+  goalStream = null,
+  tags = [],
+  limit = 100,
+  offset = 0
+} = {}) {
+  let query = `/mission_tasks?order=priority.asc,created_at.desc&limit=${limit}&offset=${offset}`;
+  if (status) query += `&status=eq.${encodeURIComponent(status)}`;
+  // Include all statuses by default
+  if (agentId) query += `&agent_id=eq.${encodeURIComponent(agentId)}`;
+  if (priority) query += `&priority=eq.${encodeURIComponent(priority)}`;
+  if (goalStream) query += `&goal_stream=eq.${encodeURIComponent(goalStream)}`;
+
+  const rows = await sbGet(query);
+  const tasks = rows.map(rowToTask);
+  return { tasks, total: tasks.length, limit, offset };
+}
+
+export async function updateTask(taskId, updates) {
+  // Map camelCase updates to DB cols
+  const row = taskToRow(updates);
+
+  const existing = await getTask(taskId);
+  if (!existing) throw new Error(`Task not found: ${taskId}`);
+
+  // Lock check
+  if (updates.status === 'running' && existing.lockedBy && existing.lockedBy !== updates.lockedBy) {
+    throw new Error(`Task is locked by ${existing.lockedBy}`);
+  }
+
+  if (updates.status) {
+    if (updates.status === 'running' && !existing.startedAt) row.started_at = new Date().toISOString();
+    if ((updates.status === 'completed' || updates.status === 'failed') && !existing.completedAt) {
+      row.completed_at = new Date().toISOString();
+    }
+  }
+
+  const updated = await sbPatch(`/mission_tasks?id=eq.${taskId}`, row);
+  await appendAuditLog({ action: 'updated', taskId, agentId: existing.agentId, changes: updates });
+  const completed = rowToTask(updated);
+  broadcastTaskEvent('task_completed', completed);
+  return completed;
+}
+
+export async function checkoutTask(taskId, agentId) {
+  const existing = await getTask(taskId);
+  if (!existing) throw new Error(`Task not found: ${taskId}`);
+  if (existing.lockedBy && existing.lockedBy !== agentId) {
+    throw new Error(`Task is already locked by ${existing.lockedBy}`);
+  }
+
+  const now = new Date().toISOString();
+  const updated = await sbPatch(`/mission_tasks?id=eq.${taskId}`, {
+    locked_by: agentId,
+    locked_at: now,
+    status: 'running',
+    started_at: existing.startedAt || now,
+    updated_at: now
+  });
+
+  await appendAuditLog({ action: 'locked', taskId, agentId, taskKey: existing.taskKey });
+  return rowToTask(updated);
+}
+
+export async function releaseTask(taskId, agentId = null) {
+  const existing = await getTask(taskId);
+  if (!existing) throw new Error(`Task not found: ${taskId}`);
+
+  const now = new Date().toISOString();
+  const updated = await sbPatch(`/mission_tasks?id=eq.${taskId}`, {
+    locked_by: null,
+    locked_at: null,
+    status: 'pending',
+    updated_at: now
+  });
+
+  await appendAuditLog({ action: 'released', taskId, agentId: agentId || existing.lockedBy, taskKey: existing.taskKey });
+  return rowToTask(updated);
+}
+
+export async function addTaskProgress(taskId, {
+  status = 'working',
+  message = '',
+  currentFile = null,
+  nextStep = null,
+  blocker = null
+} = {}) {
+  const existing = await getTask(taskId);
+  if (!existing) throw new Error(`Task not found: ${taskId}`);
+
+  const now = new Date().toISOString();
+  const progress = [...(existing.progress || []), { timestamp: now, status, message, currentFile, nextStep, blocker }];
+
+  const updates = { progress, updated_at: now };
+  if (status === 'blocked') {
+    updates.status = 'blocked';
+    updates.last_error = blocker || message;
+    await appendAuditLog({ action: 'blocked', taskId, agentId: existing.agentId, blocker: blocker || message });
+  } else if (status === 'done') {
+    updates.status = 'completed';
+    updates.completed_at = now;
+    await appendAuditLog({ action: 'completed', taskId, agentId: existing.agentId });
+  } else if (['working', 'testing', 'waiting_on_model'].includes(status) && existing.status === 'pending') {
+    updates.status = 'running';
+    if (!existing.startedAt) updates.started_at = now;
+  }
+
+  const updated = await sbPatch(`/mission_tasks?id=eq.${taskId}`, updates);
+  return rowToTask(updated);
+}
+
+export async function addExecutionHistory(taskId, runId, status, error = null) {
+  const existing = await getTask(taskId);
+  if (!existing) throw new Error(`Task not found: ${taskId}`);
+
+  const now = new Date().toISOString();
+  const history = [...(existing.executionHistory || [])];
+  const idx = history.findIndex(h => h.runId === runId);
+
+  if (idx >= 0) {
+    history[idx] = { ...history[idx], completedAt: now, status, error,
+      durationMin: Math.round((new Date() - new Date(history[idx].startedAt)) / 60000) };
+  } else {
+    history.push({ runId, startedAt: now,
+      completedAt: (status === 'completed' || status === 'failed') ? now : null,
+      status, error, durationMin: 0 });
+  }
+
+  if (history.length > 10) history.splice(0, history.length - 10);
+
+  const updated = await sbPatch(`/mission_tasks?id=eq.${taskId}`, {
+    execution_history: history,
+    last_error: error,
+    updated_at: now
+  });
+  return rowToTask(updated);
+}
+
+export async function completeTask(taskId, result = null) {
+  const existing = await getTask(taskId);
+  if (!existing) throw new Error(`Task not found: ${taskId}`);
+
+  const now = new Date().toISOString();
+  let tokenCost = null;
+  if (existing.startedAt) {
+    const durationMin = (new Date(now) - new Date(existing.startedAt)) / 60000;
+    tokenCost = Math.round(durationMin * 0.3);
+  }
+
+  const metadata = { ...(existing.metadata || {}) };
+  if (result) metadata.result = result;
+
+  const updated = await sbPatch(`/mission_tasks?id=eq.${taskId}`, {
+    status: 'completed',
+    completed_at: now,
+    updated_at: now,
+    locked_by: null,
+    locked_at: null,
+    token_cost: tokenCost,
+    metadata
+  });
+
+  await appendAuditLog({
+    action: 'completed',
+    taskId,
+    agentId: existing.agentId,
+    tokenCost,
+    durationMin: existing.startedAt ? Math.round((new Date(now) - new Date(existing.startedAt)) / 60000) : null
+  });
+
+  const completedTask = rowToTask(updated);
+  broadcastTaskEvent('task_completed', completedTask);
+  return completedTask;
+}
+
+export async function deleteTask(taskId) {
+  const existing = await getTask(taskId);
+  if (!existing) throw new Error(`Task not found: ${taskId}`);
+
+  await sbDelete(`/mission_tasks?id=eq.${taskId}`);
+  await appendAuditLog({ action: 'deleted', taskId, agentId: existing.agentId, taskKey: existing.taskKey });
+  return existing;
+}
+
+// ─── STATS ─────────────────────────────────────────────────────────────────────
+
+export async function getTaskStats(agentId = null) {
+  try {
+    let query = '/mission_tasks?limit=1000';
+    if (agentId) query += `&agent_id=eq.${encodeURIComponent(agentId)}`;
+    const rows = await sbGet(query);
+    const tasks = rows.map(rowToTask);
+
+    const active = tasks.filter(t => t.status !== 'completed');
+    const completions = tasks.filter(t => t.status === 'completed');
+
+    const stats = {
+      total: active.length,
+      byStatus: {
+        pending: active.filter(t => t.status === 'pending').length,
+        running: active.filter(t => t.status === 'running').length,
+        paused: active.filter(t => t.status === 'paused').length,
+        completed: completions.length,
+        failed: active.filter(t => t.status === 'failed').length,
+        blocked: active.filter(t => t.status === 'blocked').length,
+        cancelled: active.filter(t => t.status === 'cancelled').length
+      },
+      byPriority: {
+        P0: active.filter(t => t.priority === 'P0').length,
+        P1: active.filter(t => t.priority === 'P1').length,
+        P2: active.filter(t => t.priority === 'P2').length
+      },
+      byGoal: {
+        saas: active.filter(t => t.goalStream === 'saas').length,
+        govphone: active.filter(t => t.goalStream === 'govphone').length,
+        njelectric: active.filter(t => t.goalStream === 'njelectric').length,
+        infra: active.filter(t => t.goalStream === 'infra').length,
+        growth: active.filter(t => t.goalStream === 'growth').length
+      },
+      totalTokenCostCents: completions.reduce((s, t) => s + (t.tokenCost || 0), 0),
+      avgCompletionMin: null,
+      successRate: null
+    };
+
+    const withTimes = completions.filter(t => t.startedAt && t.completedAt);
+    if (withTimes.length > 0) {
+      const durations = withTimes.map(t => (new Date(t.completedAt) - new Date(t.startedAt)) / 60000);
+      stats.avgCompletionMin = Math.round(durations.reduce((a, b) => a + b, 0) / durations.length);
+    }
+
+    const totalAttempts = completions.length + stats.byStatus.failed;
+    if (totalAttempts > 0) stats.successRate = Math.round((completions.length / totalAttempts) * 100);
+
+    return stats;
+  } catch (err) {
+    console.error('getTaskStats failed:', err.message);
+    return { total: 0, byStatus: {}, byPriority: {}, byGoal: {}, totalTokenCostCents: 0 };
+  }
+}
+
+export async function getBlockedTasks() {
+  // No dependency tracking in Supabase schema (no dependencies column) - return empty
+  return [];
+}
+
+export async function getNextRunnableTask(agentId = null) {
+  try {
+    let query = '/mission_tasks?status=eq.pending&locked_by=is.null&order=priority.asc,created_at.asc&limit=1';
+    if (agentId) query += `&agent_id=eq.${encodeURIComponent(agentId)}`;
+    const rows = await sbGet(query);
+    return rows.length > 0 ? rowToTask(rows[0]) : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+// ─── saveTasks stub (for compat with optimize endpoint) ────────────────────────
+export async function saveTasks() {
+  // No-op: Supabase is the source of truth
+  return true;
+}

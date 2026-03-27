@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toast System Test</title>
+  <link rel="stylesheet" href="/css/toast.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: #0a0e1a;
+      color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 30px;
+      color: #3b82f6;
+    }
+    .test-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      max-width: 800px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      background: #151b2e;
+      color: #f1f5f9;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    button:hover {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    button.tone-info { border-left: 3px solid #3b82f6; }
+    button.tone-success { border-left: 3px solid #10b981; }
+    button.tone-warn { border-left: 3px solid #f59e0b; }
+    button.tone-error { border-left: 3px solid #ef4444; }
+    button.special { border-left: 3px solid #06b6d4; }
+    .instructions {
+      margin-top: 40px;
+      padding: 20px;
+      background: #151b2e;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      max-width: 800px;
+    }
+    .instructions h2 {
+      font-size: 16px;
+      margin-top: 0;
+      color: #3b82f6;
+    }
+    .instructions ul {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+    .instructions li {
+      margin: 8px 0;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <h1>🍞 Toast Notification System Test</h1>
+  
+  <div class="test-buttons">
+    <button class="tone-info" onclick="testInfo()">
+      ℹ️ Info Toast
+    </button>
+    
+    <button class="tone-success" onclick="testSuccess()">
+      ✅ Success Toast
+    </button>
+    
+    <button class="tone-warn" onclick="testWarn()">
+      ⚠️ Warning Toast
+    </button>
+    
+    <button class="tone-error" onclick="testError()">
+      ❌ Error Toast
+    </button>
+    
+    <button class="special" onclick="testWithAction()">
+      🔗 Toast with Action
+    </button>
+    
+    <button class="special" onclick="testDedup()">
+      🔄 Test Deduplication
+    </button>
+    
+    <button class="special" onclick="testMaxToasts()">
+      📚 Test Max Toasts (6)
+    </button>
+    
+    <button class="special" onclick="clearAll()">
+      🗑️ Clear All Toasts
+    </button>
+  </div>
+
+  <div class="instructions">
+    <h2>Test Checklist</h2>
+    <ul>
+      <li><strong>Info:</strong> Blue icon, 4s dismiss</li>
+      <li><strong>Success:</strong> Green icon, 3.5s dismiss</li>
+      <li><strong>Warning:</strong> Orange icon, 8s dismiss, plays sound</li>
+      <li><strong>Error:</strong> Red icon, 10s dismiss, plays sound + desktop notification</li>
+      <li><strong>Deduplication:</strong> Click twice quickly - should only show once</li>
+      <li><strong>Max toasts:</strong> Should show only 5, oldest removed first</li>
+      <li><strong>Action button:</strong> Click "View" to test navigation</li>
+      <li><strong>Close button:</strong> Click × to dismiss manually</li>
+    </ul>
+  </div>
+
+  <script src="/js/toast.js"></script>
+  <script>
+    function testInfo() {
+      window.MissionBoard.toast({
+        title: 'Agent started',
+        body: 'Mr. SEO is analyzing keywords for "AI agent platform"',
+        tone: 'info'
+      });
+    }
+
+    function testSuccess() {
+      window.MissionBoard.toast({
+        title: 'Task completed',
+        body: 'Homepage 404 has been fixed and deployed',
+        tone: 'success'
+      });
+    }
+
+    function testWarn() {
+      window.MissionBoard.toast({
+        title: 'High memory usage',
+        body: 'RAM at 82%, consider killing old agents',
+        tone: 'warn'
+      });
+    }
+
+    function testError() {
+      window.MissionBoard.toast({
+        title: 'Build failed',
+        body: 'Astro build returned exit code 1 - missing dependency',
+        tone: 'error'
+      });
+    }
+
+    function testWithAction() {
+      window.MissionBoard.toast({
+        title: 'Mr. Web completed task',
+        body: 'Homepage 404 fixed',
+        tone: 'success',
+        ttlMs: 6000,
+        action: {
+          label: 'View',
+          href: '#test-link'
+        }
+      });
+    }
+
+    function testDedup() {
+      // Send same toast twice
+      const toast = {
+        title: 'Duplicate test',
+        body: 'This should only appear once',
+        tone: 'info'
+      };
+      window.MissionBoard.toast(toast);
+      
+      // Send again immediately
+      setTimeout(() => {
+        window.MissionBoard.toast(toast);
+        alert('Sent duplicate toast - you should only see ONE toast appear');
+      }, 100);
+    }
+
+    function testMaxToasts() {
+      // Send 6 toasts quickly
+      for (let i = 1; i <= 6; i++) {
+        setTimeout(() => {
+          window.MissionBoard.toast({
+            title: `Toast ${i}`,
+            body: `This is toast number ${i}`,
+            tone: ['info', 'success', 'warn', 'error'][i % 4],
+            ttlMs: 10000 // Long TTL to test max concurrent
+          });
+        }, i * 200);
+      }
+      alert('Sending 6 toasts - you should only see 5 at once (oldest removed)');
+    }
+
+    function clearAll() {
+      window.MissionBoard.toast.clearAll();
+    }
+
+    // Show welcome toast on load
+    window.addEventListener('load', () => {
+      window.MissionBoard.toast({
+        title: 'Toast system ready',
+        body: 'Click the buttons above to test different toast types',
+        tone: 'success',
+        ttlMs: 5000
+      });
+    });
+  </script>
+</body>
+</html>

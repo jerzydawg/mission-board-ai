@@ -1,0 +1,2262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Board — MrDelegate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   MISSION BOARD — CEO Command Center
+   MrDelegate — Warm Light Theme
+   Rebuilt 2026-03-24
+   ═══════════════════════════════════════════════════════ */
+
+:root {
+  --bg: #FFFDF9;
+  --bg-warm: #FFF9F0;
+  --surface: #FFFFFF;
+  --surface-warm: #FFFBF5;
+  --surface-hover: #FFF7EE;
+  --border: #F0E6D6;
+  --border-hover: #E0D2BC;
+  --border-strong: #D4C4AA;
+
+  --text-primary: #1A1207;
+  --text-secondary: #5C4E38;
+  --text-tertiary: #9C8B70;
+  --text-inverse: #FFFFFF;
+
+  --accent: #E8720C;
+  --accent-hover: #D0650A;
+  --accent-light: #FFF3E8;
+  --accent-border: #FDDCB8;
+
+  --blue: #2563EB;
+  --blue-light: #EFF6FF;
+  --blue-border: #BFDBFE;
+
+  --green: #16A34A;
+  --green-light: #F0FDF4;
+  --green-border: #BBF7D0;
+
+  --yellow: #CA8A04;
+  --yellow-light: #FEFCE8;
+  --yellow-border: #FEF08A;
+
+  --red: #DC2626;
+  --red-light: #FEF2F2;
+  --red-border: #FECACA;
+
+  --purple: #7C3AED;
+  --purple-light: #F5F3FF;
+
+  --pink: #DB2777;
+  --pink-light: #FDF2F8;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(26,18,7,0.04);
+  --shadow-md: 0 2px 8px rgba(26,18,7,0.06);
+  --shadow-lg: 0 4px 16px rgba(26,18,7,0.08);
+  --shadow-card: 0 1px 3px rgba(26,18,7,0.04), 0 1px 2px rgba(26,18,7,0.02);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { font-size: 14px; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ═══════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════ */
+
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.header-logo {
+  height: 28px;
+  opacity: 0.9;
+}
+
+.header-subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+}
+
+.header-time {
+  position: absolute;
+  right: 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-time .live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(22,163,74,0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 4px rgba(22,163,74,0); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   STATS BAR
+   ═══════════════════════════════════════════════════════ */
+
+.stats-bar {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--surface-warm);
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.stat-pill .stat-num {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.stat-pill.pending { background: var(--yellow-light); border-color: var(--yellow-border); color: var(--yellow); }
+.stat-pill.running { background: var(--blue-light); border-color: var(--blue-border); color: var(--blue); }
+.stat-pill.running .stat-num { animation: pulse-num 2s ease-in-out infinite; }
+@keyframes pulse-num { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.stat-pill.completed { background: var(--green-light); border-color: var(--green-border); color: var(--green); }
+.stat-pill.p0 { background: var(--red-light); border-color: var(--red-border); color: var(--red); }
+.stat-pill.p0.zero { background: var(--surface-warm); border-color: var(--border); color: var(--text-tertiary); }
+.stat-pill.total { background: var(--surface-warm); color: var(--text-secondary); }
+.stat-pill.rate { background: var(--accent-light); border-color: var(--accent-border); color: var(--accent); }
+
+/* ═══════════════════════════════════════════════════════
+   FILTER BAR
+   ═══════════════════════════════════════════════════════ */
+
+.toolbar {
+  max-width: 1600px;
+  margin: 12px auto 0;
+  padding: 0 20px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 200px;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-box:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.filter-sel {
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+}
+
+.filter-sel:focus { border-color: var(--accent); }
+
+.view-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.view-btn {
+  padding: 7px 12px;
+  border: none;
+  background: var(--surface);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.view-btn.active {
+  background: var(--accent);
+  color: white;
+}
+
+.refresh-btn {
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.refresh-btn:hover { background: var(--surface-hover); border-color: var(--border-hover); }
+
+/* ═══════════════════════════════════════════════════════
+   KANBAN BOARD
+   ═══════════════════════════════════════════════════════ */
+
+.board-wrap {
+  max-width: 1600px;
+  margin: 12px auto 0;
+  padding: 0 20px 20px;
+}
+
+.kanban {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  min-height: calc(100vh - 200px);
+}
+
+@media (max-width: 900px) { .kanban { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 700px) { .kanban { grid-template-columns: 1fr; } }
+
+.col {
+  background: var(--bg-warm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+}
+
+.col-head {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-warm);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.col-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.col-count {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-tertiary);
+}
+
+.col-body {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  max-height: calc(100vh - 260px);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TASK CARDS
+   ═══════════════════════════════════════════════════════ */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.card-stripe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  border-radius: var(--radius) 0 0 var(--radius);
+}
+
+.card-stripe.P0 { background: var(--red); }
+.card-stripe.P1 { background: var(--accent); }
+.card-stripe.P2 { background: var(--text-tertiary); }
+
+.card-row1 {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.badge-priority {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.badge-priority.P0 { background: var(--red-light); color: var(--red); border: 1px solid var(--red-border); }
+.badge-priority.P1 { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent-border); }
+.badge-priority.P2 { background: var(--surface-warm); color: var(--text-tertiary); border: 1px solid var(--border); }
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+  flex: 1;
+}
+
+.card-row2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.badge-agent {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: var(--accent-light);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.badge-goal {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.badge-goal.saas { background: var(--purple-light); color: var(--purple); }
+.badge-goal.govphone { background: var(--green-light); color: var(--green); }
+.badge-goal.njelectric { background: var(--yellow-light); color: var(--yellow); }
+.badge-goal.infra { background: var(--blue-light); color: var(--blue); }
+.badge-goal.growth { background: var(--pink-light); color: var(--pink); }
+
+.card-time {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-left: auto;
+}
+
+/* Running card pulse */
+.card.is-running {
+  border-color: var(--blue-border);
+  animation: card-pulse 3s ease-in-out infinite;
+}
+
+@keyframes card-pulse {
+  0%,100% { box-shadow: var(--shadow-card); }
+  50% { box-shadow: 0 0 0 3px var(--blue-light), var(--shadow-md); }
+}
+
+.card .run-bar {
+  margin-top: 6px;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.card .run-bar-fill {
+  height: 100%;
+  background: var(--blue);
+  border-radius: 2px;
+  animation: run-fill 3s ease-in-out infinite;
+}
+
+@keyframes run-fill {
+  0% { width: 20%; opacity: 0.6; }
+  50% { width: 80%; opacity: 1; }
+  100% { width: 20%; opacity: 0.6; }
+}
+
+.card-error {
+  margin-top: 6px;
+  padding: 4px 8px;
+  background: var(--red-light);
+  border: 1px solid var(--red-border);
+  border-radius: 4px;
+  font-size: 10px;
+  color: var(--red);
+  line-height: 1.3;
+}
+
+/* ═══════════════════════════════════════════════════════
+   LIST VIEW
+   ═══════════════════════════════════════════════════════ */
+
+.list-view {
+  display: none;
+}
+
+.list-view.active { display: block; }
+.kanban.hidden { display: none; }
+
+.list-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.list-table th {
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  border-bottom: 2px solid var(--border);
+  background: var(--surface-warm);
+  position: sticky;
+  top: 0;
+}
+
+.list-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.list-table tr {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.list-table tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TASK DETAIL MODAL
+   ═══════════════════════════════════════════════════════ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26,18,7,0.4);
+  backdrop-filter: blur(4px);
+  display: none;
+  place-items: center;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.modal-overlay.active { display: grid; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  max-width: 640px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  flex: 1;
+}
+
+.modal-close {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: var(--surface-warm);
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.modal-close:hover { background: var(--border); color: var(--text-primary); }
+
+.modal-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.modal-badge {
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.modal-section {
+  margin-bottom: 14px;
+}
+
+.modal-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+}
+
+.modal-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  background: var(--bg-warm);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.modal-timeline {
+  background: var(--bg-warm);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.modal-tl-row {
+  display: flex;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.modal-tl-row:last-child { border-bottom: none; }
+
+.modal-tl-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 90px;
+}
+
+.modal-tl-value {
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.modal-progress {
+  background: var(--bg-warm);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+}
+
+.modal-progress-item {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.modal-progress-item:last-child { border-bottom: none; }
+
+.modal-progress-time {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.btn-green { background: var(--green); color: white; }
+.btn-green:hover { background: #15803d; }
+.btn-red { background: var(--red); color: white; }
+.btn-red:hover { background: #b91c1c; }
+.btn-ghost { background: var(--surface-warm); color: var(--text-secondary); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--border); }
+
+/* ═══════════════════════════════════════════════════════
+   TOAST NOTIFICATIONS
+   ═══════════════════════════════════════════════════════ */
+
+#toast-box {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  max-width: 360px;
+}
+
+.toast {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  animation: toast-in 0.3s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.toast::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0;
+  width: 3px;
+  height: 100%;
+}
+
+.toast.success::before { background: var(--green); }
+.toast.error::before { background: var(--red); }
+.toast.info::before { background: var(--blue); }
+
+.toast-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.toast-body { flex: 1; }
+
+.toast-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.toast-msg {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.toast-x {
+  border: none;
+  background: none;
+  color: var(--text-tertiary);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.toast.out {
+  animation: toast-out 0.25s ease-in forwards;
+}
+
+@keyframes toast-out {
+  to { opacity: 0; transform: translateY(10px) scale(0.95); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   EMPTY STATE
+   ═══════════════════════════════════════════════════════ */
+
+.empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+
+.empty-icon { font-size: 24px; margin-bottom: 6px; }
+
+/* ═══════════════════════════════════════════════════════
+   SCROLLBARS
+   ═══════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 700px) {
+  .header { padding: 10px 12px; }
+  .toolbar { padding: 0 12px; }
+  .board-wrap { padding: 0 12px 12px; }
+  .header-time { display: none; }
+  .stats-bar { gap: 4px; }
+  .stat-pill { padding: 4px 8px; font-size: 11px; }
+  .stat-pill .stat-num { font-size: 12px; }
+  .toolbar { flex-direction: column; }
+  .search-box { min-width: auto; }
+  .modal { padding: 16px; margin: 10px; }
+  .metrics-row { grid-template-columns: 1fr 1fr !important; }
+  .intel-grid { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 414px) {
+  .metrics-row { grid-template-columns: 1fr !important; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   DASHBOARD METRICS ROW (PART 5)
+   ═══════════════════════════════════════════════════════ */
+
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  max-width: 1600px;
+  margin: 12px auto 0;
+  padding: 0 20px;
+}
+
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: all 0.15s;
+}
+
+.metric-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.metric-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+
+.metric-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.metric-sub {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.metric-trend {
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.metric-trend.up { color: var(--green); }
+.metric-trend.down { color: var(--red); }
+.metric-trend.flat { color: var(--text-tertiary); }
+
+/* ═══════════════════════════════════════════════════════
+   INTELLIGENCE PANEL (PARTS 2-4)
+   ═══════════════════════════════════════════════════════ */
+
+.intel-section {
+  max-width: 1600px;
+  margin: 16px auto 0;
+  padding: 0 20px;
+}
+
+.intel-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-card);
+  transition: all 0.15s;
+  width: 100%;
+  text-align: left;
+}
+
+.intel-toggle:hover { background: var(--surface-hover); }
+
+.intel-toggle .arrow { transition: transform 0.2s; }
+.intel-toggle.open .arrow { transform: rotate(90deg); }
+
+.intel-panel {
+  display: none;
+  margin-top: 8px;
+}
+
+.intel-panel.open { display: block; }
+
+.intel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.intel-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow-card);
+}
+
+.intel-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.intel-card-body {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Agent performance bars */
+.agent-perf-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.agent-perf-row:last-child { border-bottom: none; }
+
+.agent-perf-name {
+  font-size: 11px;
+  font-weight: 600;
+  min-width: 90px;
+  color: var(--text-primary);
+}
+
+.agent-perf-bar {
+  flex: 1;
+  height: 16px;
+  background: var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.agent-perf-fill {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.5s;
+}
+
+.agent-perf-fill.high { background: var(--green); }
+.agent-perf-fill.mid { background: var(--yellow); }
+.agent-perf-fill.low { background: var(--red); }
+
+.agent-perf-pct {
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 35px;
+  text-align: right;
+}
+
+.agent-perf-avg {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  min-width: 50px;
+  text-align: right;
+}
+
+/* Learning log */
+.learning-item {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.learning-item:last-child { border-bottom: none; }
+
+.learning-time {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+
+.learning-agent {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Auto-suggest */
+.suggest-item {
+  padding: 8px 10px;
+  background: var(--accent-light);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  font-size: 11px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.suggest-item:last-child { margin-bottom: 0; }
+
+/* Recurring failure badge */
+.badge-recurring {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  background: var(--red-light);
+  color: var(--red);
+  border: 1px solid var(--red-border);
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Auto-dispatch */
+.dispatch-banner {
+  display: none;
+  max-width: 1600px;
+  margin: 8px auto 0;
+  padding: 0 20px;
+}
+
+.dispatch-banner.visible { display: block; }
+
+.dispatch-inner {
+  background: var(--red-light);
+  border: 1px solid var(--red-border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dispatch-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--red);
+}
+
+.dispatch-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--red);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.dispatch-btn:hover { background: #b91c1c; }
+
+.dispatch-history {
+  margin-top: 6px;
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+/* Task card intelligence additions */
+.card-intel {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.card-queue-time {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.card-queue-time.stale { color: var(--red); font-weight: 600; }
+
+.card-est {
+  font-size: 10px;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+.card-blocked {
+  font-size: 10px;
+  color: var(--red);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.card-mini-chart {
+  display: inline-flex;
+  gap: 2px;
+  align-items: flex-end;
+  height: 12px;
+}
+
+.chart-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+}
+
+.chart-dot.ok { background: var(--green); }
+.chart-dot.fail { background: var(--red); }
+.chart-dot.pending { background: var(--border-strong); }
+.status-pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+.status-pending { background:#FFF3CD; color:#856404; }
+.status-running { background:#CCE5FF; color:#004085; animation:pulse-status 2s infinite; }
+.status-completed { background:#D4EDDA; color:#155724; }
+.status-failed { background:#F8D7DA; color:#721C24; }
+.status-paused { background:#E2E3E5; color:#383D41; }
+.status-cancelled { background:#F5E6FF; color:#6F42C1; }
+.status-blocked { background:#FFE0CC; color:#CC5500; }
+@keyframes pulse-status { 0%,100%{opacity:1} 50%{opacity:0.6} }
+</style>
+</head>
+<body>
+
+<!-- Auth gate -->
+<script>
+(function() {
+  const token = localStorage.getItem('md_admin_token');
+  // Auth check disabled — board is public for now
+})();
+</script>
+
+<!-- Toast Container -->
+<div id="toast-box"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <img src="/logo-premium.svg" alt="MR • DELEGATE" class="header-logo">
+      <span class="header-subtitle">Mission Board</span>
+      <div class="header-time">
+        <span class="live-dot"></span>
+        <span id="clock">--:--:--</span>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-pill total"><span class="stat-num" id="s-total">—</span> Total</div>
+      <div class="stat-pill pending"><span class="stat-num" id="s-pending">—</span> Pending</div>
+      <div class="stat-pill running"><span class="stat-num" id="s-running">—</span> Running</div>
+      <div class="stat-pill completed"><span class="stat-num" id="s-completed">—</span> Completed</div>
+      <div class="stat-pill p0" id="pill-p0"><span class="stat-num" id="s-p0">0</span> P0</div>
+      <div class="stat-pill rate"><span class="stat-num" id="s-rate">—</span> Success</div>
+    </div>
+  </div>
+</header>
+
+<!-- DASHBOARD METRICS (Part 5) -->
+<div class="metrics-row" id="metrics-row">
+  <div class="metric-card">
+    <div class="metric-label">Completed Today</div>
+    <div class="metric-value" id="m-today">—</div>
+    <div class="metric-sub" id="m-today-sub">loading…</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Avg Completion Time</div>
+    <div class="metric-value" id="m-avgtime">—</div>
+    <div class="metric-sub">today's tasks</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Agent Utilization</div>
+    <div class="metric-value" id="m-util">—</div>
+    <div class="metric-sub" id="m-util-sub">running / total agents</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">P0 Backlog Age</div>
+    <div class="metric-value" id="m-p0age">—</div>
+    <div class="metric-sub">oldest pending P0</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Weekly Trend</div>
+    <div class="metric-value" id="m-weekly">—</div>
+    <div class="metric-trend flat" id="m-weekly-trend">loading…</div>
+  </div>
+</div>
+
+<!-- AUTO-DISPATCH BANNER (Part 3) -->
+<div class="dispatch-banner" id="dispatch-banner">
+  <div class="dispatch-inner">
+    <div>
+      <div class="dispatch-text" id="dispatch-text">⚠ P0 task pending >5 min — Auto-dispatch available</div>
+      <div class="dispatch-history" id="dispatch-history"></div>
+    </div>
+    <button class="dispatch-btn" onclick="autoDispatch()">🚀 Auto-Dispatch</button>
+  </div>
+</div>
+
+<!-- INTELLIGENCE PANEL (Parts 2 + 4) -->
+<div class="intel-section">
+  <button class="intel-toggle" id="intel-toggle" onclick="toggleIntel()">
+    <span class="arrow">▶</span> 🧠 Intelligence Panel
+  </button>
+  <div class="intel-panel" id="intel-panel">
+    <div class="intel-grid">
+      <!-- Agent Performance (Part 2.3) -->
+      <div class="intel-card">
+        <div class="intel-card-title">📊 Agent Success Rates</div>
+        <div class="intel-card-body" id="intel-agent-perf">Loading…</div>
+      </div>
+      <!-- Avg Completion by Type (Part 2.4) -->
+      <div class="intel-card">
+        <div class="intel-card-title">⏱ Avg Time by Stream</div>
+        <div class="intel-card-body" id="intel-avg-time">Loading…</div>
+      </div>
+      <!-- Learning Log (Part 2.1) -->
+      <div class="intel-card">
+        <div class="intel-card-title">📝 Learning Log</div>
+        <div class="intel-card-body" id="intel-learnings">Loading…</div>
+      </div>
+      <!-- Auto-Suggestions (Part 2.5) -->
+      <div class="intel-card">
+        <div class="intel-card-title">💡 Auto-Suggestions</div>
+        <div class="intel-card-body" id="intel-suggestions">Loading…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <input type="text" class="search-box" id="search" placeholder="Search tasks…">
+  <select class="filter-sel" id="f-priority">
+    <option value="">All Priorities</option>
+    <option value="P0">P0 Critical</option>
+    <option value="P1">P1 High</option>
+    <option value="P2">P2 Normal</option>
+  </select>
+  <select class="filter-sel" id="f-goal">
+    <option value="">All Streams</option>
+    <option value="saas">SaaS</option>
+    <option value="govphone">GovPhone</option>
+    <option value="njelectric">NJ Electric</option>
+    <option value="infra">Infra</option>
+    <option value="growth">Growth</option>
+  </select>
+  <select class="filter-sel" id="f-agent">
+    <option value="">All Agents</option>
+  </select>
+  <div class="view-toggle">
+    <button class="view-btn active" id="vb-kanban" onclick="setView('kanban')">Board</button>
+    <button class="view-btn" id="vb-list" onclick="setView('list')">List</button>
+  </div>
+  <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+</div>
+
+<!-- BOARD -->
+<div class="board-wrap">
+
+  <!-- Kanban View -->
+  <div class="kanban" id="kanban-view">
+    <div class="col">
+      <div class="col-head">
+        <span class="col-title">⏳ Pending</span>
+        <span class="col-count" id="c-pending">0</span>
+      </div>
+      <div class="col-body" id="col-pending"></div>
+    </div>
+    <div class="col col-blocked">
+      <div class="col-head col-head-blocked">
+        <span class="col-title">🚫 Blocked</span>
+        <span class="col-count" id="c-blocked">0</span>
+      </div>
+      <div class="col-body" id="col-blocked"></div>
+    </div>
+    <div class="col">
+      <div class="col-head">
+        <span class="col-title">⚡ Running</span>
+        <span class="col-count" id="c-running">0</span>
+      </div>
+      <div class="col-body" id="col-running"></div>
+    </div>
+    <div class="col">
+      <div class="col-head">
+        <span class="col-title">✓ Completed</span>
+        <span class="col-count" id="c-completed">0</span>
+      </div>
+      <div class="col-body" id="col-completed"></div>
+    </div>
+  </div>
+
+  <!-- List View -->
+  <div class="list-view" id="list-view">
+    <table class="list-table">
+      <thead>
+        <tr>
+          <th>Priority</th>
+          <th>Title</th>
+          <th>Agent</th>
+          <th>Stream</th>
+          <th>Status</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody id="list-body"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 class="modal-title" id="m-title">—</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-badges" id="m-badges"></div>
+    <div id="m-body"></div>
+    <div class="modal-actions" id="m-actions"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// MISSION BOARD — CORE JS
+// ═══════════════════════════════════════════════════════
+
+const EMOJIS = {
+  'ceo':'👔','mr-seo':'📊','mr-copy':'✍️','mr-email':'📧',
+  'mr-analytics':'📈','mr-support':'🎧','mr-web':'💻','mr-design':'🎨',
+  'mr-infra':'🔧','mr-qa':'🔍','mr-leadgen':'🎯','miami-carlos':'🌴'
+};
+const GOALS = {saas:'SaaS',govphone:'GovPhone',njelectric:'NJ Electric',infra:'Infra',growth:'Growth'};
+const GOAL_EMOJI = {saas:'🎯',govphone:'🌐',njelectric:'⚡',infra:'🔧',growth:'📈'};
+
+let tasks = [];
+let prevTaskMap = {};
+let currentTask = null;
+let viewMode = 'kanban';
+let dispatchHistory = JSON.parse(localStorage.getItem('mb_dispatch_history') || '[]');
+let intelOpen = localStorage.getItem('mb_intel_open') === 'true';
+
+// ═══════════════════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════════════════
+function tickClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('en-US', { hour12: false, hour:'2-digit', minute:'2-digit', second:'2-digit' }) + ' UTC';
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+// ═══════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════
+function toast(title, msg, type='info') {
+  const box = document.getElementById('toast-box');
+  const icons = { success:'✅', error:'❌', info:'ℹ️' };
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = `
+    <span class="toast-icon">${icons[type]||icons.info}</span>
+    <div class="toast-body">
+      <div class="toast-title">${esc(title)}</div>
+      <div class="toast-msg">${esc(msg)}</div>
+    </div>
+    <button class="toast-x" onclick="this.parentElement.remove()">✕</button>
+  `;
+  box.appendChild(el);
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 300); }, 5000);
+}
+
+// ═══════════════════════════════════════════════════════
+// DATA LOADING
+// ═══════════════════════════════════════════════════════
+async function loadAll() {
+  try {
+    const [tRes, sRes] = await Promise.all([
+      fetch('/ops/mission-board/api/tasks?limit=500'),
+      fetch('/ops/mission-board/api/tasks/stats/all')
+    ]);
+
+    if (tRes.ok) {
+      console.log('[LOAD] Tasks API responded');
+      const j = await tRes.json();
+      const newTasks = j.tasks || [];
+      detectChanges(newTasks);
+      tasks = newTasks;
+      console.log('[LOAD] Loaded', tasks.length, 'tasks, statuses:', tasks.map(t => t.status).slice(0, 10));
+      render();
+      populateAgentFilter();
+      // Intelligence updates
+      updateMetrics();
+      checkAutoDispatch();
+      updateIntelPanel();
+    }
+
+    if (sRes.ok) {
+      const j = await sRes.json();
+      updateStats(j.stats || {});
+
+    // Fetch agent data
+    fetch('/ops/mission-board/api/agents')
+      .then(r => r.json())
+      .then(data => {
+        const working = data.summary.working || 0;
+        const total = data.summary.total || 0;
+        const utilPct = total > 0 ? Math.round((working / total) * 100) : 0;
+        document.getElementById('m-util').textContent = utilPct + '%';
+        document.getElementById('m-util-sub').textContent = working + ' / ' + total + ' agents';
+      })
+      .catch(e => console.warn('Agent data unavailable:', e));
+
+    }
+  } catch(e) {
+    console.error('Load failed:', e);
+  }
+}
+
+function detectChanges(newTasks) {
+  if (!Object.keys(prevTaskMap).length) {
+    // First load — just build the map
+    newTasks.forEach(t => { prevTaskMap[t.id] = t.status; });
+    return;
+  }
+  const newMap = {};
+  newTasks.forEach(t => {
+    newMap[t.id] = t.status;
+    const prev = prevTaskMap[t.id];
+    if (prev && prev !== t.status) {
+      if (t.status === 'completed') {
+        toast('Completed', t.title || 'Task completed', 'success');
+      } else if (t.status === 'failed') {
+        toast('Failed', t.title || 'Task failed', 'error');
+      }
+    }
+    if (!prev) {
+      toast('New Task', t.title || 'New task created', 'info');
+    }
+  });
+  prevTaskMap = newMap;
+}
+
+function updateStats(s) {
+  const byS = s.byStatus || {};
+  document.getElementById('s-total').textContent = s.total || 0;
+  document.getElementById('s-pending').textContent = (byS.pending || 0) + (byS.blocked || 0);
+  document.getElementById('s-running').textContent = byS.running || 0;
+  document.getElementById('s-completed').textContent = byS.completed || 0;
+
+  const p0 = tasks.filter(t => t.priority === 'P0' && t.status !== 'completed').length;
+  document.getElementById('s-p0').textContent = p0;
+  document.getElementById('pill-p0').classList.toggle('zero', p0 === 0);
+
+  const rate = s.successRate !== undefined ? s.successRate + '%' : '—';
+  document.getElementById('s-rate').textContent = rate;
+}
+
+// ═══════════════════════════════════════════════════════
+// FILTERING
+// ═══════════════════════════════════════════════════════
+function getFiltered() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const fp = document.getElementById('f-priority').value;
+  const fg = document.getElementById('f-goal').value;
+  const fa = document.getElementById('f-agent').value;
+  return tasks.filter(t => {
+    if (q && !(t.title||'').toLowerCase().includes(q) && !(t.description||'').toLowerCase().includes(q) && !(t.agentId||'').toLowerCase().includes(q)) return false;
+    if (fp && t.priority !== fp) return false;
+    if (fg && t.goalStream !== fg) return false;
+    if (fa && t.agentId !== fa) return false;
+    return true;
+  });
+}
+
+function populateAgentFilter() {
+  const sel = document.getElementById('f-agent');
+  const existing = new Set(Array.from(sel.options).map(o => o.value));
+  const agents = [...new Set(tasks.map(t => t.agentId).filter(Boolean))];
+  agents.forEach(a => {
+    if (!existing.has(a)) {
+      const opt = document.createElement('option');
+      opt.value = a;
+      opt.textContent = (EMOJIS[a]||'🤖') + ' ' + agentName(a);
+      sel.appendChild(opt);
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+let completedPage = 1;
+const COMPLETED_PER_PAGE = 20;
+function render() {
+  console.log('[RENDER] Called with', tasks.length, 'tasks');
+  const f = getFiltered();
+  const prio = {P0:0,P1:1,P2:2};
+  const sort = (a,b) => (prio[a.priority]??2) - (prio[b.priority]??2) || new Date(b.createdAt) - new Date(a.createdAt);
+
+  const pending = f.filter(t => t.status === 'pending').sort(sort);
+  const blocked = f.filter(t => t.status === 'blocked').sort(sort);
+  const running = f.filter(t => t.status === 'running').sort(sort);
+  const completed = f.filter(t => t.status === 'completed').sort((a,b) => new Date(b.completedAt||b.updatedAt) - new Date(a.completedAt||a.updatedAt)).slice(0, completedPage * 20);
+
+  // Kanban
+  renderCol('col-pending', pending);
+  renderCol('col-blocked', blocked);
+  renderCol('col-running', running);
+  renderCol('col-completed', completed);
+  var allCompletedCount = f.filter(t => t.status === 'completed').length;
+  if (allCompletedCount > completedPage * 20) {
+    var btn = document.createElement('div');
+    btn.style.cssText = 'text-align:center;padding:12px';
+    btn.innerHTML = '<button onclick="completedPage++;render()" style="background:#FF6B35;color:white;border:none;padding:8px 20px;border-radius:20px;cursor:pointer;font-weight:600;font-family:Inter,sans-serif">Load More (' + (allCompletedCount - completedPage*20) + ' remaining)</button>';
+    document.getElementById('col-completed').appendChild(btn);
+  }
+  document.getElementById('c-pending').textContent = pending.length;
+  if (document.getElementById('c-blocked')) document.getElementById('c-blocked').textContent = blocked.length;
+  document.getElementById('c-running').textContent = running.length;
+  document.getElementById('c-completed').textContent = f.filter(t => t.status === 'completed').length;
+
+  // List
+  renderList(f.sort(sort));
+}
+
+function renderCol(id, items) {
+  console.log('[RENDERCOL]', id, 'has', items.length, 'items');
+  const el = document.getElementById(id);
+  if (!items.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📭</div>No tasks</div>';
+    return;
+  }
+  el.innerHTML = items.map(cardHTML).join('');
+}
+
+function cardHTML(t) {
+  const p = t.priority || 'P2';
+  const isRunning = t.status === 'running';
+  const goal = t.goalStream || '';
+  const err = t.lastError || t.error;
+  const errStr = err ? (typeof err === 'string' ? err : err.message || '') : '';
+  const truncErr = errStr.length > 80 ? errStr.slice(0,80) + '…' : errStr;
+
+  // Task intelligence (Part 4)
+  const queueMs = (t.status === 'pending' || t.status === 'blocked') ? Date.now() - new Date(t.createdAt) : 0;
+  const queueMin = Math.floor(queueMs / 60000);
+  const isStale = queueMin > 60;
+  const estMin = getEstimatedCompletion(t);
+  const isRecurring = isRecurringFailure(t);
+  const blocked = t.dependencies && t.dependencies.length > 0;
+  const miniChart = getAgentMiniChart(t.agentId);
+
+  return `
+    <div class="card ${isRunning ? 'is-running' : ''}" onclick='openDetail(${JSON.stringify(t).replace(/'/g,"&#39;")})'>
+      <div class="card-stripe ${p}"></div>
+      <div class="card-row1">
+        <span class="badge-priority ${p}">${p}</span>
+        <span class="card-title">${esc(t.title || t.description || 'Untitled')}</span>
+        ${isRecurring ? '<span class="badge-recurring">🔄 Recurring</span>' : ''}
+      </div>
+      <div class="card-row2">
+        ${t.agentId ? `<span class="badge-agent">${EMOJIS[t.agentId]||'🤖'} ${agentName(t.agentId)}</span>` : ''}
+        ${goal ? `<span class="badge-goal ${goal}">${GOAL_EMOJI[goal]||''} ${GOALS[goal]||goal}</span>` : ''}
+        ${miniChart}
+        <span class="card-time">${timeAgo(t.createdAt)}</span>
+      </div>
+      <div class="card-intel">
+        ${queueMin > 0 ? `<span class="card-queue-time ${isStale ? 'stale' : ''}">⏳ ${queueMin < 60 ? queueMin + 'm' : Math.floor(queueMin/60) + 'h ' + (queueMin%60) + 'm'} in queue</span>` : ''}
+        ${estMin ? `<span class="card-est">~${estMin}m est.</span>` : ''}
+        ${blocked ? `<span class="card-blocked">🚫 Blocked</span>` : ''}
+      </div>
+      ${isRunning ? '<div class="run-bar"><div class="run-bar-fill"></div></div>' : ''}
+      ${truncErr ? `<div class="card-error">⚠ ${esc(truncErr)}</div>` : ''}
+    </div>
+  `;
+}
+
+function renderList(items) {
+  const body = document.getElementById('list-body');
+  if (!items.length) {
+    body.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-tertiary)">No tasks</td></tr>';
+    return;
+  }
+  body.innerHTML = items.map(t => {
+    const p = t.priority || 'P2';
+    const goal = t.goalStream || '';
+    return `
+      <tr onclick='openDetail(${JSON.stringify(t).replace(/'/g,"&#39;")})'>
+        <td><span class="badge-priority ${p}">${p}</span></td>
+        <td style="font-weight:600">${esc(t.title||t.description||'Untitled')}</td>
+        <td><span class="badge-agent">${EMOJIS[t.agentId]||'🤖'} ${agentName(t.agentId||'')}</span></td>
+        <td>${goal ? `<span class="badge-goal ${goal}">${GOALS[goal]||goal}</span>` : '—'}</td>
+        <td><span class="status-pill status-${t.status}">${t.status === 'running' ? '⚡ ' + t.status : t.status === 'completed' ? '✅ ' + t.status : t.status === 'failed' ? '❌ ' + t.status : t.status === 'paused' ? '⏸ ' + t.status : '⏳ ' + t.status}</span></td>
+        <td style="color:var(--text-tertiary);font-size:12px">${timeAgo(t.createdAt)}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// VIEW TOGGLE
+// ═══════════════════════════════════════════════════════
+function setView(v) {
+  viewMode = v;
+  document.getElementById('kanban-view').classList.toggle('hidden', v !== 'kanban');
+  document.getElementById('list-view').classList.toggle('active', v === 'list');
+  document.getElementById('vb-kanban').classList.toggle('active', v === 'kanban');
+  document.getElementById('vb-list').classList.toggle('active', v === 'list');
+}
+
+// ═══════════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════════
+function openDetail(t) {
+  currentTask = t;
+  document.getElementById('m-title').textContent = t.title || t.description || 'Untitled';
+
+  // Badges
+  const statusColors = {completed:'green',running:'blue',pending:'yellow',blocked:'red',failed:'red'};
+  const sc = statusColors[t.status] || 'yellow';
+  const pc = t.priority === 'P0' ? 'red' : t.priority === 'P1' ? 'accent' : 'text-tertiary';
+  let badges = `
+    <span class="modal-badge" style="background:var(--${sc}-light);color:var(--${sc})">${t.status}</span>
+    <span class="modal-badge" style="background:var(--${pc === 'accent' ? 'accent' : pc}-light);color:var(--${pc})">${t.priority||'P2'}</span>
+  `;
+  if (t.agentId) badges += `<span class="modal-badge" style="background:var(--accent-light);color:var(--accent)">${EMOJIS[t.agentId]||'🤖'} ${agentName(t.agentId)}</span>`;
+  if (t.goalStream) badges += `<span class="modal-badge" style="background:var(--${t.goalStream === 'saas' ? 'purple' : t.goalStream === 'govphone' ? 'green' : t.goalStream === 'infra' ? 'blue' : 'yellow'}-light);color:var(--${t.goalStream === 'saas' ? 'purple' : t.goalStream === 'govphone' ? 'green' : t.goalStream === 'infra' ? 'blue' : 'yellow'})">${GOALS[t.goalStream]||t.goalStream}</span>`;
+  document.getElementById('m-badges').innerHTML = badges;
+
+  // Body
+  let html = '';
+
+  // Description
+  html += `
+    <div class="modal-section">
+      <div class="modal-label">Description</div>
+      <div class="modal-desc">${esc(t.description || 'No description.')}</div>
+    </div>
+  `;
+
+  // Error
+  const err = t.lastError || t.error;
+  if (err) {
+    const errMsg = typeof err === 'string' ? err : (err.message || JSON.stringify(err));
+    html += `
+      <div class="modal-section">
+        <div class="modal-label">Error</div>
+        <div style="background:var(--red-light);border:1px solid var(--red-border);border-radius:var(--radius-sm);padding:10px;color:var(--red);font-size:12px;line-height:1.5;white-space:pre-wrap">${esc(errMsg)}</div>
+      </div>
+    `;
+  }
+
+  // Timeline
+  html += '<div class="modal-section"><div class="modal-label">Timeline</div><div class="modal-timeline">';
+  html += tlRow('Created', t.createdAt);
+  if (t.startedAt) html += tlRow('Started', t.startedAt);
+  if (t.updatedAt && t.updatedAt !== t.createdAt) html += tlRow('Updated', t.updatedAt);
+  if (t.completedAt) html += tlRow('Completed', t.completedAt);
+  html += '</div></div>';
+
+  // Progress log
+  if (t.progress && t.progress.length) {
+    html += '<div class="modal-section"><div class="modal-label">Progress Log</div><div class="modal-progress">';
+    t.progress.forEach(p => {
+      html += `<div class="modal-progress-item">
+        ${p.timestamp ? `<span class="modal-progress-time">${timeAgo(p.timestamp)}</span> — ` : ''}
+        ${esc(p.note || JSON.stringify(p))}
+      </div>`;
+    });
+    html += '</div></div>';
+  }
+
+  // Metadata
+  if (t.metadata && Object.keys(t.metadata).length) {
+    html += `<div class="modal-section"><div class="modal-label">Metadata</div>
+      <div style="background:var(--bg-warm);padding:10px;border-radius:var(--radius-sm);font-size:11px;font-family:monospace;white-space:pre-wrap">${esc(JSON.stringify(t.metadata, null, 2))}</div>
+    </div>`;
+  }
+
+  document.getElementById('m-body').innerHTML = html;
+
+  // Actions
+  let acts = '';
+  if (t.status !== 'completed') acts += `<button class="btn btn-green" onclick="completeTask()">✓ Complete</button>`;
+  acts += `<button class="btn btn-red" onclick="deleteTask()">Delete</button>`;
+  acts += `<button class="btn btn-ghost" onclick="closeModal()">Close</button>`;
+  document.getElementById('m-actions').innerHTML = acts;
+
+  document.getElementById('modal').classList.add('active');
+}
+
+function tlRow(label, ts) {
+  if (!ts) return '';
+  return `<div class="modal-tl-row"><span class="modal-tl-label">${label}</span><span class="modal-tl-value">${fmtDate(ts)} (${timeAgo(ts)})</span></div>`;
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+  currentTask = null;
+}
+
+async function completeTask() {
+  if (!currentTask) return;
+  try {
+    const r = await fetch(`/ops/mission-board/api/tasks/${currentTask.id}/complete`, {method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
+    if (r.ok) { toast('Done','Task completed','success'); closeModal(); loadAll(); }
+    else { const e = await r.json(); toast('Error', e.error||'Failed','error'); }
+  } catch(e) { toast('Error',e.message,'error'); }
+}
+
+async function deleteTask() {
+  if (!currentTask || !confirm('Delete this task?')) return;
+  try {
+    const r = await fetch(`/ops/mission-board/api/tasks/${currentTask.id}`,{method:'DELETE'});
+    if (r.ok) { toast('Deleted','Task removed','info'); closeModal(); loadAll(); }
+    else { const e = await r.json(); toast('Error',e.error||'Failed','error'); }
+  } catch(e) { toast('Error',e.message,'error'); }
+}
+
+// ═══════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════
+function agentName(id) {
+  if (!id) return 'Unassigned';
+  return id.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function timeAgo(d) {
+  if (!d) return '';
+  const ms = Date.now() - new Date(d);
+  const m = Math.floor(ms/60000);
+  if (m < 1) return 'now';
+  if (m < 60) return m + 'm';
+  const h = Math.floor(m/60);
+  if (h < 24) return h + 'h';
+  return Math.floor(h/24) + 'd';
+}
+
+function fmtDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});
+}
+
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ═══════════════════════════════════════════════════════
+// SSE (live updates)
+// ═══════════════════════════════════════════════════════
+function setupSSE() {
+  try {
+    const es = new EventSource('/ops/mission-board/api/tasks/stream');
+    es.addEventListener('task-created', () => loadAll());
+    es.addEventListener('task-updated', () => loadAll());
+    es.addEventListener('task-completed', () => loadAll());
+    es.onerror = () => { es.close(); setTimeout(setupSSE, 5000); };
+  } catch(e) { console.warn('SSE unavailable'); }
+}
+
+// ═══════════════════════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════════════════════
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('f-priority').addEventListener('change', render);
+document.getElementById('f-goal').addEventListener('change', render);
+document.getElementById('f-agent').addEventListener('change', render);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target.id === 'modal') closeModal();
+});
+
+// ═══════════════════════════════════════════════════════
+// TASK INTELLIGENCE (Part 4)
+// ═══════════════════════════════════════════════════════
+
+function getEstimatedCompletion(t) {
+  if (t.status === 'completed') return null;
+  // Calculate average completion time for same agent + goal stream
+  const similar = tasks.filter(x =>
+    x.status === 'completed' && x.completedAt && x.createdAt &&
+    (x.agentId === t.agentId || x.goalStream === t.goalStream)
+  );
+  if (similar.length < 2) return t.estimatedCompletionMin || null;
+  const times = similar.map(x => (new Date(x.completedAt) - new Date(x.createdAt)) / 60000).filter(x => x > 0 && x < 1440);
+  if (!times.length) return t.estimatedCompletionMin || null;
+  return Math.round(times.reduce((a,b) => a+b, 0) / times.length);
+}
+
+function isRecurringFailure(t) {
+  // Check if same task key or title has failed 2+ times
+  if (!t.lastError && !(t.executionHistory && t.executionHistory.length)) return false;
+  const fails = (t.executionHistory || []).filter(h => h.status === 'failed').length;
+  if (fails >= 2) return true;
+  // Check other tasks with same key
+  const sameKey = tasks.filter(x => x.taskKey === t.taskKey && x.id !== t.id && (x.lastError || x.status === 'failed'));
+  return sameKey.length >= 1 && t.lastError;
+}
+
+function getAgentMiniChart(agentId) {
+  if (!agentId) return '';
+  const agentTasks = tasks.filter(t => t.agentId === agentId && (t.status === 'completed' || t.status === 'failed'))
+    .sort((a,b) => new Date(b.completedAt || b.updatedAt) - new Date(a.completedAt || a.updatedAt))
+    .slice(0, 5);
+  if (agentTasks.length < 2) return '';
+  const dots = agentTasks.reverse().map(t =>
+    `<span class="chart-dot ${t.status === 'completed' ? 'ok' : 'fail'}"></span>`
+  ).join('');
+  return `<span class="card-mini-chart">${dots}</span>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// DASHBOARD METRICS (Part 5)
+// ═══════════════════════════════════════════════════════
+
+function updateMetrics() {
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const weekStart = new Date(todayStart);
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+  const lastWeekStart = new Date(weekStart);
+  lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+
+  // Completed today
+  const completedToday = tasks.filter(t =>
+    t.status === 'completed' && t.completedAt && new Date(t.completedAt) >= todayStart
+  );
+  document.getElementById('m-today').textContent = completedToday.length;
+  document.getElementById('m-today-sub').textContent = completedToday.length === 1 ? '1 task' : completedToday.length + ' tasks';
+
+  // Avg completion time today
+  const todayTimes = completedToday
+    .filter(t => t.createdAt && t.completedAt)
+    .map(t => (new Date(t.completedAt) - new Date(t.createdAt)) / 60000)
+    .filter(x => x > 0 && x < 1440);
+  if (todayTimes.length) {
+    const avg = Math.round(todayTimes.reduce((a,b) => a+b, 0) / todayTimes.length);
+    document.getElementById('m-avgtime').textContent = avg < 60 ? avg + 'm' : Math.floor(avg/60) + 'h ' + (avg%60) + 'm';
+  } else {
+    document.getElementById('m-avgtime').textContent = '—';
+  }
+
+  // Agent utilization
+  const activeAgents = new Set(tasks.filter(t => t.status === 'running').map(t => t.agentId)).size;
+  const totalAgents = new Set(tasks.map(t => t.agentId).filter(Boolean)).size;
+  const utilPct = totalAgents > 0 ? Math.round((activeAgents / totalAgents) * 100) : 0;
+  document.getElementById('m-util').textContent = utilPct + '%';
+  document.getElementById('m-util-sub').textContent = activeAgents + ' / ' + totalAgents + ' agents';
+
+  // P0 backlog age
+  const pendingP0 = tasks.filter(t => t.priority === 'P0' && (t.status === 'pending' || t.status === 'blocked'));
+  if (pendingP0.length) {
+    const oldest = pendingP0.reduce((a,b) => new Date(a.createdAt) < new Date(b.createdAt) ? a : b);
+    const ageMin = Math.floor((now - new Date(oldest.createdAt)) / 60000);
+    document.getElementById('m-p0age').textContent = ageMin < 60 ? ageMin + 'm' : Math.floor(ageMin/60) + 'h';
+    document.getElementById('m-p0age').parentElement.style.borderColor = 'var(--red-border)';
+  } else {
+    document.getElementById('m-p0age').textContent = '0';
+    document.getElementById('m-p0age').parentElement.style.borderColor = '';
+  }
+
+  // Weekly trend
+  const thisWeekCompleted = tasks.filter(t =>
+    t.status === 'completed' && t.completedAt && new Date(t.completedAt) >= weekStart
+  ).length;
+  const lastWeekCompleted = tasks.filter(t =>
+    t.status === 'completed' && t.completedAt &&
+    new Date(t.completedAt) >= lastWeekStart && new Date(t.completedAt) < weekStart
+  ).length;
+  document.getElementById('m-weekly').textContent = thisWeekCompleted;
+  const trendEl = document.getElementById('m-weekly-trend');
+  if (lastWeekCompleted > 0) {
+    const pctChange = Math.round(((thisWeekCompleted - lastWeekCompleted) / lastWeekCompleted) * 100);
+    if (pctChange > 0) {
+      trendEl.textContent = '↑ ' + pctChange + '% vs last week';
+      trendEl.className = 'metric-trend up';
+    } else if (pctChange < 0) {
+      trendEl.textContent = '↓ ' + Math.abs(pctChange) + '% vs last week';
+      trendEl.className = 'metric-trend down';
+    } else {
+      trendEl.textContent = '→ same as last week';
+      trendEl.className = 'metric-trend flat';
+    }
+  } else {
+    trendEl.textContent = thisWeekCompleted + ' this week (new)';
+    trendEl.className = 'metric-trend flat';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// INTELLIGENCE PANEL (Part 2)
+// ═══════════════════════════════════════════════════════
+
+function toggleIntel() {
+  intelOpen = !intelOpen;
+  localStorage.setItem('mb_intel_open', intelOpen);
+  document.getElementById('intel-toggle').classList.toggle('open', intelOpen);
+  document.getElementById('intel-panel').classList.toggle('open', intelOpen);
+  if (intelOpen) updateIntelPanel();
+}
+
+function updateIntelPanel() {
+  if (!intelOpen) return;
+  updateAgentPerf();
+  updateAvgTimeByStream();
+  updateLearningLog();
+  updateSuggestions();
+}
+
+function updateAgentPerf() {
+  const el = document.getElementById('intel-agent-perf');
+  const agents = {};
+  tasks.forEach(t => {
+    if (!t.agentId) return;
+    if (!agents[t.agentId]) agents[t.agentId] = { completed: 0, failed: 0, total: 0, times: [] };
+    agents[t.agentId].total++;
+    if (t.status === 'completed') {
+      agents[t.agentId].completed++;
+      if (t.createdAt && t.completedAt) {
+        const m = (new Date(t.completedAt) - new Date(t.createdAt)) / 60000;
+        if (m > 0 && m < 1440) agents[t.agentId].times.push(m);
+      }
+    }
+    if (t.status === 'failed') agents[t.agentId].failed++;
+  });
+
+  const sorted = Object.entries(agents)
+    .filter(([,a]) => a.completed + a.failed > 0)
+    .sort((a,b) => {
+      const rA = a[1].completed / (a[1].completed + a[1].failed) * 100;
+      const rB = b[1].completed / (b[1].completed + b[1].failed) * 100;
+      return rB - rA;
+    });
+
+  if (!sorted.length) { el.innerHTML = '<div style="color:var(--text-tertiary)">No data yet</div>'; return; }
+
+  el.innerHTML = sorted.map(([id, a]) => {
+    const done = a.completed + a.failed;
+    const rate = Math.round((a.completed / done) * 100);
+    const cls = rate >= 80 ? 'high' : rate >= 50 ? 'mid' : 'low';
+    const avgT = a.times.length ? Math.round(a.times.reduce((x,y) => x+y, 0) / a.times.length) : null;
+    return `<div class="agent-perf-row">
+      <span class="agent-perf-name">${EMOJIS[id]||'🤖'} ${agentName(id)}</span>
+      <div class="agent-perf-bar"><div class="agent-perf-fill ${cls}" style="width:${rate}%"></div></div>
+      <span class="agent-perf-pct" style="color:var(--${cls === 'high' ? 'green' : cls === 'mid' ? 'yellow' : 'red'})">${rate}%</span>
+      <span class="agent-perf-avg">${avgT ? avgT + 'm' : '—'}</span>
+    </div>`;
+  }).join('');
+}
+
+function updateAvgTimeByStream() {
+  const el = document.getElementById('intel-avg-time');
+  const streams = {};
+  tasks.forEach(t => {
+    const g = t.goalStream || 'other';
+    if (!streams[g]) streams[g] = { times: [], count: 0 };
+    streams[g].count++;
+    if (t.status === 'completed' && t.createdAt && t.completedAt) {
+      const m = (new Date(t.completedAt) - new Date(t.createdAt)) / 60000;
+      if (m > 0 && m < 1440) streams[g].times.push(m);
+    }
+  });
+
+  const items = Object.entries(streams).filter(([,s]) => s.times.length > 0)
+    .map(([g, s]) => {
+      const avg = Math.round(s.times.reduce((a,b) => a+b, 0) / s.times.length);
+      return { name: GOALS[g] || g, avg, count: s.count, emoji: GOAL_EMOJI[g] || '📋' };
+    })
+    .sort((a,b) => a.avg - b.avg);
+
+  if (!items.length) { el.innerHTML = '<div style="color:var(--text-tertiary)">No data yet</div>'; return; }
+
+  el.innerHTML = items.map(i => `
+    <div class="agent-perf-row">
+      <span class="agent-perf-name">${i.emoji} ${i.name}</span>
+      <div class="agent-perf-bar"><div class="agent-perf-fill ${i.avg < 30 ? 'high' : i.avg < 60 ? 'mid' : 'low'}" style="width:${Math.min(100, (i.avg / 120) * 100)}%"></div></div>
+      <span class="agent-perf-avg" style="font-weight:700">${i.avg}m avg</span>
+    </div>
+  `).join('');
+}
+
+function updateLearningLog() {
+  const el = document.getElementById('intel-learnings');
+  // Extract learnings from task progress entries and completed tasks with results
+  const learnings = [];
+  tasks.forEach(t => {
+    if (t.progress && t.progress.length) {
+      t.progress.forEach(p => {
+        learnings.push({
+          time: p.timestamp || t.updatedAt,
+          agent: t.agentId,
+          note: p.note || p.message || '',
+          task: t.title
+        });
+      });
+    }
+    if (t.status === 'completed' && t.metadata && t.metadata.result) {
+      learnings.push({
+        time: t.completedAt || t.updatedAt,
+        agent: t.agentId,
+        note: t.metadata.result,
+        task: t.title
+      });
+    }
+  });
+
+  learnings.sort((a,b) => new Date(b.time) - new Date(a.time));
+  const recent = learnings.slice(0, 10);
+
+  if (!recent.length) { el.innerHTML = '<div style="color:var(--text-tertiary)">No learnings yet</div>'; return; }
+
+  el.innerHTML = recent.map(l => `
+    <div class="learning-item">
+      <span class="learning-time">${timeAgo(l.time)}</span>
+      <span class="learning-agent">${EMOJIS[l.agent]||'🤖'} ${agentName(l.agent)}</span>
+      <div style="margin-top:2px">${esc((l.note || '').slice(0, 120))}${l.note && l.note.length > 120 ? '…' : ''}</div>
+    </div>
+  `).join('');
+}
+
+function updateSuggestions() {
+  const el = document.getElementById('intel-suggestions');
+  const suggestions = [];
+
+  // Analyze agent performance by goal stream
+  const agentStreamTimes = {};
+  tasks.forEach(t => {
+    if (t.status !== 'completed' || !t.completedAt || !t.createdAt || !t.agentId) return;
+    const m = (new Date(t.completedAt) - new Date(t.createdAt)) / 60000;
+    if (m <= 0 || m > 1440) return;
+    const key = t.agentId;
+    const stream = t.goalStream || 'other';
+    if (!agentStreamTimes[key]) agentStreamTimes[key] = {};
+    if (!agentStreamTimes[key][stream]) agentStreamTimes[key][stream] = [];
+    agentStreamTimes[key][stream].push(m);
+  });
+
+  // Find agents with big time differences across streams
+  Object.entries(agentStreamTimes).forEach(([agent, streams]) => {
+    const streamAvgs = Object.entries(streams)
+      .filter(([,times]) => times.length >= 2)
+      .map(([stream, times]) => ({
+        stream,
+        avg: Math.round(times.reduce((a,b) => a+b, 0) / times.length),
+        count: times.length
+      }));
+
+    if (streamAvgs.length >= 2) {
+      streamAvgs.sort((a,b) => a.avg - b.avg);
+      const fastest = streamAvgs[0];
+      const slowest = streamAvgs[streamAvgs.length - 1];
+      if (slowest.avg > fastest.avg * 2 && slowest.avg > 20) {
+        suggestions.push(`💡 ${EMOJIS[agent]||'🤖'} ${agentName(agent)} averages ${fastest.avg}m on ${GOALS[fastest.stream]||fastest.stream} but ${slowest.avg}m on ${GOALS[slowest.stream]||slowest.stream} — consider reassigning ${GOALS[slowest.stream]||slowest.stream} tasks`);
+      }
+    }
+  });
+
+  // Overloaded agents
+  const agentPending = {};
+  tasks.forEach(t => {
+    if (t.status === 'pending' && t.agentId) {
+      agentPending[t.agentId] = (agentPending[t.agentId] || 0) + 1;
+    }
+  });
+  Object.entries(agentPending).forEach(([agent, count]) => {
+    if (count >= 3) {
+      suggestions.push(`⚠️ ${EMOJIS[agent]||'🤖'} ${agentName(agent)} has ${count} tasks queued — consider redistributing`);
+    }
+  });
+
+  // Stale P0s
+  const staleP0 = tasks.filter(t => t.priority === 'P0' && t.status === 'pending' && (Date.now() - new Date(t.createdAt)) > 3600000);
+  staleP0.forEach(t => {
+    const hrs = Math.floor((Date.now() - new Date(t.createdAt)) / 3600000);
+    suggestions.push(`🔴 P0 "${(t.title||'').slice(0,40)}" has been pending ${hrs}h — needs immediate attention`);
+  });
+
+  // Pattern detection: recurring failures (Part 2.2)
+  const failedKeys = {};
+  tasks.forEach(t => {
+    if (t.lastError || t.status === 'failed') {
+      const k = (t.taskKey || t.title || '').slice(0, 50);
+      failedKeys[k] = (failedKeys[k] || 0) + 1;
+    }
+  });
+  Object.entries(failedKeys).forEach(([key, count]) => {
+    if (count >= 2) {
+      suggestions.push(`🔄 Recurring failure: "${key}" has failed ${count}x — investigate root cause`);
+    }
+  });
+
+  if (!suggestions.length) {
+    el.innerHTML = '<div style="color:var(--text-tertiary)">✅ All systems nominal — no suggestions</div>';
+    return;
+  }
+
+  el.innerHTML = suggestions.map(s => `<div class="suggest-item">${esc(s)}</div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// AUTO-DISPATCH (Part 3)
+// ═══════════════════════════════════════════════════════
+
+let lastDispatchCheck = 0;
+
+function checkAutoDispatch() {
+  const now = Date.now();
+  const staleP0 = tasks.filter(t =>
+    t.priority === 'P0' &&
+    t.status === 'pending' &&
+    !t.lockedBy &&
+    (now - new Date(t.createdAt)) > 5 * 60 * 1000
+  );
+
+  const banner = document.getElementById('dispatch-banner');
+  if (staleP0.length > 0) {
+    banner.classList.add('visible');
+    document.getElementById('dispatch-text').textContent =
+      `⚠ ${staleP0.length} P0 task${staleP0.length > 1 ? 's' : ''} pending >5 min — Auto-dispatch available`;
+    // Show dispatch history
+    const histEl = document.getElementById('dispatch-history');
+    if (dispatchHistory.length > 0) {
+      const last3 = dispatchHistory.slice(-3);
+      histEl.innerHTML = 'Recent dispatches: ' + last3.map(h =>
+        `${timeAgo(h.time)} by ${h.by}`
+      ).join(' · ');
+    }
+  } else {
+    banner.classList.remove('visible');
+  }
+}
+
+async function autoDispatch() {
+  const staleP0 = tasks.filter(t =>
+    t.priority === 'P0' && t.status === 'pending' && !t.lockedBy &&
+    (Date.now() - new Date(t.createdAt)) > 5 * 60 * 1000
+  );
+
+  if (!staleP0.length) { toast('No tasks', 'No P0 tasks need dispatch', 'info'); return; }
+
+  const taskIds = staleP0.map(t => t.id);
+  const taskTitles = staleP0.map(t => (t.title || '').slice(0, 60));
+
+  // Record dispatch
+  const dispatchEntry = {
+    time: new Date().toISOString(),
+    by: 'CEO Dashboard',
+    taskIds,
+    taskTitles,
+    result: 'dispatched'
+  };
+  dispatchHistory.push(dispatchEntry);
+  localStorage.setItem('mb_dispatch_history', JSON.stringify(dispatchHistory.slice(-50)));
+
+  // Send alert via optimize/run endpoint (triggers CEO notification)
+  try {
+    const r = await fetch('/ops/mission-board/api/tasks/optimize/run');
+    if (r.ok) {
+      toast('Auto-Dispatched', `${staleP0.length} P0 task(s) flagged for CEO attention`, 'success');
+    }
+  } catch(e) {
+    toast('Dispatch Error', e.message, 'error');
+  }
+
+  loadAll();
+}
+
+// Check every 60 seconds
+setInterval(checkAutoDispatch, 60000);
+
+// ═══════════════════════════════════════════════════════
+// ENHANCED loadAll — update intelligence
+// ═══════════════════════════════════════════════════════
+
+const origLoadAll = loadAll;
+
+// Patch render to include metrics
+const origRender = render;
+
+// ═══════════════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════════════
+
+// Restore intel panel state
+if (intelOpen) {
+  document.getElementById('intel-toggle').classList.add('open');
+  document.getElementById('intel-panel').classList.add('open');
+}
+
+loadAll();
+setupSSE();
+setInterval(loadAll, 5000);
+console.log('[BOOT] Mission board initialized');
+</script>
+
+</body>
+</html>
+

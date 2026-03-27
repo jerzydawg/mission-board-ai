@@ -1,0 +1,45 @@
+<svg viewBox="0 0 240 60" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="brandGradD" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B35"/>
+      <stop offset="50%" style="stop-color:#F7931A"/>
+      <stop offset="100%" style="stop-color:#FF6B35"/>
+    </linearGradient>
+    <filter id="glowD" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Icon Mark -->
+  <g transform="translate(8, 8)">
+    <!-- Outer hexagon -->
+    <path d="M22 4 L38 14 L38 32 L22 42 L6 32 L6 14 Z" 
+          fill="none" stroke="url(#brandGradD)" stroke-width="2.5" 
+          stroke-linejoin="round" filter="url(#glowD)"/>
+    
+    <!-- Inner diamond -->
+    <path d="M22 12 L30 23 L22 34 L14 23 Z" 
+          fill="url(#brandGradD)" opacity="0.9"/>
+    
+    <!-- Center dot -->
+    <circle cx="22" cy="23" r="3" fill="#0A0A0F"/>
+    
+    <!-- Connection nodes -->
+    <circle cx="22" cy="4" r="2.5" fill="url(#brandGradD)"/>
+    <circle cx="38" cy="14" r="2.5" fill="url(#brandGradD)"/>
+    <circle cx="38" cy="32" r="2.5" fill="url(#brandGradD)"/>
+    <circle cx="22" cy="42" r="2.5" fill="url(#brandGradD)"/>
+    <circle cx="6" cy="32" r="2.5" fill="url(#brandGradD)"/>
+    <circle cx="6" cy="14" r="2.5" fill="url(#brandGradD)"/>
+  </g>
+  
+  <!-- Wordmark -->
+  <text x="60" y="38" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" 
+        font-size="28" font-weight="800" letter-spacing="-0.02em">
+    <tspan fill="url(#brandGradD)">Mr</tspan><tspan fill="#F0F0FF">Delegate</tspan>
+  </text>
+</svg>

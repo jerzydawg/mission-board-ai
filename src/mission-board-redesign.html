@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Board — MrDelegate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Mission Board — Industrial Dashboard Redesign
+   Impeccable Design System
+   Target: CEO command center, high-density operational control
+   Tone: Brutalist, asymmetric, data-first, zero decoration */
+
+:root {
+  /* Base colors — tinted black/white, never pure */
+  --bg: #0A0A0B;
+  --surface: #111113;
+  --surface-raised: #18181A;
+  --border: #27272A;
+  --border-strong: #3F3F46;
+  
+  /* Text — high contrast, warm tint */
+  --text-primary: #F4F4F5;
+  --text-secondary: #A1A1AA;
+  --text-tertiary: #71717A;
+  
+  /* Accent — amber for urgency/attention */
+  --accent: #FBBF24;
+  --accent-dim: #92400E;
+  --accent-glow: #FCD34D;
+  
+  /* Status colors */
+  --status-idle: #71717A;
+  --status-working: #10B981;
+  --status-error: #EF4444;
+  --status-blocked: #F59E0B;
+  
+  /* Type scale */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  
+  --text-xs: clamp(0.75rem, 0.7rem + 0.15vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 0.8rem + 0.2vw, 1rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem);
+  --text-xl: clamp(1.75rem, 1.5rem + 0.75vw, 2.25rem);
+  
+  /* Spacing rhythm */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Layout — asymmetric grid, no cards */
+.board {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "sidebar header"
+    "sidebar main";
+}
+
+.sidebar {
+  grid-area: sidebar;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: var(--space-6);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.header {
+  grid-area: header;
+  padding: var(--space-6) var(--space-8);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.main {
+  grid-area: main;
+  padding: var(--space-8);
+  overflow-y: auto;
+}
+
+/* Typography — no icons, just text hierarchy */
+.logo {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  margin-bottom: var(--space-12);
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+}
+
+h3 {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-3);
+}
+
+/* Nav — minimal, left-aligned */
+.nav {
+  list-style: none;
+  margin-bottom: var(--space-8);
+}
+
+.nav-item {
+  margin-bottom: var(--space-2);
+}
+
+.nav-link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  border-left: 2px solid transparent;
+  transition: all 120ms ease-out;
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+  border-left-color: var(--accent);
+  background: rgba(251, 191, 36, 0.05);
+}
+
+.nav-link.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: rgba(251, 191, 36, 0.1);
+}
+
+/* Status grid — tight, data-dense */
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-12);
+}
+
+.status-item {
+  padding: var(--space-4);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-dim);
+}
+
+.status-value {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.8rem + 0.5vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.status-label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+
+/* Agent list — table, not cards */
+.agent-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-12);
+}
+
+.agent-table thead {
+  border-bottom: 2px solid var(--border-strong);
+}
+
+.agent-table th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+
+.agent-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 80ms ease-out;
+}
+
+.agent-table tbody tr:hover {
+  background: var(--surface-raised);
+}
+
+.agent-table td {
+  padding: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.agent-table td:first-child {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Status indicators — inline, no badges */
+.status {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: var(--space-2);
+}
+
+.status--idle { background: var(--status-idle); }
+.status--working { background: var(--status-working); }
+.status--error { background: var(--status-error); }
+.status--blocked { background: var(--status-blocked); }
+
+/* Task queue — dense list */
+.task-list {
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.task-item {
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--space-4);
+  align-items: baseline;
+}
+
+.task-priority {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.task-title {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.task-agent {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  text-align: right;
+}
+
+/* Empty state — minimal */
+.empty {
+  padding: var(--space-16) var(--space-8);
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+}
+
+/* Responsive — mobile stacks sidebar */
+@media (max-width: 1024px) {
+  .board {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "main"
+      "sidebar";
+  }
+  
+  .sidebar {
+    position: static;
+    height: auto;
+    border-right: none;
+    border-top: 1px solid var(--border);
+  }
+  
+  .status-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .status-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .agent-table {
+    font-size: var(--text-xs);
+  }
+  
+  .agent-table th,
+  .agent-table td {
+    padding: var(--space-2) var(--space-3);
+  }
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-raised) 25%, var(--surface) 50%, var(--surface-raised) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s ease-in-out infinite;
+  border-radius: 2px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="board" id="app">
+  <aside class="sidebar">
+    <div class="logo">MISSION BOARD</div>
+    
+    <nav>
+      <ul class="nav">
+        <li class="nav-item"><a href="#agents" class="nav-link active">Agents</a></li>
+        <li class="nav-item"><a href="#tasks" class="nav-link">Tasks</a></li>
+        <li class="nav-item"><a href="#runs" class="nav-link">Runs</a></li>
+        <li class="nav-item"><a href="#health" class="nav-link">Health</a></li>
+      </ul>
+    </nav>
+    
+    <h3>System</h3>
+    <ul class="nav">
+      <li class="nav-item"><a href="#settings" class="nav-link">Settings</a></li>
+      <li class="nav-item"><a href="#logs" class="nav-link">Logs</a></li>
+    </ul>
+  </aside>
+
+  <header class="header">
+    <h1>Agent Status</h1>
+  </header>
+
+  <main class="main">
+    <div class="status-grid">
+      <div class="status-item">
+        <div class="status-value" id="stat-total">—</div>
+        <div class="status-label">Total Agents</div>
+      </div>
+      <div class="status-item" style="border-left-color: var(--status-working);">
+        <div class="status-value" id="stat-working">—</div>
+        <div class="status-label">Working</div>
+      </div>
+      <div class="status-item" style="border-left-color: var(--status-idle);">
+        <div class="status-value" id="stat-idle">—</div>
+        <div class="status-label">Idle</div>
+      </div>
+      <div class="status-item" style="border-left-color: var(--status-error);">
+        <div class="status-value" id="stat-error">—</div>
+        <div class="status-label">Error</div>
+      </div>
+    </div>
+
+    <h2>Active Agents</h2>
+    <table class="agent-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Status</th>
+          <th>Task</th>
+          <th>Last Activity</th>
+        </tr>
+      </thead>
+      <tbody id="agent-tbody">
+        <tr>
+          <td colspan="4" class="empty">Loading agents...</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Task Queue</h2>
+    <ul class="task-list" id="task-list">
+      <li class="empty">Loading tasks...</li>
+    </ul>
+  </main>
+</div>
+
+<script>
+// API integration
+const API_BASE = '/ops/mission-board/api';
+
+async function fetchAgents() {
+  const res = await fetch(`${API_BASE}/agents`);
+  const data = await res.json();
+  
+  // Update stats
+  document.getElementById('stat-total').textContent = data.summary.total;
+  document.getElementById('stat-working').textContent = data.summary.working;
+  document.getElementById('stat-idle').textContent = data.summary.idle;
+  document.getElementById('stat-error').textContent = data.summary.error;
+  
+  // Update agent table
+  const tbody = document.getElementById('agent-tbody');
+  if (data.agents.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="empty">No agents running</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = data.agents.map(agent => `
+    <tr>
+      <td>${agent.id}</td>
+      <td><span class="status status--${agent.status}"></span>${agent.status}</td>
+      <td>${agent.label || '—'}</td>
+      <td>${new Date(agent.lastActivity).toLocaleString()}</td>
+    </tr>
+  `).join('');
+}
+
+async function fetchTasks() {
+  const res = await fetch(`${API_BASE}/tasks`);
+  const data = await res.json();
+  
+  const taskList = document.getElementById('task-list');
+  
+  if (!data.tasks || data.tasks.length === 0) {
+    taskList.innerHTML = '<li class="empty">No tasks in queue</li>';
+    return;
+  }
+  
+  taskList.innerHTML = data.tasks.slice(0, 10).map(task => `
+    <li class="task-item">
+      <span class="task-priority">${task.priority || 'P2'}</span>
+      <span class="task-title">${task.title}</span>
+      <span class="task-agent">${task.agentId}</span>
+    </li>
+  `).join('');
+}
+
+// Auto-refresh every 5s
+setInterval(() => {
+  fetchAgents();
+  fetchTasks();
+}, 5000);
+
+// Initial load
+fetchAgents();
+fetchTasks();
+</script>
+
+</body>
+</html>

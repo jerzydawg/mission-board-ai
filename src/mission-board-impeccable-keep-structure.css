@@ -1,0 +1,373 @@
+/* Mission Board — Impeccable Redesign (keeping original structure)
+   Target: CEO command center
+   Tone: Refined, high-trust, data-first
+   Approach: Keep warm theme but elevate typography, spacing, color */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* Warm light palette — tinted, never pure */
+  --bg: #FDFCFA;
+  --bg-warm: #FBF8F4;
+  --surface: #FFFFFF;
+  --surface-raised: #FFFEFB;
+  --border: #E8E3DC;
+  --border-strong: #D4CEC4;
+  
+  /* Text — warm black, never #000 */
+  --text-primary: #1A1816;
+  --text-secondary: #6B6661;
+  --text-tertiary: #9B958E;
+  
+  /* Accent — refined amber */
+  --accent: #F76707;
+  --accent-hover: #E8590C;
+  --accent-dim: #FFF4E6;
+  
+  /* Status colors — perceptually uniform */
+  --status-pending: #868E96;
+  --status-running: #0C8599;
+  --status-completed: #2F9E44;
+  --status-error: #C92A2A;
+  --status-p0: #D9480F;
+  
+  /* Typography — distinctive but not trendy */
+  --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Menlo', monospace;
+  
+  /* Type scale — fluid, intentional */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.15vw, 0.8125rem);
+  --text-sm: clamp(0.875rem, 0.85rem + 0.125vw, 0.9375rem);
+  --text-base: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
+  --text-lg: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
+  --text-xl: clamp(1.5rem, 1.35rem + 0.5vw, 1.875rem);
+  
+  /* Spacing rhythm — varied, intentional */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  
+  /* Shadows — subtle, layered */
+  --shadow-sm: 0 1px 2px rgba(26,24,22,0.04);
+  --shadow-md: 0 2px 8px rgba(26,24,22,0.06), 0 1px 2px rgba(26,24,22,0.03);
+  --shadow-lg: 0 8px 24px rgba(26,24,22,0.08), 0 2px 4px rgba(26,24,22,0.04);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Header — refined, not decorative */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-6) var(--space-8);
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.header-logo {
+  height: 24px;
+  opacity: 0.9;
+}
+
+.header-subtitle {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.header-time {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-running);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Stats bar — tight, data-dense */
+.stats-bar {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  padding: var(--space-2) var(--space-4);
+  background: var(--bg-warm);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: all 120ms ease-out;
+}
+
+.stat-pill:hover {
+  border-color: var(--border-strong);
+  background: var(--surface);
+}
+
+.stat-num {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  margin-right: var(--space-1);
+}
+
+.stat-pill.p0 {
+  border-color: var(--status-p0);
+  background: rgba(217, 72, 15, 0.05);
+}
+
+.stat-pill.p0 .stat-num {
+  color: var(--status-p0);
+}
+
+/* Metrics row — 4-column grid */
+.metrics-row {
+  max-width: 1400px;
+  margin: var(--space-8) auto;
+  padding: 0 var(--space-8);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-6);
+}
+
+.metric-card {
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  transition: all 150ms ease-out;
+}
+
+.metric-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+}
+
+.metric-label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-2);
+}
+
+.metric-value {
+  font-size: var(--text-xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: var(--space-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-sub {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+/* Task grid — keep card structure but refine */
+#tasks {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-8) var(--space-12);
+}
+
+.col-head {
+  margin-bottom: var(--space-6);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.col-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.col-count {
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.col-body {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Task cards — refined, not decorative */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: 6px;
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+  transition: all 120ms ease-out;
+  cursor: pointer;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.card-stripe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+}
+
+.card-stripe.P0 { background: var(--status-p0); }
+.card-stripe.P1 { background: var(--accent); }
+.card-stripe.P2 { background: var(--text-tertiary); }
+
+.card.is-running {
+  border-left-color: var(--status-running);
+  background: rgba(12, 133, 153, 0.02);
+}
+
+.card.is-completed {
+  opacity: 0.7;
+}
+
+.card-row1 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.card-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  line-height: 1.4;
+}
+
+.badge-goal,
+.badge-status {
+  font-size: var(--text-xs);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.badge-status.pending { background: var(--bg-warm); color: var(--status-pending); }
+.badge-status.running { background: rgba(12, 133, 153, 0.1); color: var(--status-running); }
+.badge-status.completed { background: rgba(47, 158, 68, 0.1); color: var(--status-completed); }
+
+.card-row2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+.card-time {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: var(--space-12) var(--space-8);
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .header,
+  #tasks {
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
+  
+  .metrics-row {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 var(--space-6);
+  }
+}
+
+@media (max-width: 640px) {
+  .header,
+  #tasks {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+  
+  .metrics-row {
+    grid-template-columns: 1fr;
+    padding: 0 var(--space-4);
+  }
+  
+  .stats-bar {
+    gap: var(--space-2);
+  }
+  
+  .stat-pill {
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-3);
+  }
+}
