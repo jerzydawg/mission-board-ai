@@ -6,7 +6,14 @@
 import { readFileSync } from 'fs';
 
 const OPENCLAW_URL = process.env.OPENCLAW_URL || 'http://127.0.0.1:18789';
-const OPENCLAW_TOKEN = process.env.OPENCLAW_TOKEN || readFileSync('/home/openclaw/.openclaw/.token', 'utf-8').trim();
+const OPENCLAW_TOKEN = process.env.OPENCLAW_TOKEN || (function() {
+  try {
+    return readFileSync('/home/openclaw/.openclaw/.token', 'utf-8').trim();
+  } catch {
+    console.warn('[OpenClaw] Token file not found, using env var');
+    return process.env.GATEWAY_TOKEN || '';
+  }
+})();
 
 async function spawnSubagentForTask(task) {
   try {
