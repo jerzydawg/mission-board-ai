@@ -5,6 +5,18 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { spawnSubagentForTask, pollSubagentStatus } from './openclaw-integration.js';
+import { readFileSync } from 'fs';
+
+// Load .env manually for ESM compatibility
+try {
+  const env = readFileSync('/home/openclaw/.openclaw/mission-board-local/.env', 'utf-8');
+  env.split('\n').forEach(line => {
+    const [key, ...valueParts] = line.split('=');
+    if (key && valueParts.length) {
+      process.env[key.trim()] = valueParts.join('=').trim();
+    }
+  });
+} catch {}
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
